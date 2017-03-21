@@ -2,6 +2,7 @@ import com.google.gson.Gson;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import io.vertx.ext.web.handler.FormLoginHandler;
 import model.Database;
 import org.bson.Document;
 import protocol.mobile.ResponseObject;
@@ -44,7 +45,8 @@ public class Tests {
             test.put("login", "test login");
             test.put("password", "test password");
             System.out.println(new Gson().toJson(test));
-            System.out.println(test.get("excrement"));
+
+            FormLoginHandler toto;
         }
     }
 }

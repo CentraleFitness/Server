@@ -9,6 +9,7 @@ public class Protocol {
         REGISTRATION("/registration"),
         AUTHENTICATION("/authentication"),
         AUTHENTICATION_TOKEN("/authentication/token"),
+        USERPROFILE("/userprofile"),
         ;
         public String path;
         Path(String path) {
@@ -33,6 +34,7 @@ public class Protocol {
     }
 
     public enum Status {
+        GENERIC_OK("001", "ok"),
         REG_SUCCESS("101", "registration successful"),
         REG_ERROR_LOGIN_TAKEN("301", "registration failed, login already taken"),
         REG_ERROR_LOGIN("302", "registration failed, bad login"),

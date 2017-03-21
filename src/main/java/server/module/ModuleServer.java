@@ -34,6 +34,8 @@ public class ModuleServer extends AbstractVerticle {
                 Buffer buffer = Buffer.buffer();
                 buffer.appendString("J'ai bien recu ton message : " + event.getString(0, event.length()));
                 netSocket.write(buffer);
+                System.out.println(netSocket.localAddress());
+                System.out.println(netSocket.remoteAddress());
             });
         });
 

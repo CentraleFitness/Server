@@ -30,7 +30,7 @@ public class CentralServer {
     private MongoDatabase database;
 
     public CentralServer() {
-        System.out.println("...CentralServer creation...");
+        System.out.println("...CentralServer creation et ma bite en salade...");
 
         this.mongoClient = new MongoClient(Database.ip, Database.port);
         this.database = mongoClient.getDatabase(Database.databaseName);

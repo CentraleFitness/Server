@@ -147,6 +147,37 @@ public class MobileServer extends AbstractVerticle {
             }
             response.end(new GsonBuilder().create().toJson(sending));
         });
+
+        /**
+         * User Profile
+         */
+        this.router.route(HttpMethod.POST, Protocol.Path.USERPROFILE.path).handler(routingContext -> {
+            Map<String, Object> received = routingContext.getBodyAsJson().getMap();
+            ResponseObject sending;
+            HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
+            MongoCollection users = this.database.getCollection(Database.Collections.Users.key);
+            Database.User user;
+            try {
+                if ((user = new Database.User((Document) users.find((eq(Database.Collections.Users.Field.login, Token.decodeToken((String) received.get(Protocol.Field.TOKEN.key)).getIssuer()))).first())).getDoc() == null ||
+                        !Objects.equals(user.getToken(), received.get(Protocol.Field.TOKEN.key))) {
+                    sending = new ResponseObject(true);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
+                } else {
+                    sending = new ResponseObject(false);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
+                    sending.put(Database.Collections.Users.Field.login, user.getLogin());
+                    sending.put(Database.Collections.Users.Field.firstName, user.getFirstName());
+                    sending.put(Database.Collections.Users.Field.lastName, user.getLastName());
+                    sending.put(Database.Collections.Users.Field.email, user.getEmailAddress());
+                    sending.put(Database.Collections.Users.Field.phone, user.getPhoneNumber());
+                }
+            }catch (NullPointerException e){
+                sending = new ResponseObject(true);
+                sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
+            }
+            response.end(new GsonBuilder().create().toJson(sending));
+        });
+
     }
 
     public void setDatabase(MongoDatabase database) {
