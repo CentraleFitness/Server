@@ -19,6 +19,7 @@ import server.misc.Token;
 import java.util.Map;
 import java.util.Objects;
 
+import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
 
 /**
@@ -31,7 +32,7 @@ public class MobileServer extends AbstractVerticle {
     private int port = 0;
     private HttpServer httpServer = null;
     private Router router = null;
-    private MongoDatabase database = null;
+    private Database database = null;
 
     public MobileServer(int port) {
         this.port = port;
@@ -56,15 +57,14 @@ public class MobileServer extends AbstractVerticle {
             Map<String, Object> received = routingContext.getBodyAsJson().getMap();
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
-            MongoCollection users = this.database.getCollection(Database.Collections.Users.key);
             Database.User user;
-            if ((user = new Database.User((Document) users.find(eq(Database.Collections.Users.Field.login, received.get(Protocol.Field.LOGIN.key))).first())).getDoc() != null) {
+            if ((user = new Database.User((Document) this.database.users.find(eq(Database.User.Fields.login, received.get(Protocol.Field.LOGIN.key))).first())).getDoc() != null) {
                 if (new PasswordAuthentication().authenticate(((String) received.get(Protocol.Field.PASSWORD.key)).toCharArray(), user.getPasswordHash())) {
                     sending = new ResponseObject(false);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_SUCCESS.code);
                     user.setToken(new Token((String) received.get(Protocol.Field.LOGIN.key), (String) received.get(Protocol.Field.PASSWORD.key)).generate());
                     sending.put(Protocol.Field.TOKEN.key, user.getToken());
-                    users.updateOne(eq(Database.Collections.Users.Field.login, user.getLogin()), new Document("$set", user.getDoc()));
+                    this.database.users.updateOne(eq(Database.User.Fields.login, user.getLogin()), new Document("$set", user.getDoc()));
                 } else {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_CREDENTIALS.code);
@@ -83,10 +83,9 @@ public class MobileServer extends AbstractVerticle {
             Map<String, Object> received = routingContext.getBodyAsJson().getMap();
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
-            MongoCollection users = this.database.getCollection(Database.Collections.Users.key);
             Database.User user;
             try {
-                if ((user = new Database.User((Document) users.find((eq(Database.Collections.Users.Field.login, Token.decodeToken((String) received.get(Protocol.Field.TOKEN.key)).getIssuer()))).first())).getDoc() == null ||
+                if ((user = new Database.User((Document) this.database.users.find((eq(Database.User.Fields.login, Token.decodeToken((String) received.get(Protocol.Field.TOKEN.key)).getIssuer()))).first())).getDoc() == null ||
                         !Objects.equals(user.getToken(), received.get(Protocol.Field.TOKEN.key))) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
@@ -108,7 +107,6 @@ public class MobileServer extends AbstractVerticle {
             Map<String, Object> received = routingContext.getBodyAsJson().getMap();
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
-            MongoCollection users = this.database.getCollection(Database.Collections.Users.key);
             Database.User user;
             if (received.get(Protocol.Field.LOGIN.key) == null) {
                 sending = new ResponseObject(true);
@@ -128,7 +126,7 @@ public class MobileServer extends AbstractVerticle {
             } else if (received.get(Protocol.Field.EMAIL.key) == null) {
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_RANDOM.code);
-            } else if (new Database.User((Document) users.find(eq(Database.Collections.Users.Field.login, received.get(Protocol.Field.LOGIN.key))).first()).getDoc() == null) {
+            } else if (new Database.User((Document) this.database.users.find(eq(Database.User.Fields.login, received.get(Protocol.Field.LOGIN.key))).first()).getDoc() == null) {
                 user = new Database.User();
                 user.setLogin((String) received.get(Protocol.Field.LOGIN.key));
                 user.setPasswordHash(new PasswordAuthentication().hash(((String) received.get(Protocol.Field.PASSWORD.key)).toCharArray()));
@@ -137,7 +135,7 @@ public class MobileServer extends AbstractVerticle {
                 user.setPhoneNumber((String) received.get(Protocol.Field.PHONE.key));
                 user.setEmailAddress((String) received.get(Protocol.Field.EMAIL.key));
                 user.setToken(new Token((String) received.get(Protocol.Field.LOGIN.key), (String) received.get(Protocol.Field.PASSWORD.key)).generate());
-                users.insertOne(user.getDoc());
+                this.database.users.insertOne(user.getDoc());
                 sending = new ResponseObject(false);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_SUCCESS.code);
                 sending.put(Protocol.Field.TOKEN.key, user.getToken());
@@ -155,21 +153,20 @@ public class MobileServer extends AbstractVerticle {
             Map<String, Object> received = routingContext.getBodyAsJson().getMap();
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
-            MongoCollection users = this.database.getCollection(Database.Collections.Users.key);
             Database.User user;
             try {
-                if ((user = new Database.User((Document) users.find((eq(Database.Collections.Users.Field.login, Token.decodeToken((String) received.get(Protocol.Field.TOKEN.key)).getIssuer()))).first())).getDoc() == null ||
+                if ((user = new Database.User((Document) this.database.users.find((eq(Database.User.Fields.login, Token.decodeToken((String) received.get(Protocol.Field.TOKEN.key)).getIssuer()))).first())).getDoc() == null ||
                         !Objects.equals(user.getToken(), received.get(Protocol.Field.TOKEN.key))) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
                 } else {
                     sending = new ResponseObject(false);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
-                    sending.put(Database.Collections.Users.Field.login, user.getLogin());
-                    sending.put(Database.Collections.Users.Field.firstName, user.getFirstName());
-                    sending.put(Database.Collections.Users.Field.lastName, user.getLastName());
-                    sending.put(Database.Collections.Users.Field.email, user.getEmailAddress());
-                    sending.put(Database.Collections.Users.Field.phone, user.getPhoneNumber());
+                    sending.put(Database.User.Fields.login, user.getLogin());
+                    sending.put(Database.User.Fields.firstName, user.getFirstName());
+                    sending.put(Database.User.Fields.lastName, user.getLastName());
+                    sending.put(Database.User.Fields.email, user.getEmailAddress());
+                    sending.put(Database.User.Fields.phone, user.getPhoneNumber());
                 }
             }catch (NullPointerException e){
                 sending = new ResponseObject(true);
@@ -178,9 +175,69 @@ public class MobileServer extends AbstractVerticle {
             response.end(new GsonBuilder().create().toJson(sending));
         });
 
+        this.router.route(HttpMethod.POST, Protocol.Path.USERWATTPRODUCTIONINSTANT.path).handler(routingContext -> {
+            Map<String, Object> received = routingContext.getBodyAsJson().getMap();
+            ResponseObject sending;
+            HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
+            Database.User user;
+            Database.Module module;
+            try {
+                if ((user = new Database.User((Document) this.database.users.find((eq(Database.User.Fields.login, Token.decodeToken((String) received.get(Protocol.Field.TOKEN.key)).getIssuer()))).first())).getDoc() == null ||
+                        !Objects.equals(user.getToken(), received.get(Protocol.Field.TOKEN.key))) {
+                    sending = new ResponseObject(true);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
+                } else {
+                    sending = new ResponseObject(false);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
+                    if ((module = new Database.Module((Document) this.database.modules.find(eq(Database.Module.Fields.currentUser, user.getLogin())).first())) == null) {
+                        sending.put(Protocol.Field.INSTANTWATT.key, "0.0");
+                        sending.put(Protocol.Field.MODULENAME.key, "null");
+                        sending.put(Protocol.Field.MACHINETYPE.key, "null");
+                    } else {
+                        sending.put(Protocol.Field.INSTANTWATT.key, String.valueOf(module.getWattProductionInstant()));
+                        sending.put(Protocol.Field.MODULENAME.key, module.getName());
+                        sending.put(Protocol.Field.MACHINETYPE.key, module.getMachineType());
+                    }
+                }
+            }catch (NullPointerException e){
+                sending = new ResponseObject(true);
+                sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
+            }
+            response.end(new GsonBuilder().create().toJson(sending));
+        });
+
+        /**
+         * Tricks forward
+         */
+        this.router.route(HttpMethod.POST, "/triX").handler(routingContext -> {
+            Map<String, Object> received = routingContext.getBodyAsJson().getMap();
+            ResponseObject sending;
+            HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
+            sending = new ResponseObject(false);
+
+            String moduleName = "module1";
+
+            Database.Module module = new Database.Module((Document) this.database.modules.find(eq(Database.Module.Fields.moduleName, moduleName)).first());
+            Database.User user = new Database.User((Document) this.database.users.find(eq(Database.User.Fields.login, module.getCurrentUser())).first());
+            Database.ElectricProduction electricProduction = new Database.ElectricProduction((Document) this.database.electricProductions.find(and(eq(Database.ElectricProduction.Fields.userId, user.getDoc().get("_id")), eq(Database.ElectricProduction.Fields.moduleId, module.getDoc().get("_id")))).first());
+
+            double watt = Double.valueOf((String) received.get("trix"));
+            user.setWattProduction_day(watt + user.getWattProductionDay());
+            user.setWattProduction_instant(watt);
+            module.setWattProduction_day(watt + module.getWattProductionDay());
+            module.setWattProduction_instant(watt);
+            electricProduction.setWattProduction_day(watt + electricProduction.getWattProductionDay());
+            electricProduction.setWattProduction_instant(watt);
+            this.database.users.updateOne(eq("_id", user.getDoc().get("_id")), new Document("$set", user.getDoc()));
+            this.database.modules.updateOne(eq("_id", module.getDoc().get("_id")), new Document("$set", module.getDoc()));
+            this.database.electricProductions.updateOne(eq("_id", electricProduction.getDoc().get("_id")), new Document("$set", electricProduction.getDoc()));
+
+            sending.put("trix", String.valueOf(watt));
+            response.end(new GsonBuilder().create().toJson(sending));
+        });
     }
 
-    public void setDatabase(MongoDatabase database) {
+    public void setDatabase(Database database) {
         this.database = database;
     }
 }

@@ -26,14 +26,12 @@ public class CentralServer {
     private Settings settings;
     private MobileServer mobileServer;
     private ModuleServer moduleServer;
-    private MongoClient mongoClient;
-    private MongoDatabase database;
+    private Database database = null;
 
     public CentralServer() {
         System.out.println("...CentralServer creation et ma bite en salade...");
 
-        this.mongoClient = new MongoClient(Database.ip, Database.port);
-        this.database = mongoClient.getDatabase(Database.databaseName);
+        this.database = new Database();
 
         Gson gson = new Gson();
         JsonElement jsonElement = null;

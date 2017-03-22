@@ -10,6 +10,7 @@ public class Protocol {
         AUTHENTICATION("/authentication"),
         AUTHENTICATION_TOKEN("/authentication/token"),
         USERPROFILE("/userprofile"),
+        USERWATTPRODUCTIONINSTANT("/user/watt/instant"),
         ;
         public String path;
         Path(String path) {
@@ -26,6 +27,9 @@ public class Protocol {
         LASTNAME("last name"),
         PHONE("phone number"),
         EMAIL("email address"),
+        INSTANTWATT("instant watt"),
+        MODULENAME("module name"),
+        MACHINETYPE("machine type"),
         ;
         public String key;
         Field(String key) {
