@@ -223,14 +223,12 @@ public class MobileServer extends AbstractVerticle {
 
             double watt = Double.valueOf((String) received.get("trix"));
             user.setWattProduction_day(watt + user.getWattProductionDay());
-            user.setWattProduction_instant(watt);
             module.setWattProduction_day(watt + module.getWattProductionDay());
             module.setWattProduction_instant(watt);
             electricProduction.setWattProduction_day(watt + electricProduction.getWattProductionDay());
-            electricProduction.setWattProduction_instant(watt);
-            this.database.users.updateOne(eq("_id", user.getDoc().get("_id")), new Document("$set", user.getDoc()));
-            this.database.modules.updateOne(eq("_id", module.getDoc().get("_id")), new Document("$set", module.getDoc()));
-            this.database.electricProductions.updateOne(eq("_id", electricProduction.getDoc().get("_id")), new Document("$set", electricProduction.getDoc()));
+            this.database.users.updateOne(eq(Database.idKey, user.getId()), user.getUpdate());
+            this.database.modules.updateOne(eq(Database.idKey, module.getId()), module.getUpdate());
+            this.database.electricProductions.updateOne(eq(Database.idKey, electricProduction.getId()), electricProduction.getUpdate());
 
             sending.put("trix", String.valueOf(watt));
             response.end(new GsonBuilder().create().toJson(sending));

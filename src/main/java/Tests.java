@@ -78,4 +78,13 @@ public class Tests {
             database.electricProductions.insertOne(ep.getDoc());
         }
     }
+
+    public static class Test4 {
+        public static void main(String[] args) {
+            Database database = new Database();
+            Database.User user = new Database.User((Document) database.users.find(eq(Database.User.Fields.login, "psyycker")).first());
+            System.out.println(user.getId());
+            System.out.println(database.users.getClass());
+        }
+    }
 }

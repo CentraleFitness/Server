@@ -24,6 +24,7 @@ public class Database {
     public static String ip = "localhost";
     public static int port = 27017;
     public static String name = "centralefitness";
+    public static String idKey = "_id";
 
     public static class Collections {
 
@@ -53,6 +54,8 @@ public class Database {
         public DataDocument() { this.doc = new Document();}
         public DataDocument(Document doc) {this.doc = doc;}
         public Document getDoc() {return this.doc;}
+        public Document getUpdate() {return new Document("$set", this.doc);}
+        public ObjectId getId() {return (ObjectId) this.doc.get("_id");}
     }
 
     public static class User extends DataDocument {
@@ -69,7 +72,6 @@ public class Database {
             public static String wattProduction_month = "month watt production";
             public static String wattProduction_week = "week watt production";
             public static String wattProduction_day = "day watt production";
-            public static String wattProduction_instant = "instant watt production";
             public static String modules = "modules";
         }
         public User() {
@@ -86,7 +88,6 @@ public class Database {
             this.doc.put(Fields.wattProduction_month, 0.0);
             this.doc.put(Fields.wattProduction_week, 0.0);
             this.doc.put(Fields.wattProduction_day, 0.0);
-            this.doc.put(Fields.wattProduction_instant, 0.0);
             this.doc.put(Fields.modules, new HashMap<String, ObjectId>()); // module name, module dbID
         }
 
@@ -145,10 +146,6 @@ public class Database {
             return (Map<String, ObjectId>) (this.doc.containsKey(Fields.modules) ? this.doc.get(Fields.modules) : null);
         }
 
-        public double getWattProductionInstant() {
-            return (double) (this.doc.containsKey(Fields.wattProduction_instant) ? this.doc.get(Fields.wattProduction_instant) : 0);
-        }
-
         public void setLogin(String login) {
             this.doc.put(Fields.login, login);
         }
@@ -195,10 +192,6 @@ public class Database {
 
         public void setWattProduction_day(double watt) {
             this.doc.put(Fields.wattProduction_day, watt);
-        }
-
-        public void setWattProduction_instant(double watt) {
-            this.doc.put(Fields.wattProduction_instant, watt);
         }
     }
 
@@ -319,7 +312,6 @@ public class Database {
             public static String wattProduction_month = "month watt production";
             public static String wattProduction_week = "week watt production";
             public static String wattProduction_day = "day watt production";
-            public static String wattProduction_instant = "instant watt production";
         }
 
         public ElectricProduction() {
@@ -331,8 +323,6 @@ public class Database {
             this.doc.put(Fields.wattProduction_month, 0.0);
             this.doc.put(Fields.wattProduction_week, 0.0);
             this.doc.put(Fields.wattProduction_day, 0.0);
-            this.doc.put(Fields.wattProduction_instant, 0.0);
-            this.doc.put(Fields.wattProduction_instant, 0.0);
         }
 
         public ElectricProduction(Document doc) {
@@ -367,10 +357,6 @@ public class Database {
             return (double) (this.doc.containsKey(Fields.wattProduction_day) ? this.doc.get(Fields.wattProduction_day) : 0);
         }
 
-        public double getWattProductionInstant() {
-            return (double) (this.doc.containsKey(Fields.wattProduction_instant) ? this.doc.get(Fields.wattProduction_instant) : 0);
-        }
-
         public void setUserId(ObjectId userId) {
             this.doc.put(Fields.userId, userId);
         }
@@ -397,10 +383,6 @@ public class Database {
 
         public void setWattProduction_day(double watt) {
             this.doc.put(Fields.wattProduction_day, watt);
-        }
-
-        public void setWattProduction_instant(double watt) {
-            this.doc.put(Fields.wattProduction_instant, watt);
         }
     }
 }
