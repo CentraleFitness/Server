@@ -241,7 +241,8 @@ public class MobileServer extends AbstractVerticle {
         /**
          * Tricks forward
          */
-        this.router.route(HttpMethod.POST, "/newdb").handler(routingContext -> {
+        this.router.route("/newdb").handler(routingContext -> {
+            System.out.println("toto");
             Database.User user = new Database.User();
             Database.Module module = new Database.Module();
             Database.ElectricProduction ep = new Database.ElectricProduction();
@@ -264,7 +265,8 @@ public class MobileServer extends AbstractVerticle {
 
             ep.setModuleId((ObjectId) module.getDoc().get("_id"));
             ep.setUserId((ObjectId) user.getDoc().get("_id"));
-            database.electricProductions.insertOne(ep.getDoc());        });
+            database.electricProductions.insertOne(ep.getDoc());
+        });
     }
 
     public void setDatabase(Database database) {
