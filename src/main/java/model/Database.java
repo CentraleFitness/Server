@@ -218,6 +218,7 @@ public class Database {
             this.doc.put(Fields.wattProduction_month, 0.0);
             this.doc.put(Fields.wattProduction_week, 0.0);
             this.doc.put(Fields.wattProduction_day, 0.0);
+            this.doc.put(Fields.wattProduction_instant, 0.0);
             this.doc.put(Fields.users, new HashMap<String, ObjectId>()); //user login; user dbID;
         }
 
