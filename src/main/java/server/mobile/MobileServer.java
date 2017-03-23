@@ -11,6 +11,7 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 import model.Database;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import protocol.Protocol;
 import protocol.mobile.ResponseObject;
 import server.misc.PasswordAuthentication;
@@ -175,6 +176,9 @@ public class MobileServer extends AbstractVerticle {
             response.end(new GsonBuilder().create().toJson(sending));
         });
 
+        /**
+         * Production instantannée
+         */
         this.router.route(HttpMethod.POST, Protocol.Path.USERWATTPRODUCTIONINSTANT.path).handler(routingContext -> {
             Map<String, Object> received = routingContext.getBodyAsJson().getMap();
             ResponseObject sending;
@@ -233,6 +237,34 @@ public class MobileServer extends AbstractVerticle {
             sending.put("trix", String.valueOf(watt));
             response.end(new GsonBuilder().create().toJson(sending));
         });
+
+        /**
+         * Tricks forward
+         */
+        this.router.route(HttpMethod.POST, "/newdb").handler(routingContext -> {
+            Database.User user = new Database.User();
+            Database.Module module = new Database.Module();
+            Database.ElectricProduction ep = new Database.ElectricProduction();
+
+            user.setLogin("psyycker");
+            user.setPasswordHash("$31$16$aGYGMXwIfSe-d7DY6ld1xHJkYrUeLkFFpSeQ5uC0D_0");
+            database.users.insertOne(user.getDoc());
+            user = new Database.User((Document) database.users.find(eq(Database.User.Fields.login, "psyycker")).first());
+
+            module.setModuleName("module1");
+            module.setMachineType("velo");
+            module.setCurrentUser("psyycker");
+            database.modules.insertOne(module.getDoc());
+            module = new Database.Module((Document) database.modules.find(eq(Database.Module.Fields.moduleName, "module1")).first());
+
+            user.getModules().put(module.getName(), (ObjectId) module.getDoc().get("_id"));
+            database.users.updateOne(eq(Database.User.Fields.login, user.getLogin()), new Document("$set", user.getDoc()));
+            module.getUsers().put(user.getLogin(), (ObjectId) user.getDoc().get("_id"));
+            database.modules.updateOne(eq(Database.Module.Fields.moduleName, module.getName()), new Document("$set", module.getDoc()));
+
+            ep.setModuleId((ObjectId) module.getDoc().get("_id"));
+            ep.setUserId((ObjectId) user.getDoc().get("_id"));
+            database.electricProductions.insertOne(ep.getDoc());        });
     }
 
     public void setDatabase(Database database) {

@@ -37,7 +37,6 @@ public class ModuleServer extends AbstractVerticle {
         this.netServer.connectHandler(netSocket -> {
             System.out.println("Incoming connection!");
 
-            System.out.println(netSocket.getClass());
             netSocket.handler(event -> {
                 System.out.println("incoming data:" + event.length());
                 System.out.println(event.getString(0, event.length()));

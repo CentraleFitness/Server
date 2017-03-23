@@ -63,12 +63,14 @@ public class Tests {
             Database.Module module = new Database.Module();
             Database.ElectricProduction ep = new Database.ElectricProduction();
 
-            user.setLogin("chatonTerror");
+            user.setLogin("psyycker");
+            user.setPasswordHash("$31$16$aGYGMXwIfSe-d7DY6ld1xHJkYrUeLkFFpSeQ5uC0D_0");
             database.users.insertOne(user.getDoc());
-            user = new Database.User((Document) database.users.find(eq(Database.User.Fields.login, "chatonTerror")).first());
+            user = new Database.User((Document) database.users.find(eq(Database.User.Fields.login, "psyycker")).first());
 
             module.setModuleName("module1");
             module.setMachineType("velo");
+            module.setCurrentUser("psyycker");
             database.modules.insertOne(module.getDoc());
             module = new Database.Module((Document) database.modules.find(eq(Database.Module.Fields.moduleName, "module1")).first());
 
