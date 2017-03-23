@@ -1,8 +1,17 @@
 package server.module;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.net.NetServer;
+import model.Database;
+import org.bson.Document;
+import sun.security.pkcs11.Secmod;
+
+import static com.mongodb.client.model.Filters.eq;
 
 /**
  * Created by hadrien on 14/03/2017.
@@ -13,6 +22,7 @@ public class ModuleServer extends AbstractVerticle {
 
     private int port;
     private NetServer netServer;
+    private Database database = null;
 
     public ModuleServer(int port) {
         this.port = port;
@@ -31,13 +41,19 @@ public class ModuleServer extends AbstractVerticle {
             netSocket.handler(event -> {
                 System.out.println("incoming data:" + event.length());
                 System.out.println(event.getString(0, event.length()));
-
-                Buffer buffer = Buffer.buffer();
+                System.out.println();
+                Database.Module module = new Database.Module((Document) this.database.modules.find(eq(Database.Module.Fields.moduleName, "module1")).first());
+                module.setWattProduction_instant(((JsonObject) new JsonParser().parse(event.getString(0, event.length()))).get("W").getAsDouble());
+                this.database.modules.updateOne(eq(Database.idKey, module.getId()), module.getUpdate());
+/*                Buffer buffer = Buffer.buffer();
                 buffer.appendString("J'ai bien recu ton message : " + event.getString(0, event.length()));
-                netSocket.write(buffer);
+                netSocket.write(buffer);*/
             });
         });
 
         this.netServer.listen(this.port);
+    }
+    public void setDatabase(Database database) {
+        this.database = database;
     }
 }

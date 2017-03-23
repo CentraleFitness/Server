@@ -50,6 +50,7 @@ public class CentralServer {
         this.mobileServer = new MobileServer(Integer.parseInt(this.settings.get("Mobile Server Http Port")));
         this.mobileServer.setDatabase(this.database);
         this.moduleServer = new ModuleServer(Integer.parseInt(this.settings.get("Module Server TCP Port")));
+        this.moduleServer.setDatabase(this.database);
 
         this.vertx.deployVerticle(this.mobileServer);
         this.vertx.deployVerticle(this.moduleServer);

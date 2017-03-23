@@ -1,4 +1,5 @@
-import com.google.gson.Gson;
+import com.google.gson.*;
+import com.google.gson.stream.JsonReader;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -7,6 +8,9 @@ import model.Database;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import protocol.mobile.ResponseObject;
+
+import java.io.FileReader;
+import java.util.HashMap;
 
 import static com.mongodb.client.model.Filters.eq;
 
@@ -85,6 +89,15 @@ public class Tests {
             Database.User user = new Database.User((Document) database.users.find(eq(Database.User.Fields.login, "psyycker")).first());
             System.out.println(user.getId());
             System.out.println(database.users.getClass());
+        }
+    }
+
+    public static class Test5 {
+        public static void main(String[] args) {
+            String json = "{\"Success\":true,\"Message\":\"Invalid access token.\"}";
+            JsonParser jsonParser = new JsonParser();
+            JsonObject jo = (JsonObject)jsonParser.parse(json);
+            System.out.println(jo.get("Message"));
         }
     }
 }
