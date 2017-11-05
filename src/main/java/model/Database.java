@@ -57,7 +57,7 @@ public class Database {
 }
 
     public static class DataDocument {
-        protected Document doc;
+        public Document doc;
         public DataDocument() { this.doc = new Document();}
         public DataDocument(Document doc) {this.doc = doc;}
         public Document getDoc() {return this.doc;}
