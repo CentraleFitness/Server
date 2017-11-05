@@ -163,11 +163,90 @@ public class MobileServer extends AbstractVerticle {
                 } else {
                     sending = new ResponseObject(false);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
-                    sending.put(User.Fields.login, (String) user.get(User.Fields.login));
-                    sending.put(User.Fields.firstName, (String) user.get(User.Fields.firstName));
-                    sending.put(User.Fields.lastName, (String) user.get(User.Fields.lastName));
-                    sending.put(User.Fields.email, (String) user.get(User.Fields.email));
-                    sending.put(User.Fields.phone, (String) user.get(User.Fields.phone));
+                    sending.put(Protocol.Field.LOGIN.key, (String) user.get(User.Fields.login));
+                    sending.put(Protocol.Field.FIRSTNAME.key, (String) user.get(User.Fields.firstName));
+                    sending.put(Protocol.Field.LASTNAME.key, (String) user.get(User.Fields.lastName));
+                    sending.put(Protocol.Field.EMAIL.key, (String) user.get(User.Fields.email));
+                    sending.put(Protocol.Field.PHONE.key, (String) user.get(User.Fields.phone));
+                }
+            }catch (NullPointerException e){
+                sending = new ResponseObject(true);
+                sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
+            }
+            response.end(new GsonBuilder().create().toJson(sending));
+        });
+
+        /**
+         * User Password Update
+         */
+        this.router.route(HttpMethod.POST, Protocol.Path.USER_UPDATE_PASSWORD.path).handler(routingContext -> {
+            Map<String, Object> received = routingContext.getBodyAsJson().getMap();
+            ResponseObject sending;
+            HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
+            User user;
+            try {
+                user = new User((Document) this.database.users.find((eq(User.Fields.login, Token.decodeToken((String) received.get(Protocol.Field.TOKEN.key)).getIssuer()))).first());
+                if (!Objects.equals(user.get(User.Fields.token), received.get(Protocol.Field.TOKEN.key))) {
+                    sending = new ResponseObject(true);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
+                } else {
+                    sending = new ResponseObject(false);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
+                    this.database.users.insertOne(user);
+                }
+            }catch (NullPointerException e){
+                sending = new ResponseObject(true);
+                sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
+            }
+            response.end(new GsonBuilder().create().toJson(sending));
+        });
+
+        /**
+         * User Profile Update
+         */
+        this.router.route(HttpMethod.POST, Protocol.Path.USER_UPDATE_PROFILE.path).handler(routingContext -> {
+            Map<String, Object> received = routingContext.getBodyAsJson().getMap();
+            ResponseObject sending;
+            HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
+            User user;
+            try {
+                user = new User((Document) this.database.users.find((eq(User.Fields.login, Token.decodeToken((String) received.get(Protocol.Field.TOKEN.key)).getIssuer()))).first());
+                if (!Objects.equals(user.get(User.Fields.token), received.get(Protocol.Field.TOKEN.key))) {
+                    sending = new ResponseObject(true);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
+                } else {
+                    sending = new ResponseObject(false);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
+                    user.put(User.Fields.firstName, received.get(Protocol.Field.FIRSTNAME));
+                    user.put(User.Fields.lastName, received.get(Protocol.Field.LASTNAME));
+                    user.put(User.Fields.email, received.get(Protocol.Field.EMAIL));
+                    user.put(User.Fields.phone, received.get(Protocol.Field.PHONE));
+                    this.database.users.insertOne(user);
+                }
+            }catch (NullPointerException e){
+                sending = new ResponseObject(true);
+                sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
+            }
+            response.end(new GsonBuilder().create().toJson(sending));
+        });
+
+        /**
+         * User Picture Update
+         */
+        this.router.route(HttpMethod.POST, Protocol.Path.USER_UPDATE_PICTURE.path).handler(routingContext -> {
+            Map<String, Object> received = routingContext.getBodyAsJson().getMap();
+            ResponseObject sending;
+            HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
+            User user;
+            try {
+                user = new User((Document) this.database.users.find((eq(User.Fields.login, Token.decodeToken((String) received.get(Protocol.Field.TOKEN.key)).getIssuer()))).first());
+                if (!Objects.equals(user.get(User.Fields.token), received.get(Protocol.Field.TOKEN.key))) {
+                    sending = new ResponseObject(true);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
+                } else {
+                    sending = new ResponseObject(false);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
+                    this.database.users.insertOne(user);
                 }
             }catch (NullPointerException e){
                 sending = new ResponseObject(true);

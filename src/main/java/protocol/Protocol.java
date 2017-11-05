@@ -10,6 +10,9 @@ public class Protocol {
         AUTHENTICATION("/authentication"),
         AUTHENTICATION_TOKEN("/authentication/token"),
         USERPROFILE("/userprofile"),
+        USER_UPDATE_PROFILE("/user/update/profile"),
+        USER_UPDATE_PASSWORD("/user/update/password"),
+        USER_UPDATE_PICTURE("/user/update/pictire"),
         USERWATTPRODUCTIONINSTANT("/user/watt/instant"),
         ;
         public String path;
