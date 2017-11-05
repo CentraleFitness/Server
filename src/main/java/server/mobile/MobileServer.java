@@ -185,7 +185,7 @@ public class MobileServer extends AbstractVerticle {
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
             model.entities.User user;
-            Database.Module module;
+            model.entities.Module module;
             try {
                 if ((user = new model.entities.User((Document) this.database.users.find((eq(model.entities.User.Fields.login, Token.decodeToken((String) received.get(Protocol.Field.TOKEN.key)).getIssuer()))).first())).getDoc() == null ||
                         !Objects.equals(user.getToken(), received.get(Protocol.Field.TOKEN.key))) {
@@ -194,7 +194,7 @@ public class MobileServer extends AbstractVerticle {
                 } else {
                     sending = new ResponseObject(false);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
-                    if ((module = new Database.Module((Document) this.database.modules.find(eq(Database.Module.Fields.currentUser, user.getLogin())).first())) == null) {
+                    if ((module = new model.entities.Module((Document) this.database.modules.find(eq(model.entities.Module.Fields.currentUser, user.getLogin())).first())) == null) {
                         sending.put(Protocol.Field.INSTANTWATT.key, "0.0");
                         sending.put(Protocol.Field.MODULENAME.key, "null");
                         sending.put(Protocol.Field.MACHINETYPE.key, "null");
@@ -222,7 +222,7 @@ public class MobileServer extends AbstractVerticle {
 
             String moduleName = "module1";
 
-            Database.Module module = new Database.Module((Document) this.database.modules.find(eq(Database.Module.Fields.moduleName, moduleName)).first());
+            model.entities.Module module = new model.entities.Module((Document) this.database.modules.find(eq(model.entities.Module.Fields.moduleName, moduleName)).first());
             model.entities.User user = new model.entities.User((Document) this.database.users.find(eq(model.entities.User.Fields.login, module.getCurrentUser())).first());
             Database.ElectricProduction electricProduction = new Database.ElectricProduction((Document) this.database.electricProductions.find(and(eq(Database.ElectricProduction.Fields.userId, user.getDoc().get("_id")), eq(Database.ElectricProduction.Fields.moduleId, module.getDoc().get("_id")))).first());
 
@@ -245,7 +245,7 @@ public class MobileServer extends AbstractVerticle {
         this.router.route("/newdb").handler(routingContext -> {
             System.out.println("toto");
             model.entities.User user = new model.entities.User();
-            Database.Module module = new Database.Module();
+            model.entities.Module module = new model.entities.Module();
             Database.ElectricProduction ep = new Database.ElectricProduction();
 
             user.setLogin("psyycker");
@@ -257,12 +257,12 @@ public class MobileServer extends AbstractVerticle {
             module.setMachineType("velo");
             module.setCurrentUser("psyycker");
             database.modules.insertOne(module.getDoc());
-            module = new Database.Module((Document) database.modules.find(eq(Database.Module.Fields.moduleName, "module1")).first());
+            module = new model.entities.Module((Document) database.modules.find(eq(model.entities.Module.Fields.moduleName, "module1")).first());
 
             user.getModules().put(module.getName(), (ObjectId) module.getDoc().get("_id"));
             database.users.updateOne(eq(model.entities.User.Fields.login, user.getLogin()), new Document("$set", user.getDoc()));
             module.getUsers().put(user.getLogin(), (ObjectId) user.getDoc().get("_id"));
-            database.modules.updateOne(eq(Database.Module.Fields.moduleName, module.getName()), new Document("$set", module.getDoc()));
+            database.modules.updateOne(eq(model.entities.Module.Fields.moduleName, module.getName()), new Document("$set", module.getDoc()));
 
             ep.setModuleId((ObjectId) module.getDoc().get("_id"));
             ep.setUserId((ObjectId) user.getDoc().get("_id"));

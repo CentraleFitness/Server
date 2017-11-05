@@ -30,14 +30,18 @@ public class Tests {
             MongoDatabase database = mongoClient.getDatabase("centralefitness");
             MongoCollection<Document> users = database.getCollection("users");
 
-            Database.User user = new Database.User(users.find(eq("login", "daures_h")).first());
+            model.entities.User user = new model.entities.User(users.find(eq("login", "daures_h")).first());
 
-            user.setToken(null);
+            try {
+                user.setToken(null);
+            } catch (Exception e) {
+                System.out.println(e.toString());
+            }
             user.setPasswordHash(null);
 
             users.updateOne(eq("login", "daures_h"), new Document("$set", user.getDoc()));
 
-            user = new Database.User();
+            user = new model.entities.User();
             user.setLogin("Chaton_hardcore");
             users.insertOne(user.getDoc());
             users.find(eq("login", null)).first();
@@ -59,25 +63,25 @@ public class Tests {
 
         public static void main(String[] args) {
             Database database = new Database();
-            Database.User user = new Database.User();
-            Database.Module module = new Database.Module();
+            model.entities.User user = new model.entities.User();
+            model.entities.Module module = new model.entities.Module();
             Database.ElectricProduction ep = new Database.ElectricProduction();
 
             user.setLogin("psyycker");
             user.setPasswordHash("$31$16$aGYGMXwIfSe-d7DY6ld1xHJkYrUeLkFFpSeQ5uC0D_0");
             database.users.insertOne(user.getDoc());
-            user = new Database.User((Document) database.users.find(eq(Database.User.Fields.login, "psyycker")).first());
+            user = new model.entities.User((Document) database.users.find(eq(model.entities.User.Fields.login, "psyycker")).first());
 
             module.setModuleName("module1");
             module.setMachineType("velo");
             module.setCurrentUser("psyycker");
             database.modules.insertOne(module.getDoc());
-            module = new Database.Module((Document) database.modules.find(eq(Database.Module.Fields.moduleName, "module1")).first());
+            module = new model.entities.Module((Document) database.modules.find(eq(model.entities.Module.Fields.moduleName, "module1")).first());
 
             user.getModules().put(module.getName(), (ObjectId) module.getDoc().get("_id"));
-            database.users.updateOne(eq(Database.User.Fields.login, user.getLogin()), new Document("$set", user.getDoc()));
+            database.users.updateOne(eq(model.entities.User.Fields.login, user.getLogin()), new Document("$set", user.getDoc()));
             module.getUsers().put(user.getLogin(), (ObjectId) user.getDoc().get("_id"));
-            database.modules.updateOne(eq(Database.Module.Fields.moduleName, module.getName()), new Document("$set", module.getDoc()));
+            database.modules.updateOne(eq(model.entities.Module.Fields.moduleName, module.getName()), new Document("$set", module.getDoc()));
 
             ep.setModuleId((ObjectId) module.getDoc().get("_id"));
             ep.setUserId((ObjectId) user.getDoc().get("_id"));
@@ -88,7 +92,7 @@ public class Tests {
     public static class Test4 {
         public static void main(String[] args) {
             Database database = new Database();
-            Database.User user = new Database.User((Document) database.users.find(eq(Database.User.Fields.login, "psyycker")).first());
+            model.entities.User user = new model.entities.User((Document) database.users.find(eq(model.entities.User.Fields.login, "psyycker")).first());
             System.out.println(user.getId());
             System.out.println(database.users.getClass());
         }

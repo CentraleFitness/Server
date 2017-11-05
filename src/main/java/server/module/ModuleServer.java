@@ -41,7 +41,7 @@ public class ModuleServer extends AbstractVerticle {
                 System.out.println("incoming data:" + event.length());
                 System.out.println(event.getString(0, event.length()));
                 System.out.println();
-                Database.Module module = new Database.Module((Document) this.database.modules.find(eq(Database.Module.Fields.moduleName, "module1")).first());
+                model.entities.Module module = new model.entities.Module((Document) this.database.modules.find(eq(model.entities.Module.Fields.moduleName, "module1")).first());
                 module.setWattProduction_instant(((JsonObject) new JsonParser().parse(event.getString(0, event.length()))).get("W").getAsDouble());
                 this.database.modules.updateOne(eq(Database.idKey, module.getId()), module.getUpdate());
 /*                Buffer buffer = Buffer.buffer();
