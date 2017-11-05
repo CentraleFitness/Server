@@ -54,18 +54,23 @@ public class MobileServer extends AbstractVerticle {
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
             User user;
-            if ((user = new User((Document) this.database.users.find(eq(User.Fields.login, received.get(Protocol.Field.LOGIN.key))).first())) != null) {
-                if (new PasswordAuthentication().authenticate(((String) received.get(Protocol.Field.PASSWORD.key)).toCharArray(), (String) user.get(User.Fields.passwordHash))) {
-                    sending = new ResponseObject(false);
-                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_SUCCESS.code);
-                    user.put(User.Fields.token, new Token((String) received.get(Protocol.Field.LOGIN.key), (String) received.get(Protocol.Field.PASSWORD.key)).generate());
-                    sending.put(Protocol.Field.TOKEN.key, (String) user.get(User.Fields.token));
-                    this.database.users.updateOne(eq(User.Fields.login, user.get(User.Fields.login)), new Document("$set", user));
+            try {
+                if ((user = new User((Document) this.database.users.find(eq(User.Fields.login, received.get(Protocol.Field.LOGIN.key))).first())) != null) {
+                    if (new PasswordAuthentication().authenticate(((String) received.get(Protocol.Field.PASSWORD.key)).toCharArray(), (String) user.get(User.Fields.passwordHash))) {
+                        sending = new ResponseObject(false);
+                        sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_SUCCESS.code);
+                        user.put(User.Fields.token, new Token((String) received.get(Protocol.Field.LOGIN.key), (String) received.get(Protocol.Field.PASSWORD.key)).generate());
+                        sending.put(Protocol.Field.TOKEN.key, (String) user.get(User.Fields.token));
+                        this.database.users.updateOne(eq(User.Fields.login, user.get(User.Fields.login)), new Document("$set", user));
+                    } else {
+                        sending = new ResponseObject(true);
+                        sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_CREDENTIALS.code);
+                    }
                 } else {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_CREDENTIALS.code);
                 }
-            } else {
+            } catch (NullPointerException e) {
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_CREDENTIALS.code);
             }
@@ -81,8 +86,8 @@ public class MobileServer extends AbstractVerticle {
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
             User user;
             try {
-                if ((user = new User((Document) this.database.users.find((eq(User.Fields.login, Token.decodeToken((String) received.get(Protocol.Field.TOKEN.key)).getIssuer()))).first())) == null ||
-                        !Objects.equals(user.get(User.Fields.token), received.get(Protocol.Field.TOKEN.key))) {
+                user = new User((Document) this.database.users.find((eq(User.Fields.login, Token.decodeToken((String) received.get(Protocol.Field.TOKEN.key)).getIssuer()))).first());
+                if (!Objects.equals(user.get(User.Fields.token), received.get(Protocol.Field.TOKEN.key))) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
                 } else {
@@ -122,7 +127,7 @@ public class MobileServer extends AbstractVerticle {
             } else if (received.get(Protocol.Field.EMAIL.key) == null) {
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_RANDOM.code);
-            } else if (new User((Document) this.database.users.find(eq(User.Fields.login, received.get(Protocol.Field.LOGIN.key))).first()) == null) {
+            } else if (this.database.users.find(eq(User.Fields.login, received.get(Protocol.Field.LOGIN.key))).first() == null) {
                 user = new User();
                 user.put(User.Fields.login, received.get(Protocol.Field.LOGIN.key));
                 user.put(User.Fields.passwordHash, new PasswordAuthentication().hash(((String) received.get(Protocol.Field.PASSWORD.key)).toCharArray()));
@@ -151,8 +156,8 @@ public class MobileServer extends AbstractVerticle {
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
             User user;
             try {
-                if ((user = new User((Document) this.database.users.find((eq(User.Fields.login, Token.decodeToken((String) received.get(Protocol.Field.TOKEN.key)).getIssuer()))).first())) == null ||
-                        !Objects.equals(user.get(User.Fields.token), received.get(Protocol.Field.TOKEN.key))) {
+                user = new User((Document) this.database.users.find((eq(User.Fields.login, Token.decodeToken((String) received.get(Protocol.Field.TOKEN.key)).getIssuer()))).first());
+                if (!Objects.equals(user.get(User.Fields.token), received.get(Protocol.Field.TOKEN.key))) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
                 } else {
@@ -181,8 +186,8 @@ public class MobileServer extends AbstractVerticle {
             User user;
             model.entities.Module module;
             try {
-                if ((user = new User((Document) this.database.users.find((eq(User.Fields.login, Token.decodeToken((String) received.get(Protocol.Field.TOKEN.key)).getIssuer()))).first())) == null ||
-                        !Objects.equals(user.get(User.Fields.token), received.get(Protocol.Field.TOKEN.key))) {
+                user = new User((Document) this.database.users.find((eq(User.Fields.login, Token.decodeToken((String) received.get(Protocol.Field.TOKEN.key)).getIssuer()))).first());
+                if (!Objects.equals(user.get(User.Fields.token), received.get(Protocol.Field.TOKEN.key))) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
                 } else {

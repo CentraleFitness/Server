@@ -42,4 +42,11 @@ public class Tests {
             System.out.println(jo.get("Message"));
         }
     }
+
+    public static class Test_nullDoc {
+        public static void main(String[] args) {
+            User user = new User(null);
+            System.out.println(user.get("test"));
+        }
+    }
 }
