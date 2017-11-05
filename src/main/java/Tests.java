@@ -65,7 +65,7 @@ public class Tests {
             Database database = new Database();
             model.entities.User user = new model.entities.User();
             model.entities.Module module = new model.entities.Module();
-            Database.ElectricProduction ep = new Database.ElectricProduction();
+            model.entities.ElectricProduction ep = new model.entities.ElectricProduction();
 
             user.setLogin("psyycker");
             user.setPasswordHash("$31$16$aGYGMXwIfSe-d7DY6ld1xHJkYrUeLkFFpSeQ5uC0D_0");

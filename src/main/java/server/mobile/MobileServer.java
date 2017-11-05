@@ -224,7 +224,7 @@ public class MobileServer extends AbstractVerticle {
 
             model.entities.Module module = new model.entities.Module((Document) this.database.modules.find(eq(model.entities.Module.Fields.moduleName, moduleName)).first());
             model.entities.User user = new model.entities.User((Document) this.database.users.find(eq(model.entities.User.Fields.login, module.getCurrentUser())).first());
-            Database.ElectricProduction electricProduction = new Database.ElectricProduction((Document) this.database.electricProductions.find(and(eq(Database.ElectricProduction.Fields.userId, user.getDoc().get("_id")), eq(Database.ElectricProduction.Fields.moduleId, module.getDoc().get("_id")))).first());
+            model.entities.ElectricProduction electricProduction = new model.entities.ElectricProduction((Document) this.database.electricProductions.find(and(eq(model.entities.ElectricProduction.Fields.userId, user.getDoc().get("_id")), eq(model.entities.ElectricProduction.Fields.moduleId, module.getDoc().get("_id")))).first());
 
             double watt = Double.valueOf((String) received.get("trix"));
             user.setWattProduction_day(watt + user.getWattProductionDay());
@@ -246,7 +246,7 @@ public class MobileServer extends AbstractVerticle {
             System.out.println("toto");
             model.entities.User user = new model.entities.User();
             model.entities.Module module = new model.entities.Module();
-            Database.ElectricProduction ep = new Database.ElectricProduction();
+            model.entities.ElectricProduction ep = new model.entities.ElectricProduction();
 
             user.setLogin("psyycker");
             user.setPasswordHash("$31$16$aGYGMXwIfSe-d7DY6ld1xHJkYrUeLkFFpSeQ5uC0D_0");
