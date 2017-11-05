@@ -1,3 +1,0 @@
-[2017/11/05]
-Moved User class from model.Database to model.entities.
-Moved Module class from model.Database to model.entities.
