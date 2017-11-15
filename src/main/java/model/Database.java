@@ -31,7 +31,10 @@ public class Database {
         ElectricProductions("electricproductions"),
         Events("events"),
         Conversations("conversations"),
-        Pictures("pictures");
+        Pictures("pictures"),
+        Fitness_Centers("fitness_centers"),
+        Fitness_Center_Managers("fitness_center_managers"),
+        ;
 
         public String key;
         Collections(String key) {this.key = key;}

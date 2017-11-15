@@ -15,6 +15,7 @@ public class User extends Document {
         public static String lastName = "last name";
         public static String phone = "phone number";
         public static String email = "email address";
+        public static String picture_id = "picture_id";
         public static String wattProduction_total = "total watt production";
         public static String wattProduction_year = "year watt production";
         public static String wattProduction_month = "month watt production";
@@ -37,6 +38,7 @@ public class User extends Document {
         this.put(Fields.lastName, null);
         this.put(Fields.phone, null);
         this.put(Fields.email, null);
+        this.put(Fields.picture_id, null);
         this.put(Fields.wattProduction_total, 0.0);
         this.put(Fields.wattProduction_year, 0.0);
         this.put(Fields.wattProduction_month, 0.0);
