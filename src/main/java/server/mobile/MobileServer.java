@@ -1,6 +1,7 @@
 package server.mobile;
 
 import com.google.gson.GsonBuilder;
+import com.mongodb.client.MongoCollection;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServer;
@@ -9,6 +10,7 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 import model.Database;
 import model.entities.User;
+import model.entities._IDS_;
 import org.bson.Document;
 import protocol.Protocol;
 import protocol.mobile.ResponseObject;
@@ -17,6 +19,7 @@ import server.misc.Token;
 import java.util.Map;
 import java.util.Objects;
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Updates.inc;
 
 /**
  * Created by hadrien on 14/03/2017.
@@ -54,14 +57,15 @@ public class MobileServer extends AbstractVerticle {
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
             User user;
+            MongoCollection users = this.database.collections.get(Database.Collections.Users);
             try {
-                if ((user = new User((Document) this.database.users.find(eq(User.Fields.login, received.get(Protocol.Field.LOGIN.key))).first())) != null) {
+                if ((user = new User((Document) users.find(eq(User.Fields.login, received.get(Protocol.Field.LOGIN.key))).first())) != null) {
                     if (new PasswordAuthentication().authenticate(((String) received.get(Protocol.Field.PASSWORD.key)).toCharArray(), (String) user.get(User.Fields.passwordHash))) {
                         sending = new ResponseObject(false);
                         sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_SUCCESS.code);
                         user.put(User.Fields.token, new Token((String) received.get(Protocol.Field.LOGIN.key), (String) received.get(Protocol.Field.PASSWORD.key)).generate());
                         sending.put(Protocol.Field.TOKEN.key, (String) user.get(User.Fields.token));
-                        this.database.users.updateOne(eq(User.Fields.login, user.get(User.Fields.login)), new Document("$set", user));
+                        users.updateOne(eq(User.Fields.login, user.get(User.Fields.login)), new Document("$set", user));
                     } else {
                         sending = new ResponseObject(true);
                         sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_CREDENTIALS.code);
@@ -109,6 +113,10 @@ public class MobileServer extends AbstractVerticle {
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
             User user;
+            MongoCollection users = this.database.collections.get(Database.Collections.Users);
+            MongoCollection idss = this.database.collections.get(Database.Collections._IDS_);
+            _IDS_ ids = new _IDS_((Document) idss.find().first());
+
             if (received.get(Protocol.Field.LOGIN.key) == null) {
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_ERROR_LOGIN.code);
@@ -127,8 +135,10 @@ public class MobileServer extends AbstractVerticle {
             } else if (received.get(Protocol.Field.EMAIL.key) == null) {
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_RANDOM.code);
-            } else if (this.database.users.find(eq(User.Fields.login, received.get(Protocol.Field.LOGIN.key))).first() == null) {
+            } else if (users.find(eq(User.Fields.login, received.get(Protocol.Field.LOGIN.key))).first() == null) {
+                idss.updateOne(eq("_id", ids.get("_id")), inc(_IDS_.Fields.last_User_id, 1));
                 user = new User();
+                user.put("_id", ids.get(_IDS_.Fields.last_User_id));
                 user.put(User.Fields.login, received.get(Protocol.Field.LOGIN.key));
                 user.put(User.Fields.passwordHash, new PasswordAuthentication().hash(((String) received.get(Protocol.Field.PASSWORD.key)).toCharArray()));
                 user.put(User.Fields.firstName, received.get(Protocol.Field.FIRSTNAME.key));
@@ -136,7 +146,7 @@ public class MobileServer extends AbstractVerticle {
                 user.put(User.Fields.phone, received.get(Protocol.Field.PHONE.key));
                 user.put(User.Fields.email, received.get(Protocol.Field.EMAIL.key));
                 user.put(User.Fields.token, new Token((String) received.get(Protocol.Field.LOGIN.key), (String) received.get(Protocol.Field.PASSWORD.key)).generate());
-                this.database.users.insertOne(user);
+                users.insertOne(user);
                 sending = new ResponseObject(false);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_SUCCESS.code);
                 sending.put(Protocol.Field.TOKEN.key, (String) user.get(User.Fields.token));
