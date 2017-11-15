@@ -57,4 +57,15 @@ public class Database {
         public Document getUpdate() {return new Document("$set", this.doc);}
         public ObjectId getId() {return (ObjectId) this.doc.get("_id");}
     }
+
+    public MongoCollection getCollection(Collections col) {
+        MongoCollection collection;
+        try {
+            collection = this.db.getCollection(col.key);
+        } catch (Exception e) {
+            this.db.createCollection(col.key);
+            collection = this.db.getCollection(col.key);
+        }
+        return collection;
+    }
 }

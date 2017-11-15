@@ -6,6 +6,7 @@ import com.mongodb.client.MongoDatabase;
 import io.vertx.ext.web.handler.FormLoginHandler;
 import model.Database;
 import model.entities.User;
+import model.entities._IDS_;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import protocol.mobile.ResponseObject;
@@ -40,13 +41,6 @@ public class Tests {
             JsonParser jsonParser = new JsonParser();
             JsonObject jo = (JsonObject)jsonParser.parse(json);
             System.out.println(jo.get("Message"));
-        }
-    }
-
-    public static class Test_nullDoc {
-        public static void main(String[] args) {
-            User user = new User(null);
-            System.out.println(user.get("test"));
         }
     }
 }

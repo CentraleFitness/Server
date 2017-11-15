@@ -1,6 +1,12 @@
 package model.entities;
 
+import com.mongodb.MongoClient;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import model.Database;
 import org.bson.Document;
+
+import javax.print.Doc;
 
 public class _IDS_ extends Document {
     public static class Fields {
@@ -24,4 +30,6 @@ public class _IDS_ extends Document {
         this.put(Fields.last_Picture_id, "0");
         this.put(Fields.last_User_id, "0");
     }
+
+    public _IDS_(Document doc) {super(doc);}
 }
