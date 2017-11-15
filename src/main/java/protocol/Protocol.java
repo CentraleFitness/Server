@@ -87,6 +87,7 @@ public class Protocol {
         INSTANTWATT("instant watt"),
         MODULENAME("module name"),
         MACHINETYPE("machine type"),
+        PICTURE("picture"),
         ;
         public String key;
         Field(String key) {
