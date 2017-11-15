@@ -6,13 +6,67 @@ package protocol;
 public class Protocol {
 
     public enum Path {
+        /**
+         * @path: REGISTRATION:
+         * @param: LOGIN, PASSWORD, FIRSTNAME, LASTNAME, PHONE, EMAIL.
+         * @return: STATUS, TOKEN.
+         */
         REGISTRATION("/registration"),
+
+        /**
+         * @path: AUTHENTICATION:
+         * @param: LOGIN, PASSWORD.
+         * @return: STATUS, TOKEN.
+         */
         AUTHENTICATION("/authentication"),
+
+        /**
+         * @path: AUTHENTICATION_TOKEN:
+         * @param: TOKEN.
+         * @return: STATUS.
+         */
         AUTHENTICATION_TOKEN("/authentication/token"),
+
+        /**
+         * @path: USERPROFILE:
+         * @param: TOKEN.
+         * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
+         */
         USERPROFILE("/userprofile"),
+
+        /**
+         * @path: USER_UPDATE_PROFILE:
+         * @param: TOKEN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
+         * @return: STATUS.
+         */
         USER_UPDATE_PROFILE("/user/update/profile"),
+
+        /**
+         * ! NOT IMPLEMENTED YET !
+         *
+         * @path: USER_UPDATE_PASSWORD:
+         * @param: NA
+         * @return: NA
+         */
         USER_UPDATE_PASSWORD("/user/update/password"),
+
+        /**
+         * ! NOT IMPLEMENTED YET !
+         *
+         * @path: USER_UPDATE_PICTURE:
+         * @param: NA
+         * @return: NA
+         */
         USER_UPDATE_PICTURE("/user/update/pictire"),
+
+        /**
+         * @deprecated
+         * ! DO NOT USE !
+         *
+         * @path: USERWATTPRODUCTIONINSTANT:
+         * @param: NA
+         * @return: NA
+         */
         USERWATTPRODUCTIONINSTANT("/user/watt/instant"),
         ;
         public String path;
