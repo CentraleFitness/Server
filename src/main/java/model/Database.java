@@ -19,6 +19,7 @@ public class Database {
     public MongoCollection users = null;
     public MongoCollection modules = null;
     public MongoCollection electricProductions = null;
+    public Map<Collections, MongoCollection> collections = null;
 
     public static String ip = "localhost";
     public static int port = 27017;
@@ -47,7 +48,18 @@ public class Database {
         this.users = this.db.getCollection(Collections.Users.key);
         this.modules = this.db.getCollection(Collections.Modules.key);
         this.electricProductions = this.db.getCollection(Collections.ElectricProductions.key);
-}
+        this.collections = new HashMap<>();
+        for (Collections col : Collections.values()) {
+            MongoCollection collection;
+            try {
+                collection = db.getCollection(col.key);
+            } catch (Exception e) {
+                db.createCollection(col.key);
+                collection = db.getCollection(col.key);
+            }
+            this.collections.put(col, collection);
+        }
+    }
 
     public static class DataDocument {
         public Document doc;
@@ -56,16 +68,5 @@ public class Database {
         public Document getDoc() {return this.doc;}
         public Document getUpdate() {return new Document("$set", this.doc);}
         public ObjectId getId() {return (ObjectId) this.doc.get("_id");}
-    }
-
-    public MongoCollection getCollection(Collections col) {
-        MongoCollection collection;
-        try {
-            collection = this.db.getCollection(col.key);
-        } catch (Exception e) {
-            this.db.createCollection(col.key);
-            collection = this.db.getCollection(col.key);
-        }
-        return collection;
     }
 }
