@@ -26,6 +26,7 @@ public class Database {
     public static String idKey = "_id";
 
     public enum Collections {
+        _IDS_("_IDS_"),
         Users("users"),
         Modules("modules"),
         ElectricProductions("electricproductions"),
