@@ -25,27 +25,16 @@ public class Database {
     public static String name = "centralefitness";
     public static String idKey = "_id";
 
-    public static class Collections {
+    public enum Collections {
+        Users("users"),
+        Modules("modules"),
+        ElectricProductions("electricproductions"),
+        Events("events"),
+        Conversations("conversations"),
+        Pictures("pictures");
 
-        public static class Users {
-            public static String key = "users";
-        }
-
-        public static class Modules {
-            public static String key = "modules";
-        }
-
-        public static class ElectricProductions {
-            public static String key = "electricproductions";
-        }
-
-        public static class Events {
-            public static String key = "events";
-        }
-
-        public static class Conversations {
-            public static String key = "conversations";
-        }
+        public String key;
+        Collections(String key) {this.key = key;}
     }
 
     public Database() {
