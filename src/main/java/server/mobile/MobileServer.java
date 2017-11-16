@@ -16,10 +16,13 @@ import protocol.Protocol;
 import protocol.mobile.ResponseObject;
 import server.misc.PasswordAuthentication;
 import server.misc.Token;
+
+import java.math.BigInteger;
 import java.util.Map;
 import java.util.Objects;
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.inc;
+import static com.mongodb.client.model.Updates.set;
 
 /**
  * Created by hadrien on 14/03/2017.
@@ -136,9 +139,11 @@ public class MobileServer extends AbstractVerticle {
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_RANDOM.code);
             } else if (users.find(eq(User.Fields.login, received.get(Protocol.Field.LOGIN.key))).first() == null) {
-                idss.updateOne(eq("_id", ids.get("_id")), inc(_IDS_.Fields.last_User_id, 1));
+                BigInteger id = new BigInteger((String) ids.get(_IDS_.Fields.last_User_id));
+                id = id.add(BigInteger.ONE);
+                idss.updateOne(eq("_id", ids.get("_id")), set(_IDS_.Fields.last_User_id, id.toString()));
                 user = new User();
-                user.put("_id", ids.get(_IDS_.Fields.last_User_id));
+                user.put(User.Fields.user_id, id.toString());
                 user.put(User.Fields.login, received.get(Protocol.Field.LOGIN.key));
                 user.put(User.Fields.passwordHash, new PasswordAuthentication().hash(((String) received.get(Protocol.Field.PASSWORD.key)).toCharArray()));
                 user.put(User.Fields.firstName, received.get(Protocol.Field.FIRSTNAME.key));
@@ -146,7 +151,7 @@ public class MobileServer extends AbstractVerticle {
                 user.put(User.Fields.phone, received.get(Protocol.Field.PHONE.key));
                 user.put(User.Fields.email, received.get(Protocol.Field.EMAIL.key));
                 user.put(User.Fields.token, new Token((String) received.get(Protocol.Field.LOGIN.key), (String) received.get(Protocol.Field.PASSWORD.key)).generate());
-                users.insertOne(user);
+                users.insertOne(new Document(user));
                 sending = new ResponseObject(false);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_SUCCESS.code);
                 sending.put(Protocol.Field.TOKEN.key, (String) user.get(User.Fields.token));
