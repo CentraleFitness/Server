@@ -237,7 +237,7 @@ public class MobileServer extends AbstractVerticle {
                     user.put(User.Fields.lastName, received.get(Protocol.Field.LASTNAME));
                     user.put(User.Fields.email, received.get(Protocol.Field.EMAIL));
                     user.put(User.Fields.phone, received.get(Protocol.Field.PHONE));
-                    this.database.users.insertOne(user);
+                    this.database.users.updateOne(eq("_id", user.get("_id")), new Document("$set", user));
                 }
             }catch (NullPointerException e){
                 sending = new ResponseObject(true);
