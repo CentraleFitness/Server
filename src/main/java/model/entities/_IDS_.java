@@ -17,7 +17,7 @@ public class _IDS_ extends Document {
         public static String last_Fitness_Center_Manager_id = "last_Fitness_Center_Manager_id";
         public static String last_Module_id = "last_Module_id";
         public static String last_Picture_id = "last_Picture_id";
-        public static String last_User_id = "last_User_id";
+        public static String last_User_id = User.Fields.user_id;
     }
 
     public _IDS_() {

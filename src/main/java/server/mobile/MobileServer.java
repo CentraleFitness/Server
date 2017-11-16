@@ -117,8 +117,6 @@ public class MobileServer extends AbstractVerticle {
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
             User user;
             MongoCollection users = this.database.collections.get(Database.Collections.Users);
-            MongoCollection idss = this.database.collections.get(Database.Collections._IDS_);
-            _IDS_ ids = new _IDS_((Document) idss.find().first());
 
             if (received.get(Protocol.Field.LOGIN.key) == null) {
                 sending = new ResponseObject(true);
@@ -139,11 +137,7 @@ public class MobileServer extends AbstractVerticle {
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_RANDOM.code);
             } else if (users.find(eq(User.Fields.login, received.get(Protocol.Field.LOGIN.key))).first() == null) {
-                BigInteger id = new BigInteger((String) ids.get(_IDS_.Fields.last_User_id));
-                id = id.add(BigInteger.ONE);
-                idss.updateOne(eq("_id", ids.get("_id")), set(_IDS_.Fields.last_User_id, id.toString()));
-                user = new User();
-                user.put(User.Fields.user_id, id.toString());
+                user = (User) this.database.new_entity(Database.Collections.Users);
                 user.put(User.Fields.login, received.get(Protocol.Field.LOGIN.key));
                 user.put(User.Fields.passwordHash, new PasswordAuthentication().hash(((String) received.get(Protocol.Field.PASSWORD.key)).toCharArray()));
                 user.put(User.Fields.firstName, received.get(Protocol.Field.FIRSTNAME.key));
@@ -151,7 +145,7 @@ public class MobileServer extends AbstractVerticle {
                 user.put(User.Fields.phone, received.get(Protocol.Field.PHONE.key));
                 user.put(User.Fields.email, received.get(Protocol.Field.EMAIL.key));
                 user.put(User.Fields.token, new Token((String) received.get(Protocol.Field.LOGIN.key), (String) received.get(Protocol.Field.PASSWORD.key)).generate());
-                users.insertOne(new Document(user));
+                this.database.update_entity(Database.Collections.Users, user);
                 sending = new ResponseObject(false);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_SUCCESS.code);
                 sending.put(Protocol.Field.TOKEN.key, (String) user.get(User.Fields.token));
@@ -237,7 +231,7 @@ public class MobileServer extends AbstractVerticle {
                     user.put(User.Fields.lastName, received.get(Protocol.Field.LASTNAME));
                     user.put(User.Fields.email, received.get(Protocol.Field.EMAIL));
                     user.put(User.Fields.phone, received.get(Protocol.Field.PHONE));
-                    this.database.users.updateOne(eq("_id", user.get("_id")), new Document("$set", user));
+                    this.database.update_entity(Database.Collections.Users, user);
                 }
             }catch (NullPointerException e){
                 sending = new ResponseObject(true);

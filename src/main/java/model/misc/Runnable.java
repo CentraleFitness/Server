@@ -33,15 +33,10 @@ public class Runnable {
     public static class new_User {
         public static void main(String[] args) {
             Database db = new Database();
-            MongoCollection users = db.collections.get(Database.Collections.Users);
-            MongoCollection idss = db.collections.get(Database.Collections._IDS_);
-            _IDS_ ids = new _IDS_((Document) idss.find().first());
-            BigInteger id = new BigInteger((String) ids.get(_IDS_.Fields.last_User_id));
-            id = id.add(BigInteger.ONE);
-            User user = new User();
-            user.put(User.Fields.user_id, id.toString());
-            users.insertOne(new Document(user));
-            idss.updateOne(eq("_id", ids.get("_id")), set(_IDS_.Fields.last_User_id, id.toString()));
+            User user = (User) db.new_entity(Database.Collections.Users);
+            user.put(User.Fields.login, "tata");
+            db.update_entity(Database.Collections.Users, user);
+            //for (Database.Collections col : Database.Collections.values()) db.new_entity(col);
         }
     }
 }
