@@ -57,7 +57,7 @@ public class Protocol {
          * @param: NA
          * @return: NA
          */
-        USER_UPDATE_PICTURE("/user/update/pictire"),
+        USER_UPDATE_PICTURE("/user/update/picture"),
 
         /**
          * @deprecated
