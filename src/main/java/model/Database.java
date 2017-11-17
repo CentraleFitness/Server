@@ -64,8 +64,7 @@ public class Database {
 
     public static abstract class Entity extends Document {
         public enum Field implements Entity_Field {
-            ;
-
+                ;
             @Override
             public String get_key() {
                 return null;
@@ -88,9 +87,7 @@ public class Database {
         public Entity() {for (Field field : Field.values())
             try {
                 setField(field, field.get_class().newInstance());
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -132,9 +129,7 @@ public class Database {
             entity_collection.insertOne(new Document(doc));
             idss.updateOne(eq("_id", ids.get("_id")), set(collection.entity_id, id.toString()));
             return doc;
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -149,13 +144,7 @@ public class Database {
         try {
             c = collection._class.getConstructor(Document.class);
             return (Document) c.newInstance(this.collections.get(collection).find(eq(field.get_key(), field.get_class().cast(value))).first());
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
