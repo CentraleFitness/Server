@@ -193,6 +193,7 @@ public class MobileServer extends AbstractVerticle {
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
             User user;
             Picture picture;
+
             try {
                 user = (User) this.database.find_entity(Database.Collections.Users, User.Field.LOGIN, Token.decodeToken((String) received.get(Protocol.Field.TOKEN.key)).getIssuer());
                 picture = (Picture) this.database.find_entity(Database.Collections.Pictures, Picture.Field.PICTURE_ID, user.getField(User.Field.PICTURE_ID));
@@ -202,7 +203,7 @@ public class MobileServer extends AbstractVerticle {
                 } else {
                     sending = new ResponseObject(false);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
-                    sending.put(Protocol.Field.PICTURE.key, picture.getField(Picture.Field.PICTURE).toString());
+                    sending.put(Protocol.Field.PICTURE.key, (String) picture.getField(Picture.Field.PICTURE));
                 }
             }catch (Exception e){
                 sending = new ResponseObject(true);
@@ -273,13 +274,14 @@ public class MobileServer extends AbstractVerticle {
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
             User user;
-            Base64 pic64;
+            String pic64;
+
             try {
                 user = (User) this.database.find_entity(Database.Collections.Users, User.Field.LOGIN, Token.decodeToken((String) received.get(Protocol.Field.TOKEN.key)).getIssuer());
                 if (!Objects.equals(user.getField(User.Field.TOKEN), received.get(Protocol.Field.TOKEN.key))) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
-                } else if ((pic64 = (Base64) received.get(Protocol.Field.PICTURE.key)) == null) {
+                } else if ((pic64 = (String) received.get(Protocol.Field.PICTURE.key)) == null) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_RANDOM.code);
                 }

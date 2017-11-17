@@ -2,14 +2,11 @@ package model.entities;
 
 import model.Database;
 import org.bson.Document;
-import protocol.Protocol;
-
-import java.util.Base64;
 
 public class Picture extends Database.Entity {
     public enum Field implements Database.Entity_Field {
         PICTURE_ID("picture_id", String.class),
-        PICTURE("picture", Base64.class),
+        PICTURE("picture", String.class),
         ;
         @Override
         public String get_key() {
