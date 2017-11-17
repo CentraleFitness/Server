@@ -248,10 +248,10 @@ public class MobileServer extends AbstractVerticle {
                 } else {
                     sending = new ResponseObject(false);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
-                    user.setField(User.Field.FIRSTNAME, received.get(Protocol.Field.FIRSTNAME));
-                    user.setField(User.Field.LASTNAME, received.get(Protocol.Field.LASTNAME));
-                    user.setField(User.Field.EMAIL, received.get(Protocol.Field.EMAIL));
-                    user.setField(User.Field.PHONE, received.get(Protocol.Field.PHONE));
+                    user.setField(User.Field.FIRSTNAME, received.get(Protocol.Field.FIRSTNAME.key));
+                    user.setField(User.Field.LASTNAME, received.get(Protocol.Field.LASTNAME.key));
+                    user.setField(User.Field.EMAIL, received.get(Protocol.Field.EMAIL.key));
+                    user.setField(User.Field.PHONE, received.get(Protocol.Field.PHONE.key));
                     this.database.update_entity(Database.Collections.Users, user);
                 }
             }catch (NullPointerException e){
@@ -275,7 +275,7 @@ public class MobileServer extends AbstractVerticle {
                 if (!Objects.equals(user.getField(User.Field.TOKEN), received.get(Protocol.Field.TOKEN.key))) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
-                } else if ((pic64 = (Base64) received.get(Protocol.Field.PICTURE)) == null) {
+                } else if ((pic64 = (Base64) received.get(Protocol.Field.PICTURE.key)) == null) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_RANDOM.code);
                 }
