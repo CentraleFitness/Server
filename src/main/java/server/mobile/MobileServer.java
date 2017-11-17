@@ -159,7 +159,7 @@ public class MobileServer extends AbstractVerticle {
         /**
          * User Profile
          */
-        this.router.route(HttpMethod.POST, Protocol.Path.USERPROFILE.path).handler(routingContext -> {
+        this.router.route(HttpMethod.POST, Protocol.Path.USER_GET_PROFILE.path).handler(routingContext -> {
             Map<String, Object> received = routingContext.getBodyAsJson().getMap();
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");

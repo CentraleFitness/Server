@@ -28,11 +28,11 @@ public class Protocol {
         AUTHENTICATION_TOKEN("/authentication/token"),
 
         /**
-         * @path: USERPROFILE:
+         * @path: USER_GET_PROFILE:
          * @param: TOKEN.
          * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
          */
-        USERPROFILE("/userprofile"),
+        USER_GET_PROFILE("/user/get/profile"),
 
         /**
          * @path: USER_UPDATE_PROFILE:
