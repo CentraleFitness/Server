@@ -301,41 +301,7 @@ public class MobileServer extends AbstractVerticle {
             }
             response.end(new GsonBuilder().create().toJson(sending));
         });
-
-        /**
-         * Production instantannée
-         */
-        this.router.route(HttpMethod.POST, Protocol.Path.USERWATTPRODUCTIONINSTANT.path).handler(routingContext -> {
-            Map<String, Object> received = routingContext.getBodyAsJson().getMap();
-            ResponseObject sending;
-            HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
-            User user;
-            model.entities.Module module;
-            try {
-                user = new User((Document) this.database.collections.get(Database.Collections.Users).find((eq(User.Field.LOGIN.get_key(), Token.decodeToken((String) received.get(Protocol.Field.TOKEN.key)).getIssuer()))).first());
-                if (!Objects.equals(user.get(User.Field.TOKEN.get_key()), received.get(Protocol.Field.TOKEN.key))) {
-                    sending = new ResponseObject(true);
-                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
-                } else {
-                    sending = new ResponseObject(false);
-                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
-                    if ((module = new model.entities.Module((Document) this.database.modules.find(eq(model.entities.Module.Fields.currentUser, user.get(User.Field.LOGIN.get_key()))).first())) == null) {
-                        sending.put(Protocol.Field.INSTANTWATT.key, "0.0");
-                        sending.put(Protocol.Field.MODULENAME.key, "null");
-                        sending.put(Protocol.Field.MACHINETYPE.key, "null");
-                    } else {
-                        sending.put(Protocol.Field.INSTANTWATT.key, String.valueOf(module.getWattProductionInstant()));
-                        sending.put(Protocol.Field.MODULENAME.key, module.getName());
-                        sending.put(Protocol.Field.MACHINETYPE.key, module.getMachineType());
-                    }
-                }
-            }catch (NullPointerException e){
-                sending = new ResponseObject(true);
-                sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
-            }
-            response.end(new GsonBuilder().create().toJson(sending));
-        });
-    }
+        }
 
     public void setDatabase(Database database) {
         this.database = database;

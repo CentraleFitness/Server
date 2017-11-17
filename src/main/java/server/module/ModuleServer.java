@@ -30,27 +30,7 @@ public class ModuleServer extends AbstractVerticle {
 
     @Override
     public void start() {
-        System.out.println("...ModuleServer creation...");
 
-        this.netServer = this.vertx.createNetServer();
-
-        this.netServer.connectHandler(netSocket -> {
-            System.out.println("Incoming connection!");
-
-            netSocket.handler(event -> {
-                System.out.println("incoming data:" + event.length());
-                System.out.println(event.getString(0, event.length()));
-                System.out.println();
-                model.entities.Module module = new model.entities.Module((Document) this.database.modules.find(eq(model.entities.Module.Fields.moduleName, "module1")).first());
-                module.setWattProduction_instant(((JsonObject) new JsonParser().parse(event.getString(0, event.length()))).get("W").getAsDouble());
-                this.database.modules.updateOne(eq(Database.idKey, module.getId()), module.getUpdate());
-/*                Buffer buffer = Buffer.buffer();
-                buffer.appendString("J'ai bien recu ton message : " + event.getString(0, event.length()));
-                netSocket.write(buffer);*/
-            });
-        });
-
-        this.netServer.listen(this.port);
     }
     public void setDatabase(Database database) {
         this.database = database;

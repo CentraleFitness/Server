@@ -22,16 +22,16 @@ public class User extends Entity {
         PHONE("phone_number", String.class),
         EMAIL("email_address", String.class),
         PICTURE_ID("picture_id", String.class),
-        WATT_PRODUCTION_TOTAL("watt_production_total", BigInteger.class),
-        WATT_PRODUCTION_YEAR("watt_production_year", BigInteger.class),
-        WATT_PRODUCTION_MONTH("watt_production_month", BigInteger.class),
-        WATT_PRODUCTION_WEEK("watt_production_week", BigInteger.class),
-        WATT_PRODUCTION_DAY("watt_production_day", BigInteger.class),
-        WATT_PRODUCTION_CURRENT("watt_production_current", BigInteger.class),
+        PRODUCTION_TOTAL("production_total", BigInteger.class),
+        PRODUCTION_YEAR("production_year", BigInteger.class),
+        PRODUCTION_MONTH("production_month", BigInteger.class),
+        PRODUCTION_DAY("production_day", BigInteger.class),
+        PRODUCTION_INSTANT("production_instant", BigInteger.class),
         CURRENT_MODULE_ID("module_id", String.class),
         FRIENDS("friends", Map.class),
         CONVERSATIONS("conversations", Map.class),
         BLOCKED_USERS("blocked_users", Map.class),
+        ELECTRIC_PRODUCTION("electric_production", Map.class),
         ;
         @Override
         public String get_key() {

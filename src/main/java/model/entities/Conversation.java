@@ -5,7 +5,7 @@ import org.bson.Document;
 
 public class Conversation extends Database.Entity {
     public enum Field implements Database.Entity_Field {
-        CONVERSATION_ID("conversaation_id", String.class),
+        CONVERSATION_ID("conversation_id", String.class),
         ;
         @Override
         public String get_key() {
