@@ -4,9 +4,12 @@ import model.Database;
 import org.bson.Document;
 import protocol.Protocol;
 
-public class Picture extends Document {
+import java.util.Base64;
+
+public class Picture extends Database.Entity {
     public enum Field implements Database.Entity_Field {
         PICTURE_ID("picture_id", String.class),
+        PICTURE("picture", Base64.class),
         ;
         @Override
         public String get_key() {

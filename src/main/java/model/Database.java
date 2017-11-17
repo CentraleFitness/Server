@@ -24,7 +24,6 @@ public class Database {
 
     public MongoClient client = null;
     public MongoDatabase db = null;
-    public MongoCollection users = null;
     public MongoCollection modules = null;
     public MongoCollection electricProductions = null;
     public Map<Collections, MongoCollection> collections = null;
@@ -96,7 +95,6 @@ public class Database {
     public Database() {
         this.client = new MongoClient(Database.ip, Database.port);
         this.db = this.client.getDatabase(Database.name);
-        this.users = this.db.getCollection(Collections.Users.key);
         this.modules = this.db.getCollection(Collections.Modules.key);
         this.electricProductions = this.db.getCollection(Collections.ElectricProductions.key);
         this.collections = new HashMap<>();

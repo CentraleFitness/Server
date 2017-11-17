@@ -35,7 +35,14 @@ public class Protocol {
         USER_GET_PROFILE("/user/get/profile"),
 
         /**
-         * @path: USER_UPDATE_PROFILE:
+         * @path: USER_GET_PROFILE:
+         * @param: TOKEN.
+         * @return: STATUS, PICTURE.
+         */
+        USER_GET_PICTURE("/user/get/picture"),
+
+        /**
+         * @path: USER_UPDATE_PICTURE:
          * @param: TOKEN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
          * @return: STATUS.
          */
@@ -51,11 +58,9 @@ public class Protocol {
         USER_UPDATE_PASSWORD("/user/update/password"),
 
         /**
-         * ! NOT IMPLEMENTED YET !
-         *
          * @path: USER_UPDATE_PICTURE:
-         * @param: NA
-         * @return: NA
+         * @param: TOKEN, PICTURE.
+         * @return: STATUS.
          */
         USER_UPDATE_PICTURE("/user/update/picture"),
 

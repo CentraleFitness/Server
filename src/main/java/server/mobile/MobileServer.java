@@ -9,6 +9,7 @@ import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 import model.Database;
+import model.entities.Picture;
 import model.entities.User;
 import model.entities._IDS_;
 import org.bson.Document;
@@ -18,6 +19,7 @@ import server.misc.PasswordAuthentication;
 import server.misc.Token;
 
 import java.math.BigInteger;
+import java.util.Base64;
 import java.util.Map;
 import java.util.Objects;
 import static com.mongodb.client.model.Filters.eq;
@@ -157,13 +159,12 @@ public class MobileServer extends AbstractVerticle {
         });
 
         /**
-         * User Profile
+         * User Get Profile
          */
         this.router.route(HttpMethod.POST, Protocol.Path.USER_GET_PROFILE.path).handler(routingContext -> {
             Map<String, Object> received = routingContext.getBodyAsJson().getMap();
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
-            MongoCollection users = this.database.collections.get(Database.Collections.Users);
             User user;
             try {
                 user = (User) this.database.find_entity(Database.Collections.Users, User.Field.LOGIN, Token.decodeToken((String) received.get(Protocol.Field.TOKEN.key)).getIssuer());
@@ -178,6 +179,33 @@ public class MobileServer extends AbstractVerticle {
                     sending.put(Protocol.Field.LASTNAME.key, (String) user.getField(User.Field.LASTNAME));
                     sending.put(Protocol.Field.EMAIL.key, (String) user.getField(User.Field.EMAIL));
                     sending.put(Protocol.Field.PHONE.key, (String) user.getField(User.Field.PHONE));
+                }
+            }catch (NullPointerException e){
+                sending = new ResponseObject(true);
+                sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
+            }
+            response.end(new GsonBuilder().create().toJson(sending));
+        });
+
+        /**
+         * User Get Picture
+         */
+        this.router.route(HttpMethod.POST, Protocol.Path.USER_GET_PICTURE.path).handler(routingContext -> {
+            Map<String, Object> received = routingContext.getBodyAsJson().getMap();
+            ResponseObject sending;
+            HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
+            User user;
+            Picture picture;
+            try {
+                user = (User) this.database.find_entity(Database.Collections.Users, User.Field.LOGIN, Token.decodeToken((String) received.get(Protocol.Field.TOKEN.key)).getIssuer());
+                picture = (Picture) this.database.find_entity(Database.Collections.Pictures, Picture.Field.PICTURE_ID, user.getField(User.Field.PICTURE_ID));
+                if (!Objects.equals(user.getField(User.Field.TOKEN), received.get(Protocol.Field.TOKEN.key))) {
+                    sending = new ResponseObject(true);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
+                } else {
+                    sending = new ResponseObject(false);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
+                    sending.put(Protocol.Field.PICTURE.key, picture.getField(Picture.Field.PICTURE).toString());
                 }
             }catch (NullPointerException e){
                 sending = new ResponseObject(true);
@@ -202,7 +230,7 @@ public class MobileServer extends AbstractVerticle {
                 } else {
                     sending = new ResponseObject(false);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
-                    this.database.users.insertOne(user);
+                    this.database.update_entity(Database.Collections.Users, user);
                 }
             }catch (NullPointerException e){
                 sending = new ResponseObject(true);
@@ -248,15 +276,24 @@ public class MobileServer extends AbstractVerticle {
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
             User user;
+            Base64 pic64;
             try {
                 user = (User) this.database.find_entity(Database.Collections.Users, User.Field.LOGIN, Token.decodeToken((String) received.get(Protocol.Field.TOKEN.key)).getIssuer());
                 if (!Objects.equals(user.getField(User.Field.TOKEN), received.get(Protocol.Field.TOKEN.key))) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
-                } else {
+                } else if ((pic64 = (Base64) received.get(Protocol.Field.PICTURE)) == null) {
+                    sending = new ResponseObject(true);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_RANDOM.code);
+                }
+                else {
                     sending = new ResponseObject(false);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
-                    this.database.users.insertOne(user);
+                    Picture pic = (Picture) this.database.new_entity(Database.Collections.Pictures);
+                    pic.setField(Picture.Field.PICTURE, pic64);
+                    user.setField(User.Field.PICTURE_ID, pic.getField(Picture.Field.PICTURE_ID));
+                    this.database.update_entity(Database.Collections.Pictures, pic);
+                    this.database.update_entity(Database.Collections.Users, user);
                 }
             }catch (NullPointerException e){
                 sending = new ResponseObject(true);
@@ -275,7 +312,7 @@ public class MobileServer extends AbstractVerticle {
             User user;
             model.entities.Module module;
             try {
-                user = new User((Document) this.database.users.find((eq(User.Field.LOGIN.get_key(), Token.decodeToken((String) received.get(Protocol.Field.TOKEN.key)).getIssuer()))).first());
+                user = new User((Document) this.database.collections.get(Database.Collections.Users).find((eq(User.Field.LOGIN.get_key(), Token.decodeToken((String) received.get(Protocol.Field.TOKEN.key)).getIssuer()))).first());
                 if (!Objects.equals(user.get(User.Field.TOKEN.get_key()), received.get(Protocol.Field.TOKEN.key))) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
