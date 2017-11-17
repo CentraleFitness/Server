@@ -72,7 +72,7 @@ public class MobileServer extends AbstractVerticle {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_CREDENTIALS.code);
                 }
-            } catch (NullPointerException e) {
+            } catch (Exception e) {
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_CREDENTIALS.code);
             }
@@ -96,7 +96,7 @@ public class MobileServer extends AbstractVerticle {
                     sending = new ResponseObject(false);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_SUCCESS.code);
                 }
-            }catch (NullPointerException e){
+            }catch (Exception e){
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
             }
@@ -111,42 +111,46 @@ public class MobileServer extends AbstractVerticle {
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
             User user;
-            MongoCollection users = this.database.collections.get(Database.Collections.Users);
 
-            if (received.get(Protocol.Field.LOGIN.key) == null) {
-                sending = new ResponseObject(true);
-                sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_ERROR_LOGIN.code);
-            } else if (received.get(Protocol.Field.PASSWORD.key) == null) {
-                sending = new ResponseObject(true);
-                sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_ERROR_PASSWORD.code);
-            } else if (received.get(Protocol.Field.FIRSTNAME.key) == null) {
+            try {
+                if (received.get(Protocol.Field.LOGIN.key) == null) {
+                    sending = new ResponseObject(true);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_ERROR_LOGIN.code);
+                } else if (received.get(Protocol.Field.PASSWORD.key) == null) {
+                    sending = new ResponseObject(true);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_ERROR_PASSWORD.code);
+                } else if (received.get(Protocol.Field.FIRSTNAME.key) == null) {
+                    sending = new ResponseObject(true);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_RANDOM.code);
+                } else if (received.get(Protocol.Field.LASTNAME.key) == null) {
+                    sending = new ResponseObject(true);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_RANDOM.code);
+                } else if (received.get(Protocol.Field.PHONE.key) == null) {
+                    sending = new ResponseObject(true);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_RANDOM.code);
+                } else if (received.get(Protocol.Field.EMAIL.key) == null) {
+                    sending = new ResponseObject(true);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_RANDOM.code);
+                } else if (this.database.find_entity(Database.Collections.Users, User.Field.LOGIN, received.get(Protocol.Field.LOGIN.key)) == null) {
+                    user = (User) this.database.new_entity(Database.Collections.Users);
+                    user.setField(User.Field.LOGIN, received.get(Protocol.Field.LOGIN.key));
+                    user.setField(User.Field.PASSWORD_HASH, new PasswordAuthentication().hash(((String) received.get(Protocol.Field.PASSWORD.key)).toCharArray()));
+                    user.setField(User.Field.FIRSTNAME, received.get(Protocol.Field.FIRSTNAME.key));
+                    user.setField(User.Field.LASTNAME, received.get(Protocol.Field.LASTNAME.key));
+                    user.setField(User.Field.PHONE, received.get(Protocol.Field.PHONE.key));
+                    user.setField(User.Field.EMAIL, received.get(Protocol.Field.EMAIL.key));
+                    user.setField(User.Field.TOKEN, new Token((String) received.get(Protocol.Field.LOGIN.key), (String) received.get(Protocol.Field.PASSWORD.key)).generate());
+                    this.database.update_entity(Database.Collections.Users, user);
+                    sending = new ResponseObject(false);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_SUCCESS.code);
+                    sending.put(Protocol.Field.TOKEN.key, (String) user.getField(User.Field.TOKEN));
+                } else {
+                    sending = new ResponseObject(true);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_ERROR_LOGIN_TAKEN.code);
+                }
+            } catch (Exception e) {
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_RANDOM.code);
-            } else if (received.get(Protocol.Field.LASTNAME.key) == null) {
-                sending = new ResponseObject(true);
-                sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_RANDOM.code);
-            } else if (received.get(Protocol.Field.PHONE.key) == null) {
-                sending = new ResponseObject(true);
-                sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_RANDOM.code);
-            } else if (received.get(Protocol.Field.EMAIL.key) == null) {
-                sending = new ResponseObject(true);
-                sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_RANDOM.code);
-            } else if (this.database.find_entity(Database.Collections.Users, User.Field.LOGIN, received.get(Protocol.Field.LOGIN.key)) == null) {
-                user = (User) this.database.new_entity(Database.Collections.Users);
-                user.setField(User.Field.LOGIN, received.get(Protocol.Field.LOGIN.key));
-                user.setField(User.Field.PASSWORD_HASH, new PasswordAuthentication().hash(((String) received.get(Protocol.Field.PASSWORD.key)).toCharArray()));
-                user.setField(User.Field.FIRSTNAME, received.get(Protocol.Field.FIRSTNAME.key));
-                user.setField(User.Field.LASTNAME, received.get(Protocol.Field.LASTNAME.key));
-                user.setField(User.Field.PHONE, received.get(Protocol.Field.PHONE.key));
-                user.setField(User.Field.EMAIL, received.get(Protocol.Field.EMAIL.key));
-                user.setField(User.Field.TOKEN, new Token((String) received.get(Protocol.Field.LOGIN.key), (String) received.get(Protocol.Field.PASSWORD.key)).generate());
-                this.database.update_entity(Database.Collections.Users, user);
-                sending = new ResponseObject(false);
-                sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_SUCCESS.code);
-                sending.put(Protocol.Field.TOKEN.key, (String) user.getField(User.Field.TOKEN));
-            } else {
-                sending = new ResponseObject(true);
-                sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_ERROR_LOGIN_TAKEN.code);
             }
             response.end(new GsonBuilder().create().toJson(sending));
         });
@@ -173,7 +177,7 @@ public class MobileServer extends AbstractVerticle {
                     sending.put(Protocol.Field.EMAIL.key, (String) user.getField(User.Field.EMAIL));
                     sending.put(Protocol.Field.PHONE.key, (String) user.getField(User.Field.PHONE));
                 }
-            }catch (NullPointerException e){
+            }catch (Exception e){
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
             }
@@ -200,7 +204,7 @@ public class MobileServer extends AbstractVerticle {
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
                     sending.put(Protocol.Field.PICTURE.key, picture.getField(Picture.Field.PICTURE).toString());
                 }
-            }catch (NullPointerException e){
+            }catch (Exception e){
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
             }
@@ -225,7 +229,7 @@ public class MobileServer extends AbstractVerticle {
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
                     this.database.update_entity(Database.Collections.Users, user);
                 }
-            }catch (NullPointerException e){
+            }catch (Exception e){
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
             }
@@ -254,7 +258,7 @@ public class MobileServer extends AbstractVerticle {
                     user.setField(User.Field.PHONE, received.get(Protocol.Field.PHONE.key));
                     this.database.update_entity(Database.Collections.Users, user);
                 }
-            }catch (NullPointerException e){
+            }catch (Exception e){
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
             }
@@ -288,13 +292,13 @@ public class MobileServer extends AbstractVerticle {
                     this.database.update_entity(Database.Collections.Pictures, pic);
                     this.database.update_entity(Database.Collections.Users, user);
                 }
-            }catch (NullPointerException e){
+            }catch (Exception e){
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
             }
             response.end(new GsonBuilder().create().toJson(sending));
         });
-        }
+    }
 
     public void setDatabase(Database database) {
         this.database = database;
