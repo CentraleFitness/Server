@@ -2,53 +2,53 @@ package model.entities;
 
 import model.Database;
 import org.bson.Document;
+import org.omg.CORBA.Object;
+
+import java.math.BigInteger;
+import java.util.Map;
 import java.util.TreeSet;
 
-public class User extends Document {
-    public static class Fields {
-        public static String user_id = "user_id";
-        public static String fitness_center_id = "fitness_center_id";
-        public static String login = "login";
-        public static String passwordHash = "passwordHash";
-        public static String token = "token";
-        public static String firstName = "first name";
-        public static String lastName = "last name";
-        public static String phone = "phone number";
-        public static String email = "email address";
-        public static String picture_id = "picture_id";
-        public static String wattProduction_total = "total watt production";
-        public static String wattProduction_year = "year watt production";
-        public static String wattProduction_month = "month watt production";
-        public static String wattProduction_week = "week watt production";
-        public static String wattProduction_day = "day watt production";
-        public static String current_module_id = "current_module_id";
-        public static String electricProductions = "electricProductions";
-        public static String friends = "friends";
-        public static String conversations = "conversations";
-        public static String blocked_users = "blocked_users";
+import static model.Database.*;
+
+public class User extends Entity {
+    public enum Field implements Entity_Field {
+        USER_ID("user_id", String.class),
+        FITNESS_CENTER_ID("fitness_center_id", String.class),
+        LOGIN("login", String.class),
+        PASSWORD_HASH("passwordHash", String.class),
+        TOKEN("token", String.class),
+        FIRSTNAME("first_name", String.class),
+        LASTNAME("last_name", String.class),
+        PHONE("phone_number", String.class),
+        EMAIL("email_address", String.class),
+        PICTURE_ID("picture_id", String.class),
+        WATT_PRODUCTION_TOTAL("watt_production_total", BigInteger.class),
+        WATT_PRODUCTION_YEAR("watt_production_year", BigInteger.class),
+        WATT_PRODUCTION_MONTH("watt_production_month", BigInteger.class),
+        WATT_PRODUCTION_WEEK("watt_production_week", BigInteger.class),
+        WATT_PRODUCTION_DAY("watt_production_day", BigInteger.class),
+        WATT_PRODUCTION_CURRENT("watt_production_current", BigInteger.class),
+        CURRENT_MODULE_ID("module_id", String.class),
+        FRIENDS("friends", Map.class),
+        CONVERSATIONS("conversations", Map.class),
+        BLOCKED_USERS("blocked_users", Map.class),
+        ;
+        @Override
+        public String get_key() {
+            return this.key;
+        }
+
+        @Override
+        public Class get_class() {
+            return this._class;
+        }
+        private String key;
+        private Class _class;
+        Field(String key, Class _class) {this.key = key; this._class = _class;}
     }
+
     public User() {
         super();
-        this.put(Fields.user_id, null);
-        this.put(Fields.fitness_center_id, null);
-        this.put(Fields.login, null);
-        this.put(Fields.passwordHash, null);
-        this.put(Fields.token, null);
-        this.put(Fields.firstName, null);
-        this.put(Fields.lastName, null);
-        this.put(Fields.phone, null);
-        this.put(Fields.email, null);
-        this.put(Fields.picture_id, null);
-        this.put(Fields.wattProduction_total, 0.0);
-        this.put(Fields.wattProduction_year, 0.0);
-        this.put(Fields.wattProduction_month, 0.0);
-        this.put(Fields.wattProduction_week, 0.0);
-        this.put(Fields.wattProduction_day, 0.0);
-        this.put(Fields.current_module_id, null);
-        this.put(Fields.electricProductions, new TreeSet<String>()); // electric_production_id
-        this.put(Fields.friends, new TreeSet<String>()); // electric_production_id
-        this.put(Fields.conversations, new TreeSet<String>()); // electric_production_id
-        this.put(Fields.blocked_users, new TreeSet<String>()); // electric_production_id
     }
     public User(Document doc) {
         super(doc);

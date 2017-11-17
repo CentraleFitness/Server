@@ -9,6 +9,8 @@ import model.entities._IDS_;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
 import java.math.BigInteger;
 import java.util.HashMap;
@@ -36,7 +38,7 @@ public class Database {
 
     public enum Collections {
         _IDS_("_IDS_", model.entities._IDS_.class, null),
-        Users("users", model.entities.User.class, User.Fields.user_id),
+        Users("users", model.entities.User.class, User.Field.USER_ID.get_key()),
         Modules("modules", model.entities.Module.class, ""),
         ElectricProductions("electricproductions", model.entities.ElectricProduction.class, ""),
         Events("events", model.entities.Event.class, ""),
@@ -53,6 +55,47 @@ public class Database {
             this.key = key;
             this._class = _class;
             this.entity_id = entity_id;}
+    }
+
+    public interface Entity_Field {
+        String get_key();
+        Class get_class();
+    }
+
+    public static abstract class Entity extends Document {
+        public enum Field implements Entity_Field {
+            ;
+
+            @Override
+            public String get_key() {
+                return null;
+            }
+
+            @Override
+            public Class get_class() {
+                return null;
+            }
+        }
+
+        public Object getField(Entity_Field field) {
+            return get(field.get_key());
+        }
+
+        public void setField(Entity_Field field, Object value) {
+            put(field.get_key(), field.get_class().cast(value));
+        }
+
+        public Entity() {for (Field field : Field.values())
+            try {
+                setField(field, field.get_class().newInstance());
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+
+        public Entity(Document doc) {super(doc);}
     }
 
     public Database() {
@@ -85,8 +128,8 @@ public class Database {
             _IDS_ ids = new _IDS_((Document) idss.find().first());
             BigInteger id = new BigInteger((String) ids.get(collection.entity_id));
             id = id.add(BigInteger.ONE);
-            doc.put(User.Fields.user_id, id.toString());
-            users.insertOne(new Document(doc));
+            doc.put(collection.entity_id, id.toString());
+            entity_collection.insertOne(new Document(doc));
             idss.updateOne(eq("_id", ids.get("_id")), set(collection.entity_id, id.toString()));
             return doc;
         } catch (InstantiationException e) {
@@ -99,6 +142,23 @@ public class Database {
 
     public void update_entity(Collections collection, Document entity) {
         this.collections.get(collection).updateOne(eq(collection.entity_id, entity.get(collection.entity_id)), new Document("$set", entity));
+    }
+
+    public Document find_entity(Collections collection, Entity_Field field, Object value) {
+        Constructor c = null;
+        try {
+            c = collection._class.getConstructor(Document.class);
+            return (Document) c.newInstance(this.collections.get(collection).find(eq(field.get_key(), field.get_class().cast(value))).first());
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static class DataDocument {

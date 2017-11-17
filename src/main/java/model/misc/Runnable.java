@@ -34,9 +34,18 @@ public class Runnable {
         public static void main(String[] args) {
             Database db = new Database();
             User user = (User) db.new_entity(Database.Collections.Users);
-            user.put(User.Fields.login, "tata");
+            user.put(User.Field.LOGIN.get_key(), "tata");
             db.update_entity(Database.Collections.Users, user);
             //for (Database.Collections col : Database.Collections.values()) db.new_entity(col);
+        }
+    }
+
+    public static class find_User {
+        public static void main(String[] args) {
+            Database db = new Database();
+            User user = (User) db.find_entity(Database.Collections.Users, User.Field.LOGIN, "tata");
+            user.setField(User.Field.EMAIL, "tata@gmail.com");
+            System.out.println(user.getField(User.Field.EMAIL));
         }
     }
 }
