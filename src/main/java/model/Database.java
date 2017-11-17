@@ -36,8 +36,8 @@ public class Database {
     public enum Collections {
         _IDS_("_IDS_", model.entities._IDS_.class, "IDS"),
         Users("users", model.entities.User.class, User.Field.USER_ID.get_key()),
-        Modules("modules", model.entities.Module.class, ""),
-        ElectricProductions("electricproductions", model.entities.ElectricProduction.class, ""),
+        Modules("modules", model.entities.Module.class, Module.Field.MODULE_ID.get_key()),
+        ElectricProductions("electricproductions", model.entities.ElectricProduction.class, ElectricProduction.Field.ELECTRIC_PRODUCTION_ID.get_key()),
         Events("events", model.entities.Event.class, Event.Field.EVENT_ID.get_key()),
         Conversations("conversations", model.entities.Conversation.class, Conversation.Field.CONVERSATION_ID.get_key()),
         Pictures("pictures", model.entities.Picture.class, Picture.Field.PICTURE_ID.get_key()),
@@ -95,8 +95,6 @@ public class Database {
     public Database() {
         this.client = new MongoClient(Database.ip, Database.port);
         this.db = this.client.getDatabase(Database.name);
-        this.modules = this.db.getCollection(Collections.Modules.key);
-        this.electricProductions = this.db.getCollection(Collections.ElectricProductions.key);
         this.collections = new HashMap<>();
         for (Collections col : Collections.values()) {
             MongoCollection collection;

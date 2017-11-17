@@ -11,20 +11,13 @@ import io.vertx.ext.web.handler.BodyHandler;
 import model.Database;
 import model.entities.Picture;
 import model.entities.User;
-import model.entities._IDS_;
-import org.bson.Document;
 import protocol.Protocol;
 import protocol.mobile.ResponseObject;
 import server.misc.PasswordAuthentication;
 import server.misc.Token;
-
-import java.math.BigInteger;
 import java.util.Base64;
 import java.util.Map;
 import java.util.Objects;
-import static com.mongodb.client.model.Filters.eq;
-import static com.mongodb.client.model.Updates.inc;
-import static com.mongodb.client.model.Updates.set;
 
 /**
  * Created by hadrien on 14/03/2017.

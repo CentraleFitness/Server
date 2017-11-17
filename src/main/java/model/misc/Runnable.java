@@ -33,10 +33,7 @@ public class Runnable {
     public static class new_User {
         public static void main(String[] args) {
             Database db = new Database();
-            User user = (User) db.new_entity(Database.Collections.Users);
-            user.put(User.Field.LOGIN.get_key(), "tata");
-            db.update_entity(Database.Collections.Users, user);
-            //for (Database.Collections col : Database.Collections.values()) db.new_entity(col);
+            for (Database.Collections col : Database.Collections.values()) db.new_entity(col);
         }
     }
 
