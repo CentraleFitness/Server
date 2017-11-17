@@ -3,9 +3,7 @@ package model;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import model.entities.Module;
-import model.entities.User;
-import model.entities._IDS_;
+import model.entities.*;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
@@ -37,15 +35,15 @@ public class Database {
     public static String idKey = "_id";
 
     public enum Collections {
-        _IDS_("_IDS_", model.entities._IDS_.class, null),
+        _IDS_("_IDS_", model.entities._IDS_.class, "IDS"),
         Users("users", model.entities.User.class, User.Field.USER_ID.get_key()),
         Modules("modules", model.entities.Module.class, ""),
         ElectricProductions("electricproductions", model.entities.ElectricProduction.class, ""),
-        Events("events", model.entities.Event.class, ""),
-        Conversations("conversations", model.entities.Conversation.class, ""),
-        Pictures("pictures", model.entities.Picture.class, ""),
-        Fitness_Centers("fitness_centers", model.entities.Fitness_Center.class, ""),
-        Fitness_Center_Managers("fitness_center_managers", model.entities.Fitness_Center_Manager.class, ""),
+        Events("events", model.entities.Event.class, Event.Field.EVENT_ID.get_key()),
+        Conversations("conversations", model.entities.Conversation.class, Conversation.Field.CONVERSATION_ID.get_key()),
+        Pictures("pictures", model.entities.Picture.class, Picture.Field.PICTURE_ID.get_key()),
+        Fitness_Centers("fitness_centers", model.entities.Fitness_Center.class, Fitness_Center.Field.FITNESS_CENTER_ID.get_key()),
+        Fitness_Center_Managers("fitness_center_managers", model.entities.Fitness_Center_Manager.class, Fitness_Center_Manager.Field.FITNESS_CENTER_MANAGER_ID.get_key()),
         ;
 
         public String key;
