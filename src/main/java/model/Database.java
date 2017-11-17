@@ -143,13 +143,4 @@ public class Database {
         }
         return null;
     }
-
-    public static class DataDocument {
-        public Document doc;
-        public DataDocument() { this.doc = new Document();}
-        public DataDocument(Document doc) {this.doc = doc;}
-        public Document getDoc() {return this.doc;}
-        public Document getUpdate() {return new Document("$set", this.doc);}
-        public ObjectId getId() {return (ObjectId) this.doc.get("_id");}
-    }
 }
