@@ -2,6 +2,15 @@
  * Tuto : http://imperceptiblethoughts.com/shadow/#getting_started
  */
 
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath group: 'com.github.jengelman.gradle.plugins', name: 'shadow', version: '1.2.4'
+    }
+}
+
 plugins {
     id 'java'
     id 'application'
@@ -27,10 +36,16 @@ dependencies {
     compile group: 'org.mongodb', name: 'mongo-java-driver', version: '3.4.1'
 }
 
-shadowJar {
-    classifier = 'fat'
-}
-
 task wrapper(type: Wrapper) {
     gradleVersion = '3.4.1'
+}
+
+jar {
+    baseName = 'Central_Fitness_Server'
+    version = project.version
+    manifest {
+        attributes 'Implementation-Title': 'Membrane Daemon',
+                'Implementation-Version': project.version,
+                'Main-Class': "Launcher"
+    }
 }

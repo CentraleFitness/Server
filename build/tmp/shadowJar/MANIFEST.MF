@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Implementation-Title: Membrane Daemon
+Implementation-Version: 1.0-SNAPSHOT
+Main-Class: Launcher
+
