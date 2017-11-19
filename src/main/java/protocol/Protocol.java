@@ -52,8 +52,8 @@ public class Protocol {
          * ! NOT IMPLEMENTED YET !
          *
          * @path: USER_UPDATE_PASSWORD:
-         * @param: NA
-         * @return: NA
+         * @param: TOKEN, PASSWORD, NEW_PASSWORD.
+         * @return: STATUS, TOKEN.
          */
         USER_UPDATE_PASSWORD("/user/update/password"),
 
