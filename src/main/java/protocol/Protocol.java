@@ -83,7 +83,7 @@ public class Protocol {
     public enum Field {
         LOGIN("login"),
         PASSWORD("password"),
-        NEW_PASSWORD("password"),
+        NEW_PASSWORD("new password"),
         TOKEN("token"),
         STATUS("code"),
         FIRSTNAME("first name"),
