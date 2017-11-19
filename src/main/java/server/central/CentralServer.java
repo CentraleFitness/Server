@@ -9,6 +9,7 @@ import com.mongodb.client.MongoDatabase;
 import io.vertx.core.Vertx;
 import model.Database;
 import server.Settings;
+import server.intranet.IntranetVerticle;
 import server.mobile.MobileServer;
 import server.module.ModuleServer;
 
@@ -26,6 +27,7 @@ public class CentralServer {
     private Settings settings;
     private MobileServer mobileServer;
     private ModuleServer moduleServer;
+    private IntranetVerticle intranetVerticle;
     private Database database = null;
 
     public CentralServer() {
@@ -47,12 +49,16 @@ public class CentralServer {
         this.settings = gson.fromJson(jsonElement, Settings.class);
         this.vertx = Vertx.vertx();
 
+
         this.mobileServer = new MobileServer(Integer.parseInt(this.settings.get("Mobile Server Http Port")));
         this.mobileServer.setDatabase(this.database);
         this.moduleServer = new ModuleServer(Integer.parseInt(this.settings.get("Module Server TCP Port")));
         this.moduleServer.setDatabase(this.database);
+        this.intranetVerticle = new IntranetVerticle(Integer.parseInt(this.settings.get("Intranet Server Http Port")));
+        this.intranetVerticle.setDatabase(database);
 
         this.vertx.deployVerticle(this.mobileServer);
         this.vertx.deployVerticle(this.moduleServer);
+        this.vertx.deployVerticle(this.intranetVerticle);
     }
 }
