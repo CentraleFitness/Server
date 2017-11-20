@@ -224,12 +224,12 @@ public class MobileServer extends AbstractVerticle {
                 if (!Objects.equals(user.getField(User.Field.TOKEN), received.get(Protocol.Field.TOKEN.key))) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
-                } else if (new PasswordAuthentication().authenticate(((String) received.get(Protocol.Field.PASSWORD.key)).toCharArray(), (String) user.getField(User.Field.PASSWORD_HASH))) {
+                } else if (!new PasswordAuthentication().authenticate(((String) received.get(Protocol.Field.PASSWORD.key)).toCharArray(), (String) user.getField(User.Field.PASSWORD_HASH))) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
                 } else {
                     user.setField(User.Field.PASSWORD_HASH, new PasswordAuthentication().hash(((String) received.get(Protocol.Field.NEW_PASSWORD.key)).toCharArray()));
-                    user.setField(User.Field.TOKEN, new Token((String) received.get(Protocol.Field.LOGIN.key), (String) received.get(Protocol.Field.NEW_PASSWORD.key)).generate());
+                    user.setField(User.Field.TOKEN, new Token((String) user.getField(User.Field.LOGIN), (String) received.get(Protocol.Field.NEW_PASSWORD.key)).generate());
                     this.database.update_entity(Database.Collections.Users, user);
                     sending = new ResponseObject(false);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
