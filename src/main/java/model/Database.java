@@ -110,7 +110,7 @@ public class Database {
             this.collections.get(Collections._IDS_).insertOne(new Document(new model.entities._IDS_()));
     }
 
-    public Document new_entity(Collections collection) {
+    public Document new_entity(Collections collection) throws IllegalAccessException, InstantiationException {
         if (collection == Collections._IDS_) return null;
         try {
             Document doc = (Document) collection._class.newInstance();
@@ -124,23 +124,21 @@ public class Database {
             idss.updateOne(eq("_id", ids.get("_id")), set(collection.entity_id, id.toString()));
             return doc;
         } catch (Exception e) {
-            e.printStackTrace();
+            throw e;
         }
-        return null;
     }
 
     public void update_entity(Collections collection, Document entity) {
         this.collections.get(collection).updateOne(eq(collection.entity_id, entity.get(collection.entity_id)), new Document("$set", entity));
     }
 
-    public Document find_entity(Collections collection, Entity_Field field, Object value) {
+    public Document find_entity(Collections collection, Entity_Field field, Object value) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         Constructor c = null;
         try {
             c = collection._class.getConstructor(Document.class);
             return (Document) c.newInstance(this.collections.get(collection).find(eq(field.get_key(), field.get_class().cast(value))).first());
         } catch (Exception e) {
-            e.printStackTrace();
+            throw e;
         }
-        return null;
     }
 }
