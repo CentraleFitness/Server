@@ -13,14 +13,15 @@ import server.misc.Token;
 
 import java.util.Map;
 
-public class Authentication_with_credentials {
-    public Authentication_with_credentials(Router router) {
+public class AuthenticationWithCredentials {
+    public AuthenticationWithCredentials(Router router) {
         router.route(HttpMethod.POST, Protocol.Path.AUTHENTICATION.path).handler(routingContext -> {
             Map<String, Object> received = routingContext.getBodyAsJson().getMap();
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
             User user;
             Database database = Database.getInstance();
+
             try {
                 if ((user = (User) database.find_entity(Database.Collections.Users, User.Field.LOGIN, received.get(Protocol.Field.LOGIN.key))) != null) {
                     if (new PasswordAuthentication().authenticate(((String) received.get(Protocol.Field.PASSWORD.key)).toCharArray(), (String) user.getField(User.Field.PASSWORD_HASH))) {

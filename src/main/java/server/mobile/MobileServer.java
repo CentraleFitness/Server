@@ -1,7 +1,6 @@
 package server.mobile;
 
 import com.google.gson.GsonBuilder;
-import com.mongodb.client.MongoCollection;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServer;
@@ -13,7 +12,9 @@ import model.entities.Picture;
 import model.entities.User;
 import protocol.Protocol;
 import protocol.mobile.ResponseObject;
-import server.api.routes.mobile.Authentication_with_credentials;
+import server.api.routes.mobile.AuthenticationWithCredentials;
+import server.api.routes.mobile.AuthenticationWithToken;
+import server.api.routes.mobile.Registration;
 import server.misc.PasswordAuthentication;
 import server.misc.Token;
 import java.util.Map;
@@ -47,86 +48,10 @@ public class MobileServer extends AbstractVerticle {
     public void routing() {
         this.router.route().handler(BodyHandler.create());
 
-        /**
-         * Authentication with credentials
-         */
-        new Authentication_with_credentials(this.router);
+        new Registration(this.router);
 
-        /**
-         * Authentication with token
-         */
-        this.router.route(HttpMethod.POST, Protocol.Path.AUTHENTICATION_TOKEN.path).handler(routingContext -> {
-            Map<String, Object> received = routingContext.getBodyAsJson().getMap();
-            ResponseObject sending;
-            HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
-            User user;
-            try {
-                user = (User) this.database.find_entity(Database.Collections.Users, User.Field.LOGIN, Token.decodeToken((String) received.get(Protocol.Field.TOKEN.key)).getIssuer());
-                if (!Objects.equals(user.getField(User.Field.TOKEN), received.get(Protocol.Field.TOKEN.key))) {
-                    sending = new ResponseObject(true);
-                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
-                } else {
-                    sending = new ResponseObject(false);
-                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_SUCCESS.code);
-                }
-            }catch (Exception e){
-                sending = new ResponseObject(true);
-                sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
-            }
-            response.end(new GsonBuilder().create().toJson(sending));
-        });
-
-        /**
-         * Registration
-         */
-        this.router.route(HttpMethod.POST, Protocol.Path.REGISTRATION.path).handler(routingContext -> {
-            Map<String, Object> received = routingContext.getBodyAsJson().getMap();
-            ResponseObject sending;
-            HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
-            User user;
-
-            try {
-                if (received.get(Protocol.Field.LOGIN.key) == null) {
-                    sending = new ResponseObject(true);
-                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_ERROR_LOGIN.code);
-                } else if (received.get(Protocol.Field.PASSWORD.key) == null) {
-                    sending = new ResponseObject(true);
-                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_ERROR_PASSWORD.code);
-                } else if (received.get(Protocol.Field.FIRSTNAME.key) == null) {
-                    sending = new ResponseObject(true);
-                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_RANDOM.code);
-                } else if (received.get(Protocol.Field.LASTNAME.key) == null) {
-                    sending = new ResponseObject(true);
-                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_RANDOM.code);
-                } else if (received.get(Protocol.Field.PHONE.key) == null) {
-                    sending = new ResponseObject(true);
-                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_RANDOM.code);
-                } else if (received.get(Protocol.Field.EMAIL.key) == null) {
-                    sending = new ResponseObject(true);
-                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_RANDOM.code);
-                } else if (this.database.find_entity(Database.Collections.Users, User.Field.LOGIN, received.get(Protocol.Field.LOGIN.key)) == null) {
-                    user = (User) this.database.new_entity(Database.Collections.Users);
-                    user.setField(User.Field.LOGIN, received.get(Protocol.Field.LOGIN.key));
-                    user.setField(User.Field.PASSWORD_HASH, new PasswordAuthentication().hash(((String) received.get(Protocol.Field.PASSWORD.key)).toCharArray()));
-                    user.setField(User.Field.FIRSTNAME, received.get(Protocol.Field.FIRSTNAME.key));
-                    user.setField(User.Field.LASTNAME, received.get(Protocol.Field.LASTNAME.key));
-                    user.setField(User.Field.PHONE, received.get(Protocol.Field.PHONE.key));
-                    user.setField(User.Field.EMAIL, received.get(Protocol.Field.EMAIL.key));
-                    user.setField(User.Field.TOKEN, new Token((String) received.get(Protocol.Field.LOGIN.key), (String) received.get(Protocol.Field.PASSWORD.key)).generate());
-                    this.database.update_entity(Database.Collections.Users, user);
-                    sending = new ResponseObject(false);
-                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_SUCCESS.code);
-                    sending.put(Protocol.Field.TOKEN.key, (String) user.getField(User.Field.TOKEN));
-                } else {
-                    sending = new ResponseObject(true);
-                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_ERROR_LOGIN_TAKEN.code);
-                }
-            } catch (Exception e) {
-                sending = new ResponseObject(true);
-                sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_RANDOM.code);
-            }
-            response.end(new GsonBuilder().create().toJson(sending));
-        });
+        new AuthenticationWithCredentials(this.router);
+        new AuthenticationWithToken(this.router);
 
         /**
          * User Get Profile
