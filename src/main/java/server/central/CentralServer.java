@@ -33,7 +33,7 @@ public class CentralServer {
     public CentralServer() {
         System.out.println("...CentralServer creation et ma bite en salade...");
 
-        this.database = new Database();
+        this.database = Database.getInstance();
 
         Gson gson = new Gson();
         JsonElement jsonElement = null;

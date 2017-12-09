@@ -24,14 +24,14 @@ public class Database {
 
     public MongoClient client = null;
     public MongoDatabase db = null;
-    public MongoCollection modules = null;
-    public MongoCollection electricProductions = null;
     public Map<Collections, MongoCollection> collections = null;
 
     public static String ip = "localhost";
     public static int port = 27017;
     public static String name = "centralefitness";
     public static String idKey = "_id";
+
+    private static Database INSTANCE = new Database();
 
     public enum Collections {
         _IDS_("_IDS_", model.entities._IDS_.class, "IDS"),
@@ -92,7 +92,7 @@ public class Database {
         public Entity(Document doc) {super(doc);}
     }
 
-    public Database() {
+    private Database() {
         this.client = new MongoClient(Database.ip, Database.port);
         this.db = this.client.getDatabase(Database.name);
         this.collections = new HashMap<>();
@@ -109,6 +109,8 @@ public class Database {
         if (this.collections.get(Collections._IDS_).find().first() == null)
             this.collections.get(Collections._IDS_).insertOne(new Document(new model.entities._IDS_()));
     }
+
+    public static Database getInstance() {return INSTANCE;}
 
     public Document new_entity(Collections collection) throws IllegalAccessException, InstantiationException {
         if (collection == Collections._IDS_) return null;
