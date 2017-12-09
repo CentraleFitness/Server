@@ -13,6 +13,7 @@ import model.entities.Picture;
 import model.entities.User;
 import protocol.Protocol;
 import protocol.mobile.ResponseObject;
+import server.api.routes.mobile.Authentication_with_credentials;
 import server.misc.PasswordAuthentication;
 import server.misc.Token;
 import java.util.Map;
@@ -49,34 +50,7 @@ public class MobileServer extends AbstractVerticle {
         /**
          * Authentication with credentials
          */
-        this.router.route(HttpMethod.POST, Protocol.Path.AUTHENTICATION.path).handler(routingContext -> {
-            Map<String, Object> received = routingContext.getBodyAsJson().getMap();
-            ResponseObject sending;
-            HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
-            User user;
-            MongoCollection users = this.database.collections.get(Database.Collections.Users);
-            try {
-                if ((user = (User) this.database.find_entity(Database.Collections.Users, User.Field.LOGIN, received.get(Protocol.Field.LOGIN.key))) != null) {
-                    if (new PasswordAuthentication().authenticate(((String) received.get(Protocol.Field.PASSWORD.key)).toCharArray(), (String) user.getField(User.Field.PASSWORD_HASH))) {
-                        sending = new ResponseObject(false);
-                        sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_SUCCESS.code);
-                        user.setField(User.Field.TOKEN, new Token((String) received.get(Protocol.Field.LOGIN.key), (String) received.get(Protocol.Field.PASSWORD.key)).generate());
-                        sending.put(Protocol.Field.TOKEN.key, (String) user.getField(User.Field.TOKEN));
-                        this.database.update_entity(Database.Collections.Users, user);
-                    } else {
-                        sending = new ResponseObject(true);
-                        sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_CREDENTIALS.code);
-                    }
-                } else {
-                    sending = new ResponseObject(true);
-                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_CREDENTIALS.code);
-                }
-            } catch (Exception e) {
-                sending = new ResponseObject(true);
-                sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_CREDENTIALS.code);
-            }
-            response.end(new GsonBuilder().create().toJson(sending));
-        });
+        new Authentication_with_credentials(this.router);
 
         /**
          * Authentication with token
