@@ -34,7 +34,6 @@ public class Database {
     private static Database INSTANCE = new Database();
 
     public enum Collections {
-        _IDS_("_IDS_", model.entities._IDS_.class, "IDS"),
         Users("users", model.entities.User.class, User.Field.USER_ID.get_key()),
         Modules("modules", model.entities.Module.class, Module.Field.MODULE_ID.get_key()),
         ElectricProductions("electricproductions", model.entities.ElectricProduction.class, ElectricProduction.Field.ELECTRIC_PRODUCTION_ID.get_key()),
@@ -106,24 +105,16 @@ public class Database {
             }
             this.collections.put(col, collection);
         }
-        if (this.collections.get(Collections._IDS_).find().first() == null)
-            this.collections.get(Collections._IDS_).insertOne(new Document(new model.entities._IDS_()));
     }
 
     public static Database getInstance() {return INSTANCE;}
 
     public Document new_entity(Collections collection) throws IllegalAccessException, InstantiationException {
-        if (collection == Collections._IDS_) return null;
         try {
             Document doc = (Document) collection._class.newInstance();
             MongoCollection entity_collection = this.collections.get(collection);
-            MongoCollection idss = this.collections.get(Database.Collections._IDS_);
-            _IDS_ ids = new _IDS_((Document) idss.find().first());
-            BigInteger id = new BigInteger((String) ids.get(collection.entity_id));
-            id = id.add(BigInteger.ONE);
-            doc.put(collection.entity_id, id.toString());
+            doc.put(collection.entity_id, doc.get("_id"));
             entity_collection.insertOne(new Document(doc));
-            idss.updateOne(eq("_id", ids.get("_id")), set(collection.entity_id, id.toString()));
             return doc;
         } catch (Exception e) {
             throw e;
