@@ -113,7 +113,9 @@ public class Database {
         try {
             Document doc = (Document) collection._class.newInstance();
             MongoCollection entity_collection = this.collections.get(collection);
-            doc.put(collection.entity_id, doc.get("_id"));
+            ObjectId id = new ObjectId();
+            doc.put("_id", id);
+            doc.put(collection.entity_id, id);
             entity_collection.insertOne(new Document(doc));
             return doc;
         } catch (Exception e) {
