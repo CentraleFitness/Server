@@ -1,5 +1,6 @@
 package model;
 
+import Tools.LogManager;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -119,6 +120,7 @@ public class Database {
             entity_collection.insertOne(new Document(doc));
             return doc;
         } catch (Exception e) {
+            LogManager.getINSTANCE().write(this, "new_entity error");
             throw e;
         }
     }
@@ -133,6 +135,7 @@ public class Database {
             c = collection._class.getConstructor(Document.class);
             return (Document) c.newInstance(this.collections.get(collection).find(eq(field.get_key(), field.get_class().cast(value))).first());
         } catch (Exception e) {
+            LogManager.getINSTANCE().write(this, "find_entity error");
             throw e;
         }
     }
