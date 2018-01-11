@@ -1,3 +1,4 @@
+import Tools.LogManager;
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.mongodb.MongoClient;
@@ -6,12 +7,12 @@ import com.mongodb.client.MongoDatabase;
 import io.vertx.ext.web.handler.FormLoginHandler;
 import model.Database;
 import model.entities.User;
-import model.entities._IDS_;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import protocol.mobile.ResponseObject;
 
 import java.io.FileReader;
+import java.util.Date;
 import java.util.HashMap;
 
 import static com.mongodb.client.model.Filters.eq;
@@ -41,6 +42,15 @@ public class Tests {
             JsonParser jsonParser = new JsonParser();
             JsonObject jo = (JsonObject)jsonParser.parse(json);
             System.out.println(jo.get("Message"));
+        }
+    }
+
+    public static class TestLogManager {
+        public static void main(String[] args) {
+            LogManager lm = LogManager.getINSTANCE();
+            lm.write(new Object(),  "toto");
+
+            System.out.println(new Date().toString());
         }
     }
 }
