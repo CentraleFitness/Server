@@ -17,4 +17,8 @@ public class LogManager {
             System.err.println("LogManager: Could not open file");
         }
     }
+
+    public void write(Object writer, String message) {
+        mLog.write("\nWHEN:" + new Date().toString() + "\nWHERE " + writer.getClass().getCanonicalName() + "\nWHAT" + message);
+    }
 }
