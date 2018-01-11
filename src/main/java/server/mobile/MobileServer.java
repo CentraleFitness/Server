@@ -15,8 +15,8 @@ import protocol.mobile.ResponseObject;
 import server.api.routes.mobile.AuthenticationWithCredentials;
 import server.api.routes.mobile.AuthenticationWithToken;
 import server.api.routes.mobile.Registration;
-import server.misc.PasswordAuthentication;
-import server.misc.Token;
+import Tools.PasswordAuthentication;
+import Tools.Token;
 import java.util.Map;
 import java.util.Objects;
 

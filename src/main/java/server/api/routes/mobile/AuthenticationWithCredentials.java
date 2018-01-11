@@ -8,8 +8,8 @@ import model.Database;
 import model.entities.User;
 import protocol.Protocol;
 import protocol.mobile.ResponseObject;
-import server.misc.PasswordAuthentication;
-import server.misc.Token;
+import Tools.PasswordAuthentication;
+import Tools.Token;
 
 import java.util.Map;
 

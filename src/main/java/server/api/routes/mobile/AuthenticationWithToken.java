@@ -8,7 +8,7 @@ import model.Database;
 import model.entities.User;
 import protocol.Protocol;
 import protocol.mobile.ResponseObject;
-import server.misc.Token;
+import Tools.Token;
 
 import java.util.Map;
 import java.util.Objects;

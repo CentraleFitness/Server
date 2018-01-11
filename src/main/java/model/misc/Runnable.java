@@ -1,19 +1,11 @@
 package model.misc;
 
-import com.mongodb.client.MongoCollection;
 import model.Database;
 import model.entities.User;
-import org.bson.Document;
-import protocol.Protocol;
-import server.misc.PasswordAuthentication;
-import server.misc.Token;
 
 import java.lang.reflect.InvocationTargetException;
-import java.math.BigInteger;
 
 import static com.mongodb.client.model.Filters.eq;
-import static com.mongodb.client.model.Updates.inc;
-import static com.mongodb.client.model.Updates.set;
 
 public class Runnable {
 

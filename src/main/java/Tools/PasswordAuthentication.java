@@ -1,4 +1,4 @@
-package server.misc;
+package Tools;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
