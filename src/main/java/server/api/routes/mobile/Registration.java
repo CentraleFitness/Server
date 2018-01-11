@@ -70,7 +70,7 @@ public class Registration {
             } catch (Exception e) {
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_RANDOM.code);
-                log.write(this, "Exception: " + e.getMessage());
+                log.write(this, "Exception: " + e.toString());
             }
             response.end(new GsonBuilder().create().toJson(sending));
         });
