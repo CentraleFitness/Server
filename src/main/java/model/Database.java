@@ -2,6 +2,7 @@ package model;
 
 import Tools.LogManager;
 import com.mongodb.MongoClient;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import model.entities.*;
@@ -133,7 +134,8 @@ public class Database {
         Constructor c = null;
         try {
             c = collection._class.getConstructor(Document.class);
-            return (Document) c.newInstance(this.collections.get(collection).find(eq(field.get_key(), field.get_class().cast(value))).first());
+            Document entity = (Document) this.collections.get(collection).find(eq(field.get_key(), field.get_class().cast(value))).first();
+            return (entity != null ? (Document) c.newInstance(entity) : entity);
         } catch (Exception e) {
             LogManager.getINSTANCE().write(this, "find_entity error");
             throw e;
