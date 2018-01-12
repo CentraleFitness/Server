@@ -22,33 +22,32 @@ public class Registration {
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
             User user;
             Database database = Database.getInstance();
-            LogManager log = LogManager.getINSTANCE();
 
             try {
                 if (received.get(Protocol.Field.LOGIN.key) == null) {
-                    log.write(this, "Missing login key");
+                    LogManager.getINSTANCE().write(this, "Missing login key");
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_ERROR_LOGIN.code);
                 } else if (received.get(Protocol.Field.PASSWORD.key) == null) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_ERROR_PASSWORD.code);
-                    log.write(this, "Missing password key");
+                    LogManager.getINSTANCE().write(this, "Missing password key");
                 } else if (received.get(Protocol.Field.FIRSTNAME.key) == null) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_RANDOM.code);
-                    log.write(this, "Missing firstname key");
+                    LogManager.getINSTANCE().write(this, "Missing firstname key");
                 } else if (received.get(Protocol.Field.LASTNAME.key) == null) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_RANDOM.code);
-                    log.write(this, "Missing lastname key");
+                    LogManager.getINSTANCE().write(this, "Missing lastname key");
                 } else if (received.get(Protocol.Field.PHONE.key) == null) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_RANDOM.code);
-                    log.write(this, "Missing phone key");
+                    LogManager.getINSTANCE().write(this, "Missing phone key");
                 } else if (received.get(Protocol.Field.EMAIL.key) == null) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_RANDOM.code);
-                    log.write(this, "Missing email key");
+                    LogManager.getINSTANCE().write(this, "Missing email key");
                 } else if (database.find_entity(Database.Collections.Users, User.Field.LOGIN, received.get(Protocol.Field.LOGIN.key)) == null) {
                     user = (User) database.new_entity(Database.Collections.Users);
                     user.setField(User.Field.LOGIN, received.get(Protocol.Field.LOGIN.key));
@@ -65,12 +64,12 @@ public class Registration {
                 } else {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_ERROR_LOGIN_TAKEN.code);
-                    log.write(this, "Login already taken");
+                    LogManager.getINSTANCE().write(this, "Login already taken");
                 }
             } catch (Exception e) {
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_RANDOM.code);
-                log.write(this, "Exception: " + e.toString());
+                LogManager.getINSTANCE().write(this, "Exception: " + e.toString());
             }
             response.end(new GsonBuilder().create().toJson(sending));
         });
