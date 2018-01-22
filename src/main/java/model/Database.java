@@ -36,14 +36,14 @@ public class Database {
     private static Database INSTANCE = new Database();
 
     public enum Collections {
-        Users("users", model.entities.User.class, User.Field.USER_ID.get_key()),
-        Modules("modules", model.entities.Module.class, Module.Field.MODULE_ID.get_key()),
-        ElectricProductions("electricproductions", model.entities.ElectricProduction.class, ElectricProduction.Field.ELECTRIC_PRODUCTION_ID.get_key()),
-        Events("events", model.entities.Event.class, Event.Field.EVENT_ID.get_key()),
-        Conversations("conversations", model.entities.Conversation.class, Conversation.Field.CONVERSATION_ID.get_key()),
-        Pictures("pictures", model.entities.Picture.class, Picture.Field.PICTURE_ID.get_key()),
-        Fitness_Centers("fitness_centers", model.entities.Fitness_Center.class, Fitness_Center.Field.FITNESS_CENTER_ID.get_key()),
-        Fitness_Center_Managers("fitness_center_managers", model.entities.Fitness_Center_Manager.class, Fitness_Center_Manager.Field.FITNESS_CENTER_MANAGER_ID.get_key()),
+        Users("users", model.entities.User.class, User.Field.ID.get_key()),
+        Modules("modules", model.entities.Module.class, Module.Field.ID.get_key()),
+        ElectricProductions("electricproductions", model.entities.ElectricProduction.class, ElectricProduction.Field.ID.get_key()),
+        Events("events", model.entities.Event.class, Event.Field.ID.get_key()),
+        Conversations("conversations", model.entities.Conversation.class, Conversation.Field.ID.get_key()),
+        Pictures("pictures", model.entities.Picture.class, Picture.Field.ID.get_key()),
+        Fitness_Centers("fitness_centers", model.entities.Fitness_Center.class, Fitness_Center.Field.ID.get_key()),
+        Fitness_Center_Managers("fitness_center_managers", model.entities.Fitness_Center_Manager.class, Fitness_Center_Manager.Field.ID.get_key()),
         ;
 
         public String key;

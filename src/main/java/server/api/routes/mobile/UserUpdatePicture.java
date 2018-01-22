@@ -38,7 +38,7 @@ public class UserUpdatePicture {
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
                     Picture pic = (Picture) database.new_entity(Database.Collections.Pictures);
                     pic.setField(Picture.Field.PICTURE, pic64);
-                    user.setField(User.Field.PICTURE_ID, pic.getField(Picture.Field.PICTURE_ID));
+                    user.setField(User.Field.PICTURE_ID, pic.getField(Picture.Field.ID));
                     database.update_entity(Database.Collections.Pictures, pic);
                     database.update_entity(Database.Collections.Users, user);
                 }

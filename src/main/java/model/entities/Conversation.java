@@ -2,10 +2,11 @@ package model.entities;
 
 import model.Database;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
 public class Conversation extends Database.Entity {
     public enum Field implements Database.Entity_Field {
-        CONVERSATION_ID("conversation_id", String.class),
+        ID("_id", ObjectId.class),
         ;
         @Override
         public String get_key() {

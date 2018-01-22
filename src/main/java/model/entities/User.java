@@ -2,6 +2,7 @@ package model.entities;
 
 import model.Database;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.omg.CORBA.Object;
 
 import java.math.BigInteger;
@@ -12,8 +13,8 @@ import static model.Database.*;
 
 public class User extends Entity {
     public enum Field implements Entity_Field {
-        USER_ID("user_id", String.class),
-        FITNESS_CENTER_ID("fitness_center_id", String.class),
+        ID("_id", ObjectId.class),
+        FITNESS_CENTER_ID("fitness_center_id", ObjectId.class),
         LOGIN("login", String.class),
         PASSWORD_HASH("passwordHash", String.class),
         TOKEN("token", String.class),
@@ -21,7 +22,7 @@ public class User extends Entity {
         LASTNAME("last_name", String.class),
         PHONE("phone_number", String.class),
         EMAIL("email_address", String.class),
-        PICTURE_ID("picture_id", String.class),
+        PICTURE_ID("picture_id", ObjectId.class),
         PRODUCTION_TOTAL("production_total", BigInteger.class),
         PRODUCTION_YEAR("production_year", BigInteger.class),
         PRODUCTION_MONTH("production_month", BigInteger.class),

@@ -10,8 +10,8 @@ import java.util.Map;
 
 public class Module extends Database.Entity {
     public enum Field implements Database.Entity_Field {
-        MODULE_ID("module_id", String.class),
-        FITNESS_CENTER_ID("fitness_center_id", String.class),
+        ID("_id", ObjectId.class),
+        FITNESS_CENTER_ID("fitness_center_id", ObjectId.class),
         MACHINE_TYPE("machine_type", String.class),
         CURRENT_USER_ID("current_user_id", String.class),
         PRODUCTION_TOTAL("production_total", BigInteger.class),

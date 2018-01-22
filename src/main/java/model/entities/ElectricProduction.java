@@ -8,7 +8,7 @@ import java.math.BigInteger;
 
 public class ElectricProduction extends Database.Entity {
     public enum Field implements Database.Entity_Field {
-        ELECTRIC_PRODUCTION_ID("electric_production_id", String.class),
+        ID("_id", ObjectId.class),
         MODULE_ID("module_id", String.class),
         PRODUCTION_TOTAL("production_total", BigInteger.class),
         PRODUCTION_YEAR("production_year", BigInteger.class),

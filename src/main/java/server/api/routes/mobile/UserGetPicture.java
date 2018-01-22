@@ -26,7 +26,7 @@ public class UserGetPicture {
 
             try {
                 user = (User) database.find_entity(Database.Collections.Users, User.Field.LOGIN, Token.decodeToken((String) received.get(Protocol.Field.TOKEN.key)).getIssuer());
-                picture = (Picture) database.find_entity(Database.Collections.Pictures, Picture.Field.PICTURE_ID, user.getField(User.Field.PICTURE_ID));
+                picture = (Picture) database.find_entity(Database.Collections.Pictures, Picture.Field.ID, user.getField(User.Field.PICTURE_ID));
                 if (!Objects.equals(user.getField(User.Field.TOKEN), received.get(Protocol.Field.TOKEN.key))) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
