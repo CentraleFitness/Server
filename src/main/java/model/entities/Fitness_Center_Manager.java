@@ -7,6 +7,14 @@ import org.bson.types.ObjectId;
 public class Fitness_Center_Manager extends Database.Entity {
     public enum Field implements Database.Entity_Field {
         ID("_id", ObjectId.class),
+        FITNESS_CENTER_ID("fitness_center_id", ObjectId.class),
+        PASSWORD_HASH("password_hash", String.class),
+        TOKEN("token", String.class),
+        FIRSTNAME("first_name", String.class),
+        LASTNAME("last_name", String.class),
+        PICTURE_ID("picture_id", ObjectId.class),
+        EMAIL("email_address", String.class),
+        PHONE("phone_number", String.class),
         ;
         @Override
         public String get_key() {
