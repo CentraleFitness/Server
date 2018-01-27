@@ -18,16 +18,19 @@ public class UserGetProfile {
     public UserGetProfile(Router router) {
         router.route(HttpMethod.POST, Protocol.Path.USER_GET_PROFILE.path).handler(routingContext -> {
             Map<String, Object> received = routingContext.getBodyAsJson().getMap();
+            String rToken = (String) received.get(Protocol.Field.TOKEN.key);
+
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
             User user;
             Database database = Database.getInstance();
 
             try {
-                user = (User) database.find_entity(Database.Collections.Users, User.Field.LOGIN, Token.decodeToken((String) received.get(Protocol.Field.TOKEN.key)).getIssuer());
-                if (!Objects.equals(user.getField(User.Field.TOKEN), received.get(Protocol.Field.TOKEN.key))) {
+                user = (User) database.find_entity(Database.Collections.Users, User.Field.LOGIN, Token.decodeToken(rToken).getIssuer());
+                if (!Objects.equals(user.getField(User.Field.TOKEN), rToken)) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
+                    LogManager.write("Bad token");
                 } else {
                     sending = new ResponseObject(false);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
