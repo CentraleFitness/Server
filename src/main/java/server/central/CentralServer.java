@@ -1,5 +1,6 @@
 package server.central;
 
+import Tools.LogManager;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -49,7 +50,7 @@ public class CentralServer {
         this.settings = gson.fromJson(jsonElement, Settings.class);
         this.vertx = Vertx.vertx();
 
-
+        if (Boolean.parseBoolean(this.settings.get("EnableLogManager")) == true) LogManager.enable();
         this.mobileServer = new MobileServer(Integer.parseInt(this.settings.get("Mobile Server Http Port")));
         this.mobileServer.setDatabase(this.database);
         this.moduleServer = new ModuleServer(Integer.parseInt(this.settings.get("Module Server TCP Port")));

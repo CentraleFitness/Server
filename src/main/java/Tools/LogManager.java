@@ -10,17 +10,30 @@ import java.util.Date;
 public class LogManager {
 
     private static PrintWriter mLog;
-
+    private static boolean mEnabled = false;
     private static  LogManager INSTANCE = new LogManager();
+
     private LogManager() {
-        try {
-            mLog = new PrintWriter("server_" + new Date().getTime() + ".log", "UTF-8");
-        } catch (Exception e) {
-            System.err.println("LogManager: Could not open file");
+    }
+
+    private static void logFile() {
+        if (mEnabled == true) {
+            try {
+                mLog = new PrintWriter("server_" + new Date().getTime() + ".log", "UTF-8");
+            } catch (Exception e) {
+                System.err.println("LogManager: Could not open file");
+            }
+        } else {
+            mLog.close();
+            mLog = null;
         }
     }
 
+    public static void enable() {mEnabled = true; logFile();}
+    public static void disable() {mEnabled = false; logFile();}
+
     public static void write(String message) {
+        if (mEnabled == false) return;
         mLog.println("WHEN: " + new Date().toString() + " :: WHERE: " + getCallerCallerClassName() + " :: WHAT: " + message);
         mLog.flush();
     }

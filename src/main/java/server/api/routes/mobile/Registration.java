@@ -71,7 +71,7 @@ public class Registration {
                 } else {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_ERROR_LOGIN_TAKEN.code);
-                    LogManager.write("Login already taken");
+                    LogManager.write("Login already taken : \"" + rLogin + "\"");
                 }
             } catch (Exception e) {
                 sending = new ResponseObject(true);

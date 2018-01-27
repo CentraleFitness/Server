@@ -1,5 +1,6 @@
 package server.api.routes.mobile;
 
+import Tools.LogManager;
 import Tools.PasswordAuthentication;
 import Tools.Token;
 import com.google.gson.GsonBuilder;
@@ -42,6 +43,7 @@ public class UserUpdatePassword {
             }catch (Exception e){
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
+                LogManager.write("Exception: " + e.toString());
             }
             response.end(new GsonBuilder().create().toJson(sending));
         });
