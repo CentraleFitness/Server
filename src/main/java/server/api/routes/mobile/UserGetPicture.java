@@ -33,6 +33,7 @@ public class UserGetPicture {
                 if (!Objects.equals(user.getField(User.Field.TOKEN), rToken)) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
+                    LogManager.write("Bad token");
                 } else {
                     sending = new ResponseObject(false);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);

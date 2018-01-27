@@ -37,12 +37,12 @@ public class AuthenticationWithCredentials {
                     } else {
                         sending = new ResponseObject(true);
                         sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_CREDENTIALS.code);
-                        LogManager.write("Bad password : \"" + rPassword + "\"");
+                        LogManager.write("Bad password");
                     }
                 } else {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_CREDENTIALS.code);
-                    LogManager.write("User not found : \"" + rLogin + "\"");
+                    LogManager.write("User not found");
                 }
             } catch (Exception e) {
                 sending = new ResponseObject(true);
