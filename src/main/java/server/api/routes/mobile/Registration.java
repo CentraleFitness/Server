@@ -18,45 +18,52 @@ public class Registration {
     public Registration(Router router) {
         router.route(HttpMethod.POST, Protocol.Path.REGISTRATION.path).handler(routingContext -> {
             Map<String, Object> received = routingContext.getBodyAsJson().getMap();
+            String rLogin = (String) received.get(Protocol.Field.LOGIN.key);
+            String rPassword = (String) received.get(Protocol.Field.PASSWORD.key);
+            String rFirstname  = (String) received.get(Protocol.Field.FIRSTNAME.key);
+            String rLasname = (String) received.get(Protocol.Field.LASTNAME.key);
+            String rPhone = (String) received.get(Protocol.Field.PHONE.key);
+            String rEmail = (String) received.get(Protocol.Field.EMAIL.key);
+
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
             User user;
             Database database = Database.getInstance();
 
             try {
-                if (received.get(Protocol.Field.LOGIN.key) == null) {
-                    LogManager.getINSTANCE().write(this, "Missing login key");
+                if (rLogin == null) {
+                    LogManager.write("Missing login key");
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_ERROR_LOGIN.code);
-                } else if (received.get(Protocol.Field.PASSWORD.key) == null) {
+                } else if (rPassword == null) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_ERROR_PASSWORD.code);
-                    LogManager.getINSTANCE().write(this, "Missing password key");
-                } else if (received.get(Protocol.Field.FIRSTNAME.key) == null) {
+                    LogManager.write("Missing password key");
+                } else if (rFirstname == null) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_RANDOM.code);
-                    LogManager.getINSTANCE().write(this, "Missing firstname key");
-                } else if (received.get(Protocol.Field.LASTNAME.key) == null) {
+                    LogManager.write("Missing firstname key");
+                } else if (rLasname == null) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_RANDOM.code);
-                    LogManager.getINSTANCE().write(this, "Missing lastname key");
-                } else if (received.get(Protocol.Field.PHONE.key) == null) {
+                    LogManager.write("Missing lastname key");
+                } else if (rPhone == null) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_RANDOM.code);
-                    LogManager.getINSTANCE().write(this, "Missing phone key");
-                } else if (received.get(Protocol.Field.EMAIL.key) == null) {
+                    LogManager.write("Missing phone key");
+                } else if (rEmail == null) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_RANDOM.code);
-                    LogManager.getINSTANCE().write(this, "Missing email key");
-                } else if (database.find_entity(Database.Collections.Users, User.Field.LOGIN, received.get(Protocol.Field.LOGIN.key)) == null) {
+                    LogManager.write("Missing email key");
+                } else if (database.find_entity(Database.Collections.Users, User.Field.LOGIN, rLogin) == null) {
                     user = (User) database.new_entity(Database.Collections.Users);
-                    user.setField(User.Field.LOGIN, received.get(Protocol.Field.LOGIN.key));
-                    user.setField(User.Field.PASSWORD_HASH, new PasswordAuthentication().hash(((String) received.get(Protocol.Field.PASSWORD.key)).toCharArray()));
-                    user.setField(User.Field.FIRSTNAME, received.get(Protocol.Field.FIRSTNAME.key));
-                    user.setField(User.Field.LASTNAME, received.get(Protocol.Field.LASTNAME.key));
-                    user.setField(User.Field.PHONE, received.get(Protocol.Field.PHONE.key));
-                    user.setField(User.Field.EMAIL, received.get(Protocol.Field.EMAIL.key));
-                    user.setField(User.Field.TOKEN, new Token((String) received.get(Protocol.Field.LOGIN.key), (String) received.get(Protocol.Field.PASSWORD.key)).generate());
+                    user.setField(User.Field.LOGIN, rLogin);
+                    user.setField(User.Field.PASSWORD_HASH, new PasswordAuthentication().hash((rPassword).toCharArray()));
+                    user.setField(User.Field.FIRSTNAME, rFirstname);
+                    user.setField(User.Field.LASTNAME, rLasname);
+                    user.setField(User.Field.PHONE, rPhone);
+                    user.setField(User.Field.EMAIL, rEmail);
+                    user.setField(User.Field.TOKEN, new Token(rLogin, rPassword).generate());
                     database.update_entity(Database.Collections.Users, user);
                     sending = new ResponseObject(false);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_SUCCESS.code);
@@ -64,12 +71,12 @@ public class Registration {
                 } else {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_ERROR_LOGIN_TAKEN.code);
-                    LogManager.getINSTANCE().write(this, "Login already taken");
+                    LogManager.write("Login already taken");
                 }
             } catch (Exception e) {
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_RANDOM.code);
-                LogManager.getINSTANCE().write(this, "Exception: " + e.toString());
+                LogManager.write("Exception: " + e.toString());
             }
             response.end(new GsonBuilder().create().toJson(sending));
         });

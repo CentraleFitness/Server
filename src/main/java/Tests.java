@@ -47,8 +47,7 @@ public class Tests {
 
     public static class TestLogManager {
         public static void main(String[] args) {
-            LogManager lm = LogManager.getINSTANCE();
-            lm.write(new Object(),  "toto");
+            LogManager.write("toto");
 
             System.out.println(new Date().toString());
         }

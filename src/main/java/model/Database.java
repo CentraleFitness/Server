@@ -121,7 +121,7 @@ public class Database {
             entity_collection.insertOne(new Document(doc));
             return doc;
         } catch (Exception e) {
-            LogManager.getINSTANCE().write(this, "new_entity error");
+            LogManager.write("new_entity error");
             throw e;
         }
     }
@@ -137,7 +137,7 @@ public class Database {
             Document entity = (Document) this.collections.get(collection).find(eq(field.get_key(), field.get_class().cast(value))).first();
             return (entity != null ? (Document) c.newInstance(entity) : entity);
         } catch (Exception e) {
-            LogManager.getINSTANCE().write(this, "find_entity error");
+            LogManager.write("find_entity error");
             throw e;
         }
     }
