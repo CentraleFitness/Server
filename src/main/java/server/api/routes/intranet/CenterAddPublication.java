@@ -51,7 +51,7 @@ public class CenterAddPublication {
                         publication.setField(Fitness_Center.Publication.Field.TEXT, text);
                         publication.setField(Fitness_Center.Publication.Field.CREATION_DATE, System.currentTimeMillis());
                         publications.add(publication);
-                        center.setField(Fitness_Center.Field.PUBLICATIONS, publications);
+                        //center.setField(Fitness_Center.Field.PUBLICATIONS, publications);
                         database.update_entity(Database.Collections.Fitness_Centers, center);
                     }
                 }

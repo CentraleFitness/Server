@@ -7,25 +7,24 @@ import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import model.Database;
+import model.entities.Event;
 import model.entities.Fitness_Center;
 import model.entities.Fitness_Center_Manager;
-import model.entities.Picture;
 import protocol.ProtocolIntranet;
 import protocol.mobile.ResponseObject;
 
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
 
-public class CenterAddPictureToAlbum {
-    public CenterAddPictureToAlbum(Router router) {
-        router.route(HttpMethod.POST, ProtocolIntranet.Path.CENTER_INCREASE_ALBUM.path).handler(routingContext -> {
+public class AddEvent {
+    public AddEvent(Router router) {
+        router.route(HttpMethod.POST, ProtocolIntranet.Path.ADD_EVENT.path).handler(routingContext -> {
             Map<String, Object> received = routingContext.getBodyAsJson().getMap();
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
             Fitness_Center_Manager manager;
+            Event event;
             Fitness_Center center;
-            String pic64;
             Database database = Database.getInstance();
 
             try {
@@ -33,11 +32,20 @@ public class CenterAddPictureToAlbum {
                 if (!Objects.equals(manager.getField(Fitness_Center_Manager.Field.TOKEN), received.get(ProtocolIntranet.Field.TOKEN.key))) {
                     sending = new ResponseObject(true);
                     sending.put(ProtocolIntranet.Field.STATUS.key, ProtocolIntranet.Status.AUTH_ERROR_TOKEN.code);
-                } else if ((pic64 = (String) received.get(ProtocolIntranet.Field.PICTURE.key)) == null) {
+                } else if (received.get(ProtocolIntranet.Field.TITLE.key) == null) {
                     sending = new ResponseObject(true);
                     sending.put(ProtocolIntranet.Field.STATUS.key, ProtocolIntranet.Status.GENERIC_MISSING_PARAM.code);
-                }
-                else {
+                } else if (received.get(ProtocolIntranet.Field.DESCRIPTION.key) == null) {
+                    sending = new ResponseObject(true);
+                    sending.put(ProtocolIntranet.Field.STATUS.key, ProtocolIntranet.Status.GENERIC_MISSING_PARAM.code);
+                } else if (received.get(ProtocolIntranet.Field.START_DATE.key) == null) {
+                    sending = new ResponseObject(true);
+                    sending.put(ProtocolIntranet.Field.STATUS.key, ProtocolIntranet.Status.GENERIC_MISSING_PARAM.code);
+                } else if (received.get(ProtocolIntranet.Field.END_DATE.key) == null) {
+                    sending = new ResponseObject(true);
+                    sending.put(ProtocolIntranet.Field.STATUS.key, ProtocolIntranet.Status.GENERIC_MISSING_PARAM.code);
+                } else {
+
                     center = (Fitness_Center) database.find_entity(Database.Collections.Fitness_Centers, Fitness_Center.Field.ID, manager.getField(Fitness_Center_Manager.Field.FITNESS_CENTER_ID));
 
                     if (center == null) {
@@ -46,32 +54,26 @@ public class CenterAddPictureToAlbum {
                     } else {
                         sending = new ResponseObject(false);
                         sending.put(ProtocolIntranet.Field.STATUS.key, ProtocolIntranet.Status.GENERIC_OK.code);
-                        Picture pic = (Picture) database.new_entity(Database.Collections.Pictures);
-                        pic.setField(Picture.Field.PICTURE, pic64);
 
-                        @SuppressWarnings("unchecked")
-                        ArrayList<Fitness_Center.Picture_Describe> album = (ArrayList<Fitness_Center.Picture_Describe>) center.getField(Fitness_Center.Field.ALBUM);
-                        Fitness_Center.Picture_Describe picture_describe = new Fitness_Center.Picture_Describe();
-                        picture_describe.setField(Fitness_Center.Picture_Describe.Field.PICTURE_ID, pic.getField(Picture.Field.ID).toString());
-                        picture_describe.setField(Fitness_Center.Picture_Describe.Field.PICTURE, pic.getField(Picture.Field.PICTURE));
-                        picture_describe.setField(Fitness_Center.Picture_Describe.Field.TITLE, received.get(ProtocolIntranet.Field.TITLE.key));
-                        picture_describe.setField(Fitness_Center.Picture_Describe.Field.DESCRIPTION, received.get(ProtocolIntranet.Field.DESCRIPTION.key));
-                        picture_describe.setField(Fitness_Center.Picture_Describe.Field.CREATION_DATE, System.currentTimeMillis());
-                        album.add(picture_describe);
-                        //center.setField(Fitness_Center.Field.ALBUM, album);
+                        Long time = System.currentTimeMillis();
 
-                        database.update_entity(Database.Collections.Pictures, pic);
-                        database.update_entity(Database.Collections.Fitness_Centers, center);
-                        sending.put(ProtocolIntranet.Field.PICTURE_ID.key, pic.getField(Picture.Field.ID).toString());
+                        event = (Event) database.new_entity(Database.Collections.Events);
+                        event.setField(Event.Field.TITLE, received.get(ProtocolIntranet.Field.TITLE.key));
+                        event.setField(Event.Field.DESCRIPTION, received.get(ProtocolIntranet.Field.DESCRIPTION.key));
+                        event.setField(Event.Field.START_DATE, received.get(ProtocolIntranet.Field.START_DATE.key));
+                        event.setField(Event.Field.END_DATE, received.get(ProtocolIntranet.Field.END_DATE.key));
+                        event.setField(Event.Field.FITNESS_CENTER_ID, center.getField(Fitness_Center.Field.ID));
+                        event.setField(Event.Field.UPDATE_DATE, time);
+                        database.update_entity(Database.Collections.Events, event);
+                        sending.put(ProtocolIntranet.Field.EVENT_ID.key, event.getField(Event.Field.ID).toString());
                     }
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 sending = new ResponseObject(true);
                 sending.put(ProtocolIntranet.Field.STATUS.key, ProtocolIntranet.Status.MISC_ERROR.code);
                 LogManager.write("Exception: " + e.toString());
             }
             response.end(new GsonBuilder().create().toJson(sending));
         });
-
     }
 }

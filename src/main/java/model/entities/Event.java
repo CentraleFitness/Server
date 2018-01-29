@@ -7,6 +7,12 @@ import org.bson.types.ObjectId;
 public class Event extends Database.Entity {
     public enum Field implements Database.Entity_Field {
         ID("_id", ObjectId.class),
+        TITLE("title", String.class),
+        DESCRIPTION("description", String.class),
+        START_DATE("start_date", Long.class),
+        END_DATE("end_date", Long.class),
+        FITNESS_CENTER_ID("fitness_center_id", ObjectId.class),
+        UPDATE_DATE("update_date", Long.class),
         ;
         @Override
         public String get_key() {

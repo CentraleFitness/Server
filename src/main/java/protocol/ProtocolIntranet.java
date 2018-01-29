@@ -139,6 +139,41 @@ public class ProtocolIntranet {
          */
         CENTER_GET_PUBLICATIONS("/club/get/publications"),
 
+        /**
+         * @path: ADD_FEEDBACK:
+         * @param: TOKEN.
+         * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
+         */
+        ADD_FEEDBACK("/manager/add/feedback"),
+
+        /**
+         * @path: ADD_FEEDBACK:
+         * @param: TOKEN.
+         * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
+         */
+        GET_FEEDBACKS("/manager/get/feedbacks"),
+
+        /**
+         * @path: ADD_FEEDBACK:
+         * @param: TOKEN.
+         * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
+         */
+        GET_FEEDBACK_STATES("/manager/get/feedbackstates"),
+
+        /**
+         * @path: ADD_EVENT:
+         * @param: TOKEN.
+         * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
+         */
+        ADD_EVENT("/center/add/event"),
+
+        /**
+         * @path: ADD_FEEDBACK:
+         * @param: TOKEN.
+         * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
+         */
+        GET_EVENTS("/center/get/events"),
+
         ;
         public String path;
         Path(String path) {
@@ -168,6 +203,11 @@ public class ProtocolIntranet {
         TEXT("text"),
         CREATION_DATE("creation_date"),
         PUBLICATIONS("publications"),
+        UPDATE_DATE("update_date"),
+        START_DATE("start_date"),
+        END_DATE("end_date"),
+        FEEDBACK_ID("feedback_id"),
+        EVENT_ID("event_id"),
         ;
         public String key;
         Field(String key) {
