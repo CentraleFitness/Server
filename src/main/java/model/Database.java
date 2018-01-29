@@ -14,7 +14,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
 import java.math.BigInteger;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.set;
@@ -136,6 +139,21 @@ public class Database {
             c = collection._class.getConstructor(Document.class);
             Document entity = (Document) this.collections.get(collection).find(eq(field.get_key(), field.get_class().cast(value))).first();
             return (entity != null ? (Document) c.newInstance(entity) : entity);
+        } catch (Exception e) {
+            LogManager.write("find_entity error");
+            throw e;
+        }
+    }
+
+    public LinkedList<Entity> find_entities(Collections collection, Entity_Field field, Object value) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        Constructor c = null;
+        try {
+            LinkedList entities = new LinkedList<Document>();
+            c = collection._class.getConstructor(Document.class);
+            for (Document doc : (FindIterable<Document>) this.collections.get(collection).find(eq(field.get_key(), field.get_class().cast(value)))) {
+                entities.push(c.newInstance(doc));
+            }
+            return entities;
         } catch (Exception e) {
             LogManager.write("find_entity error");
             throw e;
