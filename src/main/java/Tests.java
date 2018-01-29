@@ -14,6 +14,8 @@ import protocol.mobile.ResponseObject;
 import java.io.FileReader;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
 
 import static com.mongodb.client.model.Filters.eq;
 
@@ -51,6 +53,28 @@ public class Tests {
             LogManager.write("toto");
 
             System.out.println(new Date().toString());
+        }
+    }
+
+    public static class TestGetField {
+        public static void main(String[] args) {
+            Map<String, LinkedList<Integer>> map1 = new HashMap<>();
+            LinkedList<Integer> list1 = new LinkedList<Integer>();
+
+            list1.push(0);
+            list1.push(1);
+
+            map1.put("list1", list1);
+
+            for (Integer i : map1.get("list1")) {
+                System.out.println(i);
+            }
+
+            map1.get("list1").push(4);
+
+            for (Integer i : map1.get("list1")) {
+                System.out.println(i);
+            }
         }
     }
 }

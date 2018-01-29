@@ -65,16 +65,20 @@ public class Database {
 
     public static abstract class Entity extends Document {
         public enum Field implements Entity_Field {
-                ;
+            ID("_id", ObjectId.class),
+            ;
             @Override
             public String get_key() {
-                return null;
+                return this.key;
             }
 
             @Override
             public Class get_class() {
-                return null;
+                return this._class;
             }
+            private String key;
+            private Class _class;
+            Field(String key, Class _class) {this.key = key; this._class = _class;}
         }
 
         public Object getField(Entity_Field field) {
@@ -158,5 +162,13 @@ public class Database {
             LogManager.write("find_entity error");
             throw e;
         }
+    }
+
+    public void delete_entity(Collections collection, Entity_Field field, Object value) {
+        this.collections.get(collection).deleteOne(eq(field.get_key(), field.get_class().cast(value)));
+    }
+
+    public void delete_entities(Collections collection, Entity_Field field, Object value) {
+        this.collections.get(collection).deleteMany(eq(field.get_key(), field.get_class().cast(value)));
     }
 }
