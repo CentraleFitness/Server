@@ -1,4 +1,4 @@
-package protocol;
+package protocol.mobile;
 
 /**
  * Created by hadrien on 16/03/2017.

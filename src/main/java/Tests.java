@@ -6,12 +6,14 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import io.vertx.ext.web.handler.FormLoginHandler;
 import model.Database;
+import model.entities.Feedback;
 import model.entities.User;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import protocol.mobile.ResponseObject;
 
 import java.io.FileReader;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -75,6 +77,15 @@ public class Tests {
             for (Integer i : map1.get("list1")) {
                 System.out.println(i);
             }
+        }
+    }
+
+    public static class TestDB {
+        public static void main(String[] args) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+            Database db = Database.getInstance();
+
+            LinkedList<Database.Entity> feedBacks = db.find_entities(Database.Collections.Feedbacks, Feedback.Field.ID, "");
+            Feedback feedback = (Feedback) feedBacks.getFirst();
         }
     }
 }

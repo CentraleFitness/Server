@@ -1,17 +1,9 @@
 package server.module;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.buffer.Buffer;
-import io.vertx.core.net.NetServer;
-import model.Database;
-import org.bson.Document;
-import sun.security.pkcs11.Secmod;
-
-import static com.mongodb.client.model.Filters.eq;
+import io.vertx.core.http.HttpServer;
+import io.vertx.ext.web.Router;
+import io.vertx.ext.web.handler.BodyHandler;
 
 /**
  * Created by hadrien on 14/03/2017.
@@ -21,8 +13,8 @@ import static com.mongodb.client.model.Filters.eq;
 public class ModuleServer extends AbstractVerticle {
 
     private int port;
-    private NetServer netServer;
-    private Database database = null;
+    private HttpServer httpServer = null;
+    private Router router = null;
 
     public ModuleServer(int port) {
         this.port = port;
@@ -30,9 +22,15 @@ public class ModuleServer extends AbstractVerticle {
 
     @Override
     public void start() {
-
+        System.out.println("...MobileServer creation...");
+        this.httpServer = this.vertx.createHttpServer();
+        this.router = Router.router(this.vertx);
+        routing();
+        this.httpServer.requestHandler(this.router::accept).listen(this.port);
     }
-    public void setDatabase(Database database) {
-        this.database = database;
+
+    public void routing() {
+        this.router.route().handler(BodyHandler.create());
+
     }
 }

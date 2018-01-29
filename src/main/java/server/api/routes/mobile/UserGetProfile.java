@@ -8,7 +8,7 @@ import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import model.Database;
 import model.entities.User;
-import protocol.Protocol;
+import protocol.mobile.Protocol;
 import protocol.mobile.ResponseObject;
 
 import java.util.Map;
