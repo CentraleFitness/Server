@@ -66,7 +66,7 @@ public class LogManager {
                 if (callerClassName==null) {
                     callerClassName = ste.getClassName();
                 } else if (!callerClassName.equals(ste.getClassName())) {
-                    return ste.getClassName();
+                    return ste.getClassName() + ":" + ste.getMethodName() + "()";
                 }
             }
         }
