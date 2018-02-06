@@ -1,18 +1,10 @@
 import Tools.LogManager;
 import com.google.gson.*;
-import com.google.gson.stream.JsonReader;
-import com.mongodb.MongoClient;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
 import io.vertx.ext.web.handler.FormLoginHandler;
 import model.Database;
 import model.entities.Feedback;
-import model.entities.User;
-import org.bson.Document;
-import org.bson.types.ObjectId;
-import protocol.mobile.ResponseObject;
+import protocol.ResponseObject;
 
-import java.io.FileReader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.HashMap;

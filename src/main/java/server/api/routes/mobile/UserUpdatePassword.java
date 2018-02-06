@@ -10,7 +10,7 @@ import io.vertx.ext.web.Router;
 import model.Database;
 import model.entities.User;
 import protocol.mobile.Protocol;
-import protocol.mobile.ResponseObject;
+import protocol.ResponseObject;
 
 import java.util.Map;
 import java.util.Objects;

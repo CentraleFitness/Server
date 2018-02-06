@@ -11,7 +11,7 @@ import model.entities.Fitness_Center;
 import model.entities.Fitness_Center_Manager;
 import model.entities.Picture;
 import protocol.ProtocolIntranet;
-import protocol.mobile.ResponseObject;
+import protocol.ResponseObject;
 
 import java.util.ArrayList;
 import java.util.Map;

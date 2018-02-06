@@ -1,4 +1,4 @@
-package protocol.mobile;
+package protocol;
 
 import java.util.HashMap;
 import java.util.Objects;

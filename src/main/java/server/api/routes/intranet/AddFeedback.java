@@ -11,7 +11,7 @@ import model.entities.Feedback;
 import model.entities.Feedback_State;
 import model.entities.Fitness_Center_Manager;
 import protocol.ProtocolIntranet;
-import protocol.mobile.ResponseObject;
+import protocol.ResponseObject;
 
 import java.util.Map;
 import java.util.Objects;

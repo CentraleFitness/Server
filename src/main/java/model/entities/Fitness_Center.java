@@ -6,6 +6,7 @@ import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Fitness_Center extends Database.Entity {
     public enum Field implements Database.Entity_Field {
@@ -20,6 +21,7 @@ public class Fitness_Center extends Database.Entity {
         PICTURE_ID("picture_id", ObjectId.class),
         ALBUM("album", ArrayList.class),
         PUBLICATIONS("publications", ArrayList.class),
+        API_KEY("apiKey", String.class),
         ;
         @Override
         public String get_key() {

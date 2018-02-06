@@ -55,6 +55,8 @@ public class Protocol {
     }
 
     public enum Status {
+        GENERIC_OK("001", "ok"),
+        MISC_RANDOM("666", "Random error"),
         ;
         public String code;
         public String message;

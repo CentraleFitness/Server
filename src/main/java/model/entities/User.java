@@ -32,7 +32,6 @@ public class User extends Entity {
         FRIENDS("friends", Map.class),
         CONVERSATIONS("conversations", Map.class),
         BLOCKED_USERS("blocked_users", Map.class),
-        ELECTRIC_PRODUCTION("electric_production", Map.class),
         ;
         @Override
         public String get_key() {
