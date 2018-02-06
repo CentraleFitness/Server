@@ -28,7 +28,7 @@ public class ModuleGetIds {
             try {
 
             } catch (Exception e) {
-                LogManager.write("");
+                LogManager.write(e);
             }
             response.end(new GsonBuilder().create().toJson(sending));
         });

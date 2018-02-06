@@ -39,7 +39,9 @@ public class LogManager {
     }
 
     public static void write(Exception e) {
-        LogManager.write("Exception: " + e.toString());
+        if (mEnabled == false) return;
+        mLog.println("WHEN: " + new Date().toString() + " :: WHERE: " + getCallerCallerClassName() + " :: WHAT: " + "Exception: " + e.toString());
+        mLog.flush();
     }
 
     @Override
