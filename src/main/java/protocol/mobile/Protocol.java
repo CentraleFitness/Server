@@ -49,8 +49,6 @@ public class Protocol {
         USER_UPDATE_PROFILE("/user/update/profile"),
 
         /**
-         * ! NOT IMPLEMENTED YET !
-         *
          * @path: USER_UPDATE_PASSWORD:
          * @param: TOKEN, PASSWORD, NEW_PASSWORD.
          * @return: STATUS, TOKEN.
@@ -65,14 +63,25 @@ public class Protocol {
         USER_UPDATE_PICTURE("/user/update/picture"),
 
         /**
-         * @deprecated
-         * ! DO NOT USE !
-         *
-         * @path: USERWATTPRODUCTIONINSTANT:
-         * @param: NA
-         * @return: NA
+         * @path: USER_PAIR_START:
+         * @param: TOKEN, MODULE_ID.
+         * @return: STATUS.
          */
-        USERWATTPRODUCTIONINSTANT("/user/watt/instant"),
+        USER_PAIR_START("/user/pair/start"),
+
+        /**
+         * @path: USER_PAIR_STOP:
+         * @param: TOKEN.
+         * @return: STATUS.
+         */
+        USER_PAIR_STOP("/user/pair/stop"),
+
+        /**
+         * @path: USER_GET_INSTANTPRODUCTION:
+         * @param: TOKEN.
+         * @return: STATUS, LIST PRODUCTION.
+         */
+        USER_GET_INSTANTPRODUCTION("/user/get/instantprodution"),
         ;
         public String path;
         Path(String path) {
@@ -90,10 +99,9 @@ public class Protocol {
         LASTNAME("last name"),
         PHONE("phone number"),
         EMAIL("email address"),
-        INSTANTWATT("instant watt"),
-        MODULENAME("module name"),
-        MACHINETYPE("machine type"),
         PICTURE("picture"),
+        PRODUCTION("production"),
+        MODULEID("moduleID"),
         ;
         public String key;
         Field(String key) {
