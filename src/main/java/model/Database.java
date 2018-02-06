@@ -146,7 +146,7 @@ public class Database {
             Document entity = (Document) this.collections.get(collection).find(eq(field.get_key(), field.get_class().cast(value))).first();
             return (entity != null ? (Document) c.newInstance(entity) : entity);
         } catch (Exception e) {
-            LogManager.write("find_entity error");
+            LogManager.write("Exception: " + e.toString());
             throw e;
         }
     }
@@ -161,7 +161,7 @@ public class Database {
             }
             return entities;
         } catch (Exception e) {
-            LogManager.write("find_entity error");
+            LogManager.write("Exception: " + e.toString());
             throw e;
         }
     }
