@@ -11,19 +11,19 @@ import server.api.routes.mobile.*;
  *
  * Tuto : http://vertx.io/docs/vertx-web/java/
  */
-public class MobileServer extends AbstractVerticle {
+public class MobileVerticle extends AbstractVerticle {
 
     private int port = 0;
     private HttpServer httpServer = null;
     private Router router = null;
 
-    public MobileServer(int port) {
+    public MobileVerticle(int port) {
         this.port = port;
     }
 
     @Override
     public void start() {
-        System.out.println("...MobileServer creation...");
+        System.out.println("...MobileVerticle creation...");
         this.httpServer = this.vertx.createHttpServer();
         this.router = Router.router(this.vertx);
         routing();

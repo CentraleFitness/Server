@@ -5,14 +5,12 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
-import com.mongodb.MongoClient;
-import com.mongodb.client.MongoDatabase;
 import io.vertx.core.Vertx;
 import model.Database;
 import server.Settings;
 import server.intranet.IntranetVerticle;
-import server.mobile.MobileServer;
-import server.module.ModuleServer;
+import server.mobile.MobileVerticle;
+import server.module.ModuleVerticle;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -26,8 +24,8 @@ public class CentralServer {
 
     private Vertx vertx;
     private Settings settings;
-    private MobileServer mobileServer;
-    private ModuleServer moduleServer;
+    private MobileVerticle mobileVerticle;
+    private ModuleVerticle moduleVerticle;
     private IntranetVerticle intranetVerticle;
     private Database database = null;
 
@@ -51,13 +49,13 @@ public class CentralServer {
         this.vertx = Vertx.vertx();
 
         if (Boolean.parseBoolean(this.settings.get("EnableLogManager")) == true) LogManager.enable();
-        this.mobileServer = new MobileServer(Integer.parseInt(this.settings.get("Mobile Server Http Port")));
-        this.moduleServer = new ModuleServer(Integer.parseInt(this.settings.get("Module Server TCP Port")));
+        this.mobileVerticle = new MobileVerticle(Integer.parseInt(this.settings.get("Mobile Server Http Port")));
+        this.moduleVerticle = new ModuleVerticle(Integer.parseInt(this.settings.get("Module Server TCP Port")));
         this.intranetVerticle = new IntranetVerticle(Integer.parseInt(this.settings.get("Intranet Server Http Port")));
         this.intranetVerticle.setDatabase(database);
 
-        this.vertx.deployVerticle(this.mobileServer);
-        this.vertx.deployVerticle(this.moduleServer);
+        this.vertx.deployVerticle(this.mobileVerticle);
+        this.vertx.deployVerticle(this.moduleVerticle);
         this.vertx.deployVerticle(this.intranetVerticle);
     }
 }
