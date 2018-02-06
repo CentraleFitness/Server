@@ -25,11 +25,10 @@ public class UserGetPicture {
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
             User user;
             Picture picture;
-            Database database = Database.getInstance();
 
             try {
-                user = (User) database.find_entity(Database.Collections.Users, User.Field.LOGIN, Token.decodeToken(rToken).getIssuer());
-                picture = (Picture) database.find_entity(Database.Collections.Pictures, Picture.Field.ID, user.getField(User.Field.PICTURE_ID));
+                user = (User) Database.find_entity(Database.Collections.Users, User.Field.LOGIN, Token.decodeToken(rToken).getIssuer());
+                picture = (Picture) Database.find_entity(Database.Collections.Pictures, Picture.Field.ID, user.getField(User.Field.PICTURE_ID));
                 if (!Objects.equals(user.getField(User.Field.TOKEN), rToken)) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);

@@ -20,7 +20,6 @@ public class ModuleGetIds {
 
             ResponseObject sending = null;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
-            Database database = Database.getInstance();
 
             label:try {
                 if (rApiKey == null) {

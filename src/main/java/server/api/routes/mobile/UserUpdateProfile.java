@@ -27,10 +27,9 @@ public class UserUpdateProfile {
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
             User user;
-            Database database = Database.getInstance();
 
             try {
-                user = (User) database.find_entity(Database.Collections.Users, User.Field.LOGIN, Token.decodeToken(rToken).getIssuer());
+                user = (User) Database.find_entity(Database.Collections.Users, User.Field.LOGIN, Token.decodeToken(rToken).getIssuer());
                 if (!Objects.equals(user.getField(User.Field.TOKEN), rToken)) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
@@ -42,7 +41,7 @@ public class UserUpdateProfile {
                     user.setField(User.Field.LASTNAME, rLastname);
                     user.setField(User.Field.EMAIL, rEmail);
                     user.setField(User.Field.PHONE, rPhone);
-                    database.update_entity(Database.Collections.Users, user);
+                    Database.update_entity(Database.Collections.Users, user);
                 }
             }catch (Exception e){
                 sending = new ResponseObject(true);

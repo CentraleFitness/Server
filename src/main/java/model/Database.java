@@ -27,14 +27,14 @@ import static com.mongodb.client.model.Updates.set;
  */
 public class Database {
 
-    public MongoClient client = null;
-    public MongoDatabase db = null;
-    public Map<Collections, MongoCollection> collections = null;
+    private static MongoClient client = null;
+    private static MongoDatabase db = null;
+    public static Map<Collections, MongoCollection> collections = null;
 
-    public static String ip = "localhost";
-    public static int port = 27017;
-    public static String name = "centralefitness";
-    public static String idKey = "_id";
+    private static String ip = "localhost";
+    private static int port = 27017;
+    private static String name = "centralefitness";
+    private static String idKey = "_id";
 
     private static Database INSTANCE = new Database();
 
@@ -118,12 +118,13 @@ public class Database {
         }
     }
 
+    @Deprecated
     public static Database getInstance() {return INSTANCE;}
 
-    public Document new_entity(Collections collection) throws IllegalAccessException, InstantiationException {
+    public static Document new_entity(Collections collection) throws IllegalAccessException, InstantiationException {
         try {
             Document doc = (Document) collection._class.newInstance();
-            MongoCollection entity_collection = this.collections.get(collection);
+            MongoCollection entity_collection = collections.get(collection);
             ObjectId id = new ObjectId();
             doc.put("_id", id);
             doc.put(collection.entity_id, id);
@@ -135,15 +136,15 @@ public class Database {
         }
     }
 
-    public void update_entity(Collections collection, Document entity) {
-        this.collections.get(collection).updateOne(eq(collection.entity_id, entity.get(collection.entity_id)), new Document("$set", entity));
+    public static void update_entity(Collections collection, Document entity) {
+        collections.get(collection).updateOne(eq(collection.entity_id, entity.get(collection.entity_id)), new Document("$set", entity));
     }
 
-    public Document find_entity(Collections collection, Entity_Field field, Object value) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public static Document find_entity(Collections collection, Entity_Field field, Object value) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         Constructor c = null;
         try {
             c = collection._class.getConstructor(Document.class);
-            Document entity = (Document) this.collections.get(collection).find(eq(field.get_key(), field.get_class().cast(value))).first();
+            Document entity = (Document) collections.get(collection).find(eq(field.get_key(), field.get_class().cast(value))).first();
             return (entity != null ? (Document) c.newInstance(entity) : entity);
         } catch (Exception e) {
             LogManager.write(e);
@@ -151,12 +152,12 @@ public class Database {
         }
     }
 
-    public LinkedList<Entity> find_entities(Collections collection, Entity_Field field, Object value) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public static LinkedList<Entity> find_entities(Collections collection, Entity_Field field, Object value) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         Constructor c = null;
         try {
             LinkedList entities = new LinkedList<Document>();
             c = collection._class.getConstructor(Document.class);
-            for (Document doc : (FindIterable<Document>) this.collections.get(collection).find(eq(field.get_key(), field.get_class().cast(value)))) {
+            for (Document doc : (FindIterable<Document>) collections.get(collection).find(eq(field.get_key(), field.get_class().cast(value)))) {
                 entities.push(c.newInstance(doc));
             }
             return entities;
@@ -166,11 +167,11 @@ public class Database {
         }
     }
 
-    public void delete_entity(Collections collection, Entity_Field field, Object value) {
-        this.collections.get(collection).deleteOne(eq(field.get_key(), field.get_class().cast(value)));
+    public static void delete_entity(Collections collection, Entity_Field field, Object value) {
+        collections.get(collection).deleteOne(eq(field.get_key(), field.get_class().cast(value)));
     }
 
-    public void delete_entities(Collections collection, Entity_Field field, Object value) {
-        this.collections.get(collection).deleteMany(eq(field.get_key(), field.get_class().cast(value)));
+    public static void delete_entities(Collections collection, Entity_Field field, Object value) {
+        collections.get(collection).deleteMany(eq(field.get_key(), field.get_class().cast(value)));
     }
 }

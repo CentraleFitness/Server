@@ -28,7 +28,6 @@ public class Registration {
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
             User user;
-            Database database = Database.getInstance();
 
             try {
                 if (rLogin == null) {
@@ -55,8 +54,8 @@ public class Registration {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_RANDOM.code);
                     LogManager.write("Missing email key");
-                } else if (database.find_entity(Database.Collections.Users, User.Field.LOGIN, rLogin) == null) {
-                    user = (User) database.new_entity(Database.Collections.Users);
+                } else if (Database.find_entity(Database.Collections.Users, User.Field.LOGIN, rLogin) == null) {
+                    user = (User) Database.new_entity(Database.Collections.Users);
                     user.setField(User.Field.LOGIN, rLogin);
                     user.setField(User.Field.PASSWORD_HASH, new PasswordAuthentication().hash((rPassword).toCharArray()));
                     user.setField(User.Field.FIRSTNAME, rFirstname);
@@ -64,7 +63,7 @@ public class Registration {
                     user.setField(User.Field.PHONE, rPhone);
                     user.setField(User.Field.EMAIL, rEmail);
                     user.setField(User.Field.TOKEN, new Token(rLogin, rPassword).generate());
-                    database.update_entity(Database.Collections.Users, user);
+                    Database.update_entity(Database.Collections.Users, user);
                     sending = new ResponseObject(false);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_SUCCESS.code);
                     sending.put(Protocol.Field.TOKEN.key, (String) user.getField(User.Field.TOKEN));
