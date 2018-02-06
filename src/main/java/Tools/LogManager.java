@@ -19,7 +19,7 @@ public class LogManager {
     private static void logFile() {
         if (mEnabled == true) {
             try {
-                mLog = new PrintWriter("server_" + new Date().getTime() + ".log", "UTF-8");
+                mLog = new PrintWriter(new Date().getTime() + ".log", "UTF-8");
             } catch (Exception e) {
                 System.err.println("LogManager: Could not open file");
             }

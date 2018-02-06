@@ -4,6 +4,7 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.http.HttpServer;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
+import server.api.routes.module.ModuleGetIds;
 
 /**
  * Created by hadrien on 14/03/2017.
@@ -32,5 +33,6 @@ public class ModuleVerticle extends AbstractVerticle {
     public void routing() {
         this.router.route().handler(BodyHandler.create());
 
+        new ModuleGetIds(router);
     }
 }
