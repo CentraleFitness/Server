@@ -34,6 +34,7 @@ public class Protocol {
     }
 
     public enum Field {
+        STATUS("code"),
         APIKEY("apiKey"),
         UUID("UUID"),
         COMMAND("commande"),
@@ -56,7 +57,8 @@ public class Protocol {
 
     public enum Status {
         GENERIC_OK("001", "ok"),
-        MISC_RANDOM("666", "Random error"),
+        GENERIC_KO("401", "ko"),
+        INTERNAL_SERVER_ERROR("666", "Internal server error"),
         ;
         public String code;
         public String message;
