@@ -38,6 +38,10 @@ public class LogManager {
         mLog.flush();
     }
 
+    public static void write(Exception e) {
+        LogManager.write("Exception: " + e.toString());
+    }
+
     @Override
     protected void finalize() throws Throwable {
         super.finalize();
