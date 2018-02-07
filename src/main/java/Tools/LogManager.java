@@ -19,7 +19,7 @@ public class LogManager {
     private static void logFile() {
         if (mEnabled == true) {
             try {
-                mLog = new PrintWriter("server_" + new Date().getTime() + ".log", "UTF-8");
+                mLog = new PrintWriter(new Date().getTime() + ".log", "UTF-8");
             } catch (Exception e) {
                 System.err.println("LogManager: Could not open file");
             }
@@ -35,6 +35,12 @@ public class LogManager {
     public static void write(String message) {
         if (mEnabled == false) return;
         mLog.println("WHEN: " + new Date().toString() + " :: WHERE: " + getCallerCallerClassName() + " :: WHAT: " + message);
+        mLog.flush();
+    }
+
+    public static void write(Exception e) {
+        if (mEnabled == false) return;
+        mLog.println("WHEN: " + new Date().toString() + " :: WHERE: " + getCallerCallerClassName() + " :: WHAT: " + "Exception: " + e.toString());
         mLog.flush();
     }
 
@@ -66,7 +72,7 @@ public class LogManager {
                 if (callerClassName==null) {
                     callerClassName = ste.getClassName();
                 } else if (!callerClassName.equals(ste.getClassName())) {
-                    return ste.getClassName();
+                    return ste.getClassName() + ":" + ste.getMethodName() + "()";
                 }
             }
         }

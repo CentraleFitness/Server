@@ -10,6 +10,7 @@ public class Feedback extends Database.Entity {
         TITLE("title", String.class),
         DESCRIPTION("description", String.class),
         FEEDBACK_STATE_ID("feedback_state_id", ObjectId.class),
+        FEEDBACK_STATE("feedback_state", Integer.class),
         FITNESS_MANAGER_ID("fitness_manager_id", ObjectId.class),
         CREATION_DATE("creation_date", Long.class),
         UPDATE_DATE("update_date", Long.class),

@@ -56,6 +56,13 @@ public class IntranetVerticle extends AbstractVerticle {
         new CenterAddPublication(this.router);
         new CenterDeletePublication(this.router);
         new CenterGetPublications(this.router);
+
+        new AddFeedback(this.router);
+        new GetFeedbacks(this.router);
+
+        new AddEvent(this.router);
+        new GetEvents(this.router);
+        new UpdateEvent(this.router);
     }
 
 

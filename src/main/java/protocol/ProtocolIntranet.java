@@ -168,6 +168,13 @@ public class ProtocolIntranet {
         ADD_EVENT("/center/add/event"),
 
         /**
+         * @path: ADD_EVENT:
+         * @param: TOKEN.
+         * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
+         */
+        UPDATE_EVENT("/center/update/event"),
+
+        /**
          * @path: ADD_FEEDBACK:
          * @param: TOKEN.
          * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
@@ -208,6 +215,10 @@ public class ProtocolIntranet {
         END_DATE("end_date"),
         FEEDBACK_ID("feedback_id"),
         EVENT_ID("event_id"),
+        FEEDBACKS("feedbacks"),
+        EVENTS("events"),
+        FEEDBACK_STATES("feedback_states"),
+        NB_SUBSCRIBERS("nb_subscribers"),
         ;
         public String key;
         Field(String key) {

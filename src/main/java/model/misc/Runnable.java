@@ -11,8 +11,7 @@ public class Runnable {
 
     public static class new_User {
         public static void main(String[] args) throws InstantiationException, IllegalAccessException {
-            Database db = Database.getInstance();
-            for (Database.Collections col : Database.Collections.values()) db.new_entity(col);
+            for (Database.Collections col : Database.Collections.values()) Database.new_entity(col);
         }
     }
 

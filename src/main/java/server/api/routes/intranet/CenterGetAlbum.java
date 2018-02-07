@@ -1,6 +1,7 @@
 package server.api.routes.intranet;
 
 import Tools.LogManager;
+import Tools.ObjectIdSerializer;
 import Tools.Token;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -10,6 +11,7 @@ import io.vertx.ext.web.Router;
 import model.Database;
 import model.entities.Fitness_Center;
 import model.entities.Fitness_Center_Manager;
+import org.bson.types.ObjectId;
 import protocol.ProtocolIntranet;
 import protocol.intranet.ResponseObject;
 
@@ -52,7 +54,7 @@ public class CenterGetAlbum {
                 sending.put(ProtocolIntranet.Field.STATUS.key, ProtocolIntranet.Status.MISC_ERROR.code);
                 LogManager.write("Exception: " + e.toString());
             }
-            response.end(new GsonBuilder().create().toJson(sending));
+            response.end(new GsonBuilder().registerTypeAdapter(ObjectId.class, new ObjectIdSerializer()).create().toJson(sending));
         });
     }
 }

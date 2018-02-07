@@ -11,7 +11,7 @@ import model.entities.Fitness_Center;
 import model.entities.Fitness_Center_Manager;
 import model.entities.Picture;
 import protocol.ProtocolIntranet;
-import protocol.mobile.ResponseObject;
+import protocol.ResponseObject;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -52,7 +52,7 @@ public class CenterAddPictureToAlbum {
                         @SuppressWarnings("unchecked")
                         ArrayList<Fitness_Center.Picture_Describe> album = (ArrayList<Fitness_Center.Picture_Describe>) center.getField(Fitness_Center.Field.ALBUM);
                         Fitness_Center.Picture_Describe picture_describe = new Fitness_Center.Picture_Describe();
-                        picture_describe.setField(Fitness_Center.Picture_Describe.Field.PICTURE_ID, pic.getField(Picture.Field.ID).toString());
+                        picture_describe.setField(Fitness_Center.Picture_Describe.Field.PICTURE_ID, pic.getField(Picture.Field.ID));
                         picture_describe.setField(Fitness_Center.Picture_Describe.Field.PICTURE, pic.getField(Picture.Field.PICTURE));
                         picture_describe.setField(Fitness_Center.Picture_Describe.Field.TITLE, received.get(ProtocolIntranet.Field.TITLE.key));
                         picture_describe.setField(Fitness_Center.Picture_Describe.Field.DESCRIPTION, received.get(ProtocolIntranet.Field.DESCRIPTION.key));

@@ -10,8 +10,9 @@ import model.Database;
 import model.entities.Event;
 import model.entities.Fitness_Center;
 import model.entities.Fitness_Center_Manager;
+import model.entities.Picture;
 import protocol.ProtocolIntranet;
-import protocol.mobile.ResponseObject;
+import protocol.ResponseObject;
 
 import java.util.Map;
 import java.util.Objects;
@@ -25,6 +26,7 @@ public class AddEvent {
             Fitness_Center_Manager manager;
             Event event;
             Fitness_Center center;
+            String pic64;
             Database database = Database.getInstance();
 
             try {
@@ -54,16 +56,29 @@ public class AddEvent {
                     } else {
                         sending = new ResponseObject(false);
                         sending.put(ProtocolIntranet.Field.STATUS.key, ProtocolIntranet.Status.GENERIC_OK.code);
+                        event = (Event) database.new_entity(Database.Collections.Events);
+                        Picture pic;
+
+                        if ((pic64 = (String) received.get(ProtocolIntranet.Field.PICTURE.key)) != null) {
+                            pic = (Picture) database.new_entity(Database.Collections.Pictures);
+                            pic.setField(Picture.Field.PICTURE, pic64);
+                            event.setField(Event.Field.PICTURE_ID, pic.getField(Picture.Field.ID));
+                            event.setField(Event.Field.PICTURE, pic.getField(Picture.Field.PICTURE));
+                            database.update_entity(Database.Collections.Pictures, pic);
+                        } else {
+                            event.setField(Event.Field.PICTURE_ID, null);
+                            event.setField(Event.Field.PICTURE, "");
+                        }
 
                         Long time = System.currentTimeMillis();
 
-                        event = (Event) database.new_entity(Database.Collections.Events);
                         event.setField(Event.Field.TITLE, received.get(ProtocolIntranet.Field.TITLE.key));
                         event.setField(Event.Field.DESCRIPTION, received.get(ProtocolIntranet.Field.DESCRIPTION.key));
                         event.setField(Event.Field.START_DATE, received.get(ProtocolIntranet.Field.START_DATE.key));
                         event.setField(Event.Field.END_DATE, received.get(ProtocolIntranet.Field.END_DATE.key));
                         event.setField(Event.Field.FITNESS_CENTER_ID, center.getField(Fitness_Center.Field.ID));
                         event.setField(Event.Field.UPDATE_DATE, time);
+                        event.setField(Event.Field.CREATION_DATE, time);
                         database.update_entity(Database.Collections.Events, event);
                         sending.put(ProtocolIntranet.Field.EVENT_ID.key, event.getField(Event.Field.ID).toString());
                     }

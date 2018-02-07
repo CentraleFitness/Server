@@ -11,7 +11,7 @@ import model.entities.Feedback;
 import model.entities.Feedback_State;
 import model.entities.Fitness_Center_Manager;
 import protocol.ProtocolIntranet;
-import protocol.mobile.ResponseObject;
+import protocol.ResponseObject;
 
 import java.util.Map;
 import java.util.Objects;
@@ -48,6 +48,7 @@ public class AddFeedback {
                     feedback.setField(Feedback.Field.TITLE, received.get(ProtocolIntranet.Field.TITLE.key));
                     feedback.setField(Feedback.Field.DESCRIPTION, received.get(ProtocolIntranet.Field.DESCRIPTION.key));
                     feedback.setField(Feedback.Field.FEEDBACK_STATE_ID, state.getField(Feedback_State.Field.ID));
+                    feedback.setField(Feedback.Field.FEEDBACK_STATE, state.getField(Feedback_State.Field.CODE));
                     feedback.setField(Feedback.Field.FITNESS_MANAGER_ID, manager.getField(Fitness_Center_Manager.Field.ID));
                     feedback.setField(Feedback.Field.CREATION_DATE, time);
                     feedback.setField(Feedback.Field.UPDATE_DATE, time);

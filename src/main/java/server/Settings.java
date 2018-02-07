@@ -1,7 +1,5 @@
 package server;
 
-import server.mobile.MobileServer;
-
 import java.util.HashMap;
 
 /**

@@ -11,15 +11,15 @@ import java.util.Map;
 public class Module extends Database.Entity {
     public enum Field implements Database.Entity_Field {
         ID("_id", ObjectId.class),
+        UUID("UUID", String.class),
+        SESSION_ID("session_id", String.class),
         FITNESS_CENTER_ID("fitness_center_id", ObjectId.class),
         MACHINE_TYPE("machine_type", String.class),
-        CURRENT_USER_ID("current_user_id", String.class),
         PRODUCTION_TOTAL("production_total", BigInteger.class),
         PRODUCTION_YEAR("production_year", BigInteger.class),
         PRODUCTION_MONTH("production_month", BigInteger.class),
         PRODUCTION_DAY("production_day", BigInteger.class),
         PRODUCTION_INSTANT("production_instant", BigInteger.class),
-        ELECTRIC_PRODUCTION("electric_production", Map.class),
         ;
         @Override
         public String get_key() {

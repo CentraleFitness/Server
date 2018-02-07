@@ -9,7 +9,7 @@ import io.vertx.ext.web.Router;
 import model.Database;
 import model.entities.Fitness_Center_Manager;
 import protocol.ProtocolIntranet;
-import protocol.mobile.ResponseObject;
+import protocol.ResponseObject;
 
 import java.util.Map;
 import java.util.Objects;

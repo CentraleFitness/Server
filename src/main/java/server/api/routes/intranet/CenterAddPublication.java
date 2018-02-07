@@ -10,7 +10,7 @@ import model.Database;
 import model.entities.Fitness_Center;
 import model.entities.Fitness_Center_Manager;
 import protocol.ProtocolIntranet;
-import protocol.mobile.ResponseObject;
+import protocol.ResponseObject;
 
 import java.util.ArrayList;
 import java.util.Map;

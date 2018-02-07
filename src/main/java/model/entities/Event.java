@@ -11,8 +11,11 @@ public class Event extends Database.Entity {
         DESCRIPTION("description", String.class),
         START_DATE("start_date", Long.class),
         END_DATE("end_date", Long.class),
+        PICTURE_ID("picture_id", ObjectId.class),
+        PICTURE("picture", String.class),
         FITNESS_CENTER_ID("fitness_center_id", ObjectId.class),
         UPDATE_DATE("update_date", Long.class),
+        CREATION_DATE("creation_date", Long.class),
         ;
         @Override
         public String get_key() {
