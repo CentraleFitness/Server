@@ -53,6 +53,7 @@ public class Database {
 <<<<<<< HEAD
         TUPLE_Event_Users("TUPLE_event_users", model.entities.TUPLE_Event_User.class, TUPLE_Event_User.Field.ID.get_key()),
 =======
+        SportSessions("sportsession", model.entities.SportSession.class, SportSession.Field.ID.get_key()),
 >>>>>>> 000f4c3e970202c1a7df1bb420b792ab9e95bcd1
 =======
         SportSessions("sportsession", model.entities.SportSession.class, SportSession.Field.ID.get_key()),
