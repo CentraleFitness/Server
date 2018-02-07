@@ -16,14 +16,15 @@ import java.util.Map;
 public class ModuleGetIds {
     public ModuleGetIds(Router router) {
         router.route(HttpMethod.POST, Protocol.Path.MODULE_GET_IDS.path).handler(routingContext -> {
-            Map<String, Object> received = routingContext.getBodyAsJson().getMap();
-            String rApiKey = (String) received.get(Protocol.Field.APIKEY.key);
-            String[] rUUID = (String[]) received.get(Protocol.Field.UUID.key);
 
             ResponseObject sending = null;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
 
             label:try {
+                Map<String, Object> received = routingContext.getBodyAsJson().getMap();
+                String rApiKey = (String) received.get(Protocol.Field.APIKEY.key);
+                String[] rUUID = (String[]) received.get(Protocol.Field.UUID.key);
+
                 if (rApiKey == null) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_KO.code);
