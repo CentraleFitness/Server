@@ -49,6 +49,7 @@ public class Database {
         Fitness_Center_Managers("fitness_center_managers", model.entities.Fitness_Center_Manager.class, Fitness_Center_Manager.Field.ID.get_key()),
         Feedbacks("feedbacks", model.entities.Feedback.class, Feedback.Field.ID.get_key()),
         Feedback_States("feedback_states", model.entities.Feedback_State.class, Feedback_State.Field.ID.get_key()),
+        SportSessions("sportsession", model.entities.SportSession.class, SportSession.Field.ID.get_key()),
         ;
 
         public String key;

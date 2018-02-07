@@ -28,7 +28,6 @@ public class User extends Entity {
         PRODUCTION_MONTH("production_month", BigInteger.class),
         PRODUCTION_DAY("production_day", BigInteger.class),
         PRODUCTION_INSTANT("production_instant", BigInteger.class),
-        CURRENT_MODULE_ID("module_id", String.class),
         FRIENDS("friends", Map.class),
         CONVERSATIONS("conversations", Map.class),
         BLOCKED_USERS("blocked_users", Map.class),
