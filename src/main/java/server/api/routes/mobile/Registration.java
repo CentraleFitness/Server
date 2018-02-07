@@ -17,19 +17,20 @@ import java.util.Map;
 public class Registration {
     public Registration(Router router) {
         router.route(HttpMethod.POST, Protocol.Path.REGISTRATION.path).handler(routingContext -> {
-            Map<String, Object> received = routingContext.getBodyAsJson().getMap();
-            String rLogin = (String) received.get(Protocol.Field.LOGIN.key);
-            String rPassword = (String) received.get(Protocol.Field.PASSWORD.key);
-            String rFirstname  = (String) received.get(Protocol.Field.FIRSTNAME.key);
-            String rLasname = (String) received.get(Protocol.Field.LASTNAME.key);
-            String rPhone = (String) received.get(Protocol.Field.PHONE.key);
-            String rEmail = (String) received.get(Protocol.Field.EMAIL.key);
 
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
             User user;
 
             try {
+                Map<String, Object> received = routingContext.getBodyAsJson().getMap();
+                String rLogin = (String) received.get(Protocol.Field.LOGIN.key);
+                String rPassword = (String) received.get(Protocol.Field.PASSWORD.key);
+                String rFirstname  = (String) received.get(Protocol.Field.FIRSTNAME.key);
+                String rLasname = (String) received.get(Protocol.Field.LASTNAME.key);
+                String rPhone = (String) received.get(Protocol.Field.PHONE.key);
+                String rEmail = (String) received.get(Protocol.Field.EMAIL.key);
+
                 if (rLogin == null) {
                     LogManager.write("Missing login key");
                     sending = new ResponseObject(true);

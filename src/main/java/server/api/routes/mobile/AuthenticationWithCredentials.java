@@ -17,15 +17,16 @@ import java.util.Map;
 public class AuthenticationWithCredentials {
     public AuthenticationWithCredentials(Router router) {
         router.route(HttpMethod.POST, Protocol.Path.AUTHENTICATION.path).handler(routingContext -> {
-            Map<String, Object> received = routingContext.getBodyAsJson().getMap();
-            String rLogin = (String) received.get(Protocol.Field.LOGIN.key);
-            String rPassword = (String) received.get(Protocol.Field.PASSWORD.key);
 
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
             User user;
 
             try {
+                Map<String, Object> received = routingContext.getBodyAsJson().getMap();
+                String rLogin = (String) received.get(Protocol.Field.LOGIN.key);
+                String rPassword = (String) received.get(Protocol.Field.PASSWORD.key);
+
                 if ((user = (User) Database.find_entity(Database.Collections.Users, User.Field.LOGIN, rLogin)) != null) {
                     if (new PasswordAuthentication().authenticate((rPassword).toCharArray(), (String) user.getField(User.Field.PASSWORD_HASH))) {
                         sending = new ResponseObject(false);
