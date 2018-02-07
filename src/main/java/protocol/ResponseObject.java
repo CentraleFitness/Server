@@ -7,7 +7,7 @@ import java.util.Objects;
  * Created by hadrien on 14/03/2017.
  */
 
-public class ResponseObject extends HashMap<String, String> {
+public class ResponseObject extends HashMap<String, Object> {
 
 
     public ResponseObject(boolean isAnError){

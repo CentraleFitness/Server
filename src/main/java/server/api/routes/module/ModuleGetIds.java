@@ -47,18 +47,20 @@ public class ModuleGetIds {
                     LogManager.write("Missing UUID not found in database");
                     break label;
                 }
-                for (String uuid : rUUID) {
-                    Module module = (Module) Database.find_entity(Database.Collections.Modules, Module.Field.UUID, uuid);
+                for (int i = 0, j = rUUID.size(); i < j; ++i) {
+                    Module module = (Module) Database.find_entity(Database.Collections.Modules, Module.Field.UUID, rUUID.get(i));
                     if (module == null) {
                         module = (Module) Database.new_entity(Database.Collections.Modules);
-                        module.setField(Module.Field.UUID, uuid);
+                        module.setField(Module.Field.UUID, rUUID.get(i));
                     }
                     String moduleID = new ObjectId().toString();
                     module.setField(Module.Field.SESSION_ID, moduleID);
                     Database.update_entity(Database.Collections.Modules, module);
-                    uuid = moduleID;
+                    rUUID.set(i, moduleID);
                 }
-                sending.put(Protocol.Field.MODULEIDS.key, String.valueOf(rUUID));
+                sending = new ResponseObject(false);
+                sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK);
+                sending.put(Protocol.Field.MODULEIDS.key, rUUID);
             } catch (Exception e) {
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.INTERNAL_SERVER_ERROR.code);
