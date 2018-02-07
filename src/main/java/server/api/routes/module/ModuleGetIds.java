@@ -11,9 +11,7 @@ import model.entities.Module;
 import org.bson.types.ObjectId;
 import protocol.ResponseObject;
 import protocol.module.Protocol;
-
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class ModuleGetIds {
@@ -44,7 +42,7 @@ public class ModuleGetIds {
                 if (fitness_center == null) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_KO.code);
-                    LogManager.write("Missing UUID not found in database");
+                    LogManager.write("ApiKey not found in database");
                     break label;
                 }
                 for (int i = 0, j = rUUID.size(); i < j; ++i) {

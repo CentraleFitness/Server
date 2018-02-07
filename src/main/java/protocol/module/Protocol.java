@@ -39,6 +39,9 @@ public class Protocol {
         UUID("UUID"),
         COMMAND("commande"),
         MODULEIDS("moduleIDS"),
+        SESSION_ID("moduleID"),
+        COMMAND_NAME("cmd"),
+        COMMAND_PARAMS("params"),
         ;
         public String key;
         Field(String key) {
