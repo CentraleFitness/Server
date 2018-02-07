@@ -11,6 +11,9 @@ import model.entities.Module;
 import org.bson.types.ObjectId;
 import protocol.ResponseObject;
 import protocol.module.Protocol;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class ModuleGetIds {
@@ -23,7 +26,7 @@ public class ModuleGetIds {
             label:try {
                 Map<String, Object> received = routingContext.getBodyAsJson().getMap();
                 String rApiKey = (String) received.get(Protocol.Field.APIKEY.key);
-                String[] rUUID = (String[]) received.get(Protocol.Field.UUID.key);
+                ArrayList<String> rUUID = (ArrayList) received.get(Protocol.Field.UUID.key);
 
                 if (rApiKey == null) {
                     sending = new ResponseObject(true);
@@ -48,7 +51,7 @@ public class ModuleGetIds {
                     Module module = (Module) Database.find_entity(Database.Collections.Modules, Module.Field.UUID, uuid);
                     if (module == null) {
                         module = (Module) Database.new_entity(Database.Collections.Modules);
-                        module.setField(Module.Field.UUID, rUUID);
+                        module.setField(Module.Field.UUID, uuid);
                     }
                     String moduleID = new ObjectId().toString();
                     module.setField(Module.Field.SESSION_ID, moduleID);
