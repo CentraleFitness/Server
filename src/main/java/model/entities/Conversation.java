@@ -4,9 +4,12 @@ import model.Database;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
+import java.util.Map;
+
 public class Conversation extends Database.Entity {
     public enum Field implements Database.Entity_Field {
         ID("_id", ObjectId.class),
+        USERS_ID("users_id", Map.class),
         ;
         @Override
         public String get_key() {

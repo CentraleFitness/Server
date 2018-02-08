@@ -23,13 +23,7 @@ public class User extends Entity {
         PHONE("phone_number", String.class),
         EMAIL("email_address", String.class),
         PICTURE_ID("picture_id", ObjectId.class),
-        PRODUCTION_TOTAL("production_total", BigInteger.class),
-        PRODUCTION_YEAR("production_year", BigInteger.class),
-        PRODUCTION_MONTH("production_month", BigInteger.class),
-        PRODUCTION_DAY("production_day", BigInteger.class),
-        PRODUCTION_INSTANT("production_instant", BigInteger.class),
         FRIENDS("friends", Map.class),
-        CONVERSATIONS("conversations", Map.class),
         BLOCKED_USERS("blocked_users", Map.class),
         ;
         @Override

@@ -15,11 +15,6 @@ public class Module extends Database.Entity {
         SESSION_ID("session_id", String.class),
         FITNESS_CENTER_ID("fitness_center_id", ObjectId.class),
         MACHINE_TYPE("machine_type", String.class),
-        PRODUCTION_TOTAL("production_total", BigInteger.class),
-        PRODUCTION_YEAR("production_year", BigInteger.class),
-        PRODUCTION_MONTH("production_month", BigInteger.class),
-        PRODUCTION_DAY("production_day", BigInteger.class),
-        PRODUCTION_INSTANT("production_instant", BigInteger.class),
         ;
         @Override
         public String get_key() {

@@ -74,9 +74,7 @@ public class Tests {
 
     public static class TestDB {
         public static void main(String[] args) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-            Database db = Database.getInstance();
-
-            LinkedList<Database.Entity> feedBacks = db.find_entities(Database.Collections.Feedbacks, Feedback.Field.ID, "");
+            LinkedList<Database.Entity> feedBacks = Database.find_entities(Database.Collections.Feedbacks, Feedback.Field.ID, "");
             Feedback feedback = (Feedback) feedBacks.getFirst();
         }
     }

@@ -5,17 +5,19 @@ import org.bson.Document;
 import org.bson.types.ObjectId;
 
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 
 public class ElectricProduction extends Database.Entity {
     public enum Field implements Database.Entity_Field {
         ID("_id", ObjectId.class),
         MODULE_ID("module_id", String.class),
-        PRODUCTION_TOTAL("production_total", BigInteger.class),
-        PRODUCTION_YEAR("production_year", BigInteger.class),
-        PRODUCTION_MONTH("production_month", BigInteger.class),
-        PRODUCTION_DAY("production_day", BigInteger.class),
-        PRODUCTION_INSTANT("production_instant", BigInteger.class),
+        PRODUCTION_TOTAL("production_total", Double.class),
+        PRODUCTION_YEAR("production_year", Double.class),
+        PRODUCTION_MONTH("production_month", Double.class),
+        PRODUCTION_DAY("production_day", Double.class),
+        PRODUCTION_INSTANT("production_instant", Double.class),
         USER_ID("user_id", String.class),
+        LAST_UPDATE("last_update", LocalDateTime.class),
         ;
         @Override
         public String get_key() {
