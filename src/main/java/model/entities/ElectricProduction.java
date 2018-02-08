@@ -6,6 +6,7 @@ import org.bson.types.ObjectId;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class ElectricProduction extends Database.Entity {
     public enum Field implements Database.Entity_Field {
@@ -49,11 +50,33 @@ public class ElectricProduction extends Database.Entity {
     }
 
     public void updatePoduction() {
-
+        LocalDateTime lastUpdate = (LocalDateTime) getField(Field.LAST_UPDATE);
+        LocalDateTime now = LocalDateTime.now();
+        setField(Field.LAST_UPDATE, LocalDateTime.now());
+        if (lastUpdate.getYear() < now.getYear()) {
+            setField(Field.PRODUCTION_YEAR, 0f);
+            setField(Field.PRODUCTION_MONTH, 0f);
+            setField(Field.PRODUCTION_DAY, 0f);
+        } else if (lastUpdate.getMonth().getValue() < now.getMonth().getValue()) {
+            setField(Field.PRODUCTION_MONTH, 0f);
+            setField(Field.PRODUCTION_DAY, 0f);
+        } else if (lastUpdate.getDayOfMonth() < now.getDayOfMonth()) {
+            setField(Field.PRODUCTION_DAY, 0f);
+        }
     }
 
-    public void addProduction(Object production) {
-        LocalDateTime now = LocalDateTime.now();
+    public void addProduction(Object production_list) {
+        ArrayList pl = (ArrayList) production_list;
+        double production = 0d;
+        for (int i = 0, j = pl.size(); i < j; ++i) {
+            production += (double)pl.get(i);
+        }
+        double finalProduction = production;
+        compute(Field.PRODUCTION_TOTAL.key, (key, value) -> {return (double)value + (double) finalProduction;});
+        compute(Field.PRODUCTION_YEAR.key, (key, value) -> {return (double)value + (double)finalProduction;});
+        compute(Field.PRODUCTION_MONTH.key, (key, value) -> {return (double)value + (double)finalProduction;});
+        compute(Field.PRODUCTION_DAY.key, (key, value) -> {return (double)value + (double)finalProduction;});
+        updatePoduction();
     }
 
 }

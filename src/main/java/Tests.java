@@ -9,6 +9,7 @@ import org.bson.types.ObjectId;
 import protocol.ResponseObject;
 
 import java.lang.reflect.InvocationTargetException;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static com.mongodb.client.model.Filters.eq;
@@ -69,12 +70,11 @@ public class Tests {
         }
     }
 
-    public static class TestEntity {
+    public static class TestRandom {
         public static void main(String[] args) throws IllegalAccessException, InstantiationException {
-            SportSession user = new SportSession();
-            user.get("tartaatat");
-            user.put("test", String.class.newInstance());
-            System.out.println(new Gson().toJson(user));
+            System.out.println(LocalDateTime.now().getYear());
+            System.out.println(LocalDateTime.now().getMonth().getValue());
+            System.out.println(LocalDateTime.now().getDayOfMonth());
         }
     }
 }

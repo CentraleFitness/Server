@@ -13,7 +13,7 @@ public class SportSession extends Database.Entity {
         MODULE_ID("module_id", String.class),
         USER_ID("user_id", String.class),
         EXPIRATION("expiration", LocalDateTime.class),
-        PRODUCTION("production", Double.class),
+        PRODUCTION("production", ArrayList.class),
         ;
         @Override
         public String get_key() {
@@ -35,7 +35,7 @@ public class SportSession extends Database.Entity {
         setField(Field.MODULE_ID, "");
         setField(Field.USER_ID, "");
         setField(Field.EXPIRATION, LocalDateTime.now());
-        setField(Field.PRODUCTION, 0d);
+        setField(Field.PRODUCTION, new ArrayList());
     }
 
     public SportSession(Document doc) {
