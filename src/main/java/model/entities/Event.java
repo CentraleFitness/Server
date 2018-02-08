@@ -33,12 +33,6 @@ public class Event extends Database.Entity {
 
     public Event() {
         super();
-        for (Field field : Field.values())
-            try {
-                setField(field, field.get_class().newInstance());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
     }
 
     public Event(Document doc) {super(doc);}

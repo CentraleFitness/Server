@@ -28,12 +28,6 @@ public class Conversation extends Database.Entity {
 
     public Conversation() {
         super();
-        for (Field field : Field.values())
-            try {
-                setField(field, field.get_class().newInstance());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
     }
 
     public Conversation(Document doc) {super(doc);}

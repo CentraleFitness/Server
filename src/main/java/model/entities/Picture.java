@@ -25,12 +25,6 @@ public class Picture extends Database.Entity {
 
     public Picture() {
         super();
-        for (Field field : Field.values())
-            try {
-                setField(field, field.get_class().newInstance());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
     }
 
     public Picture(Document doc) {super(doc);}

@@ -23,6 +23,7 @@ import java.util.function.Consumer;
 
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.set;
+import static model.Database.Entity.Field.ID;
 
 /**
  * Created by hadrien on 14/03/2017.
@@ -100,13 +101,8 @@ public class Database {
             put(field.get_key(), field.get_class().cast(value));
         }
 
-        public Entity() {
-            for (Field field : Field.values())
-                try {
-                    setField(field, field.get_class().newInstance());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        public Entity() throws IllegalAccessException, InstantiationException {
+            setField(ID, ID.get_class().newInstance());
         }
 
         public Entity(Document doc) {

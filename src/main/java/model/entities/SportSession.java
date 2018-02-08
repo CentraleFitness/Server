@@ -30,12 +30,6 @@ public class SportSession extends Database.Entity {
 
     public SportSession() {
         super();
-        for (Field field : Field.values())
-            try {
-                setField(field, field.get_class().newInstance());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
     }
 
     public SportSession(Document doc) {
