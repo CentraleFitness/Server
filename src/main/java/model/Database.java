@@ -5,8 +5,10 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 import model.entities.*;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
 import java.lang.reflect.Constructor;
@@ -154,6 +156,18 @@ public class Database {
         }
     }
 
+    public static Document find_entity(Collections collection, Bson filters) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        Constructor c = null;
+        try {
+            c = collection._class.getConstructor(Document.class);
+            Document entity = (Document) collections.get(collection).find(filters).first();
+            return (entity != null ? (Document) c.newInstance(entity) : entity);
+        } catch (Exception e) {
+            LogManager.write(e);
+            throw e;
+        }
+    }
+
     public static LinkedList<Entity> find_entities(Collections collection, Entity_Field field, Object value) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         Constructor c = null;
         try {
@@ -169,11 +183,34 @@ public class Database {
         }
     }
 
+    public static LinkedList<Entity> find_entities(Collections collection, Bson filters) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        Constructor c = null;
+        try {
+            LinkedList entities = new LinkedList<Document>();
+            c = collection._class.getConstructor(Document.class);
+            for (Document doc : (FindIterable<Document>) collections.get(collection).find(filters)) {
+                entities.push(c.newInstance(doc));
+            }
+            return entities;
+        } catch (Exception e) {
+            LogManager.write(e);
+            throw e;
+        }
+    }
+
     public static void delete_entity(Collections collection, Entity_Field field, Object value) {
         collections.get(collection).deleteOne(eq(field.get_key(), field.get_class().cast(value)));
     }
 
+    public static void delete_entity(Collections collection, Bson filters) {
+        collections.get(collection).deleteOne(filters);
+    }
+
     public static void delete_entities(Collections collection, Entity_Field field, Object value) {
         collections.get(collection).deleteMany(eq(field.get_key(), field.get_class().cast(value)));
+    }
+
+    public static void delete_entities(Collections collection, Bson filters) {
+        collections.get(collection).deleteMany(filters);
     }
 }
