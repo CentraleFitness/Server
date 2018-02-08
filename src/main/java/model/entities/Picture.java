@@ -25,6 +25,8 @@ public class Picture extends Database.Entity {
 
     public Picture() {
         super();
+        setField(Field.ID, new ObjectId());
+        setField(Field.PICTURE, "");
     }
 
     public Picture(Document doc) {super(doc);}

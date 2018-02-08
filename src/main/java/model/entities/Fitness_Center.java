@@ -39,6 +39,8 @@ public class Fitness_Center extends Database.Entity {
 
     public Fitness_Center() {
         super();
+        setField(Field.ID, new ObjectId());
+        setField(Field.API_KEY, "");
     }
 
     public Fitness_Center(Document doc) {super(doc);}

@@ -4,6 +4,7 @@ import model.Database;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class SportSession extends Database.Entity {
@@ -11,7 +12,7 @@ public class SportSession extends Database.Entity {
         ID("_id", ObjectId.class),
         MODULE_ID("module_id", String.class),
         USER_ID("user_id", String.class),
-        EXPIRATION("expiration", Float.class),
+        EXPIRATION("expiration", LocalDateTime.class),
         PRODUCTION("production", Double.class),
         ;
         @Override
@@ -30,6 +31,11 @@ public class SportSession extends Database.Entity {
 
     public SportSession() {
         super();
+        setField(Field.ID, new ObjectId());
+        setField(Field.MODULE_ID, "");
+        setField(Field.USER_ID, "");
+        setField(Field.EXPIRATION, LocalDateTime.now());
+        setField(Field.PRODUCTION, 0d);
     }
 
     public SportSession(Document doc) {

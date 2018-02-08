@@ -33,6 +33,7 @@ public class Event extends Database.Entity {
 
     public Event() {
         super();
+        setField(Field.ID, new ObjectId());
     }
 
     public Event(Document doc) {super(doc);}

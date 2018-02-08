@@ -72,6 +72,7 @@ public class Tests {
     public static class TestEntity {
         public static void main(String[] args) throws IllegalAccessException, InstantiationException {
             SportSession user = new SportSession();
+            user.get("tartaatat");
             user.put("test", String.class.newInstance());
             System.out.println(new Gson().toJson(user));
         }

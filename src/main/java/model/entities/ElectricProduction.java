@@ -15,7 +15,6 @@ public class ElectricProduction extends Database.Entity {
         PRODUCTION_YEAR("production_year", Double.class),
         PRODUCTION_MONTH("production_month", Double.class),
         PRODUCTION_DAY("production_day", Double.class),
-        PRODUCTION_INSTANT("production_instant", Double.class),
         USER_ID("user_id", String.class),
         LAST_UPDATE("last_update", LocalDateTime.class),
         ;
@@ -35,6 +34,14 @@ public class ElectricProduction extends Database.Entity {
 
     public ElectricProduction() {
         super();
+        setField(Field.ID, new ObjectId());
+        setField(Field.MODULE_ID, "");
+        setField(Field.USER_ID, "");
+        setField(Field.PRODUCTION_TOTAL, 0.f);
+        setField(Field.PRODUCTION_YEAR, 0f);
+        setField(Field.PRODUCTION_MONTH, 0f);
+        setField(Field.PRODUCTION_DAY, 0f);
+        setField(Field.LAST_UPDATE, LocalDateTime.now());
     }
 
     public ElectricProduction(Document doc) {

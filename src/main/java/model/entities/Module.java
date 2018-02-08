@@ -32,6 +32,10 @@ public class Module extends Database.Entity {
 
     public Module() {
         super();
+        setField(Field.ID, new ObjectId());
+        setField(Field.UUID, "");
+        setField(Field.SESSION_ID, "");
+        setField(Field.MACHINE_TYPE, "");
     }
 
     public Module(Document doc) {

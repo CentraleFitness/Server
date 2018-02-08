@@ -40,6 +40,7 @@ public class User extends Entity {
 
     public User() {
         super();
+        setField(Field.ID, new ObjectId());
     }
 
     public User(Document doc) {

@@ -28,6 +28,8 @@ public class Conversation extends Database.Entity {
 
     public Conversation() {
         super();
+        setField(Field.ID, new ObjectId());
+        setField(Field.USERS_ID, new TreeMap<>());
     }
 
     public Conversation(Document doc) {super(doc);}

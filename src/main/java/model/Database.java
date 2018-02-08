@@ -101,8 +101,8 @@ public class Database {
             put(field.get_key(), field.get_class().cast(value));
         }
 
-        public Entity() throws IllegalAccessException, InstantiationException {
-            setField(ID, ID.get_class().newInstance());
+        public Entity() {
+            setField(ID, new ObjectId());
         }
 
         public Entity(Document doc) {
