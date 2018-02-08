@@ -3,6 +3,7 @@ import com.google.gson.*;
 import io.vertx.ext.web.handler.FormLoginHandler;
 import model.Database;
 import model.entities.Feedback;
+import model.entities.SportSession;
 import model.entities.User;
 import org.bson.types.ObjectId;
 import protocol.ResponseObject;
@@ -70,7 +71,7 @@ public class Tests {
 
     public static class TestEntity {
         public static void main(String[] args) throws IllegalAccessException, InstantiationException {
-            User user = new User();
+            SportSession user = new SportSession();
             user.put("test", String.class.newInstance());
             System.out.println(new Gson().toJson(user));
         }
