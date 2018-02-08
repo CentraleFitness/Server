@@ -35,10 +35,24 @@ public class ElectricProduction extends Database.Entity {
 
     public ElectricProduction() {
         super();
+        for (User.Field field : User.Field.values())
+            try {
+                setField(field, field.get_class().newInstance());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
     }
 
     public ElectricProduction(Document doc) {
         super(doc);
+    }
+
+    public void updatePoduction() {
+
+    }
+
+    public void addProduction(Object production) {
+        LocalDateTime now = LocalDateTime.now();
     }
 
 }

@@ -39,6 +39,12 @@ public class Fitness_Center extends Database.Entity {
 
     public Fitness_Center() {
         super();
+        for (User.Field field : User.Field.values())
+            try {
+                setField(field, field.get_class().newInstance());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
     }
 
     public Fitness_Center(Document doc) {super(doc);}

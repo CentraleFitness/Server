@@ -3,13 +3,12 @@ import com.google.gson.*;
 import io.vertx.ext.web.handler.FormLoginHandler;
 import model.Database;
 import model.entities.Feedback;
+import model.entities.User;
+import org.bson.types.ObjectId;
 import protocol.ResponseObject;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 import static com.mongodb.client.model.Filters.eq;
 
@@ -52,30 +51,28 @@ public class Tests {
 
     public static class TestGetField {
         public static void main(String[] args) {
-            Map<String, LinkedList<Integer>> map1 = new HashMap<>();
-            LinkedList<Integer> list1 = new LinkedList<Integer>();
-
-            list1.push(0);
-            list1.push(1);
-
-            map1.put("list1", list1);
-
-            for (Integer i : map1.get("list1")) {
-                System.out.println(i);
-            }
-
-            map1.get("list1").push(4);
-
-            for (Integer i : map1.get("list1")) {
-                System.out.println(i);
-            }
+            Map map = new TreeMap();
+            map.put("Test", 15f);
+            map.compute("Test", (key, value) -> {
+                System.out.println(key);
+                System.out.println(value);
+                return ((float)value + 1.0f);
+            });
+            System.out.println(map.get("Test"));
         }
     }
 
     public static class TestDB {
         public static void main(String[] args) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
             LinkedList<Database.Entity> feedBacks = Database.find_entities(Database.Collections.Feedbacks, Feedback.Field.ID, "");
-            Feedback feedback = (Feedback) feedBacks.getFirst();
+        }
+    }
+
+    public static class TestEntity {
+        public static void main(String[] args) throws IllegalAccessException, InstantiationException {
+            User user = new User();
+            user.put("test", String.class.newInstance());
+            System.out.println(new Gson().toJson(user));
         }
     }
 }

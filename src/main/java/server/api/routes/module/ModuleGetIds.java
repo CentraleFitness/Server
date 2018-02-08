@@ -46,6 +46,8 @@ public class ModuleGetIds {
                     break label;
                 }
                 for (int i = 0, j = rUUID.size(); i < j; ++i) {
+                    String uuid = rUUID.get(i);
+                    if (uuid == null) continue ;
                     Module module = (Module) Database.find_entity(Database.Collections.Modules, Module.Field.UUID, rUUID.get(i));
                     if (module == null) {
                         module = (Module) Database.new_entity(Database.Collections.Modules);

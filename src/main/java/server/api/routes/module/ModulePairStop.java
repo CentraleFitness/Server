@@ -2,20 +2,24 @@ package server.api.routes.module;
 
 import Tools.LogManager;
 import com.google.gson.GsonBuilder;
+import com.mongodb.client.model.Filters;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import model.Database;
+import model.entities.ElectricProduction;
 import model.entities.Fitness_Center;
 import model.entities.Module;
 import model.entities.SportSession;
 import org.bson.types.ObjectId;
 import protocol.ResponseObject;
 import protocol.module.Protocol;
-
+import static com.mongodb.client.model.Filters.eq;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
+
+import static com.mongodb.client.model.Filters.and;
 
 public class ModulePairStop {
     public ModulePairStop(Router router) {
@@ -54,12 +58,29 @@ public class ModulePairStop {
                 commande_setModuleIds.put(Protocol.Field.COMMAND_NAME.key, Protocol.Command.SET_MODULE_ID.key);
                 commande.add(commande_setModuleIds);
                 for (int i = 0, j = rUUID.size(); i < j; ++i) {
+                    String uuid = rUUID.get(i);
+                    if (uuid == null) continue ;
                     Module module = (Module) Database.find_entity(Database.Collections.Modules, Module.Field.UUID, rUUID.get(i));
                     if (module == null) module = (Module) Database.new_entity(Database.Collections.Modules);
-                    Database.delete_entity(Database.Collections.SportSessions, SportSession.Field.MODULE_ID, module.getField(Module.Field.ID));
                     String sessionID = new ObjectId().toString();
                     module.setField(Module.Field.SESSION_ID, sessionID);
                     Database.update_entity(Database.Collections.Modules, module);
+                    SportSession sportSession = (SportSession) Database.find_entity(Database.Collections.SportSessions, SportSession.Field.MODULE_ID, module.getField(Module.Field.ID));
+                    if (sportSession != null) {
+                        ElectricProduction electricProduction = (ElectricProduction) Database.find_entity(
+                                Database.Collections.ElectricProductions,
+                                and(
+                                        eq(ElectricProduction.Field.MODULE_ID.get_key(), sportSession.getField(SportSession.Field.MODULE_ID)),
+                                        eq(ElectricProduction.Field.USER_ID.get_key(), sportSession.getField(SportSession.Field.USER_ID))
+                                )
+                        );
+                        if (electricProduction == null) electricProduction = (ElectricProduction) Database.new_entity(Database.Collections.ElectricProductions);
+                        electricProduction.setField(ElectricProduction.Field.MODULE_ID, sportSession.getField(SportSession.Field.MODULE_ID));
+                        electricProduction.setField(ElectricProduction.Field.USER_ID, sportSession.getField(SportSession.Field.USER_ID));
+                        electricProduction.addProduction(sportSession.getField(SportSession.Field.PRODUCTION));
+                        Database.update_entity(Database.Collections.ElectricProductions, electricProduction);
+                        Database.delete_entity(Database.Collections.SportSessions, SportSession.Field.MODULE_ID, module.getField(Module.Field.ID));
+                    }
                     Map param = new TreeMap();
                     param.put(Protocol.Field.UUID.key, rUUID.get(i));
                     param.put(Protocol.Field.SESSION_ID.key, sessionID);

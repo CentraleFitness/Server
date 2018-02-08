@@ -32,6 +32,12 @@ public class Module extends Database.Entity {
 
     public Module() {
         super();
+        for (User.Field field : User.Field.values())
+            try {
+                setField(field, field.get_class().newInstance());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
     }
 
     public Module(Document doc) {

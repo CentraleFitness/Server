@@ -3,11 +3,9 @@ package model.entities;
 import model.Database;
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.omg.CORBA.Object;
 
-import java.math.BigInteger;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeSet;
 
 import static model.Database.*;
 
@@ -23,8 +21,8 @@ public class User extends Entity {
         PHONE("phone_number", String.class),
         EMAIL("email_address", String.class),
         PICTURE_ID("picture_id", ObjectId.class),
-        FRIENDS("friends", Map.class),
-        BLOCKED_USERS("blocked_users", Map.class),
+        FRIENDS("friends", HashMap.class),
+        BLOCKED_USERS("blocked_users", HashMap.class),
         ;
         @Override
         public String get_key() {
@@ -42,6 +40,12 @@ public class User extends Entity {
 
     public User() {
         super();
+        for (Field field : User.Field.values())
+            try {
+                setField(field, field.get_class().newInstance());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
     }
     public User(Document doc) {
         super(doc);

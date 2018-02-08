@@ -71,8 +71,8 @@ public class Database {
 
     public static abstract class Entity extends Document {
         public enum Field implements Entity_Field {
-            ID("_id", ObjectId.class),
-            ;
+            ID("_id", ObjectId.class),;
+
             @Override
             public String get_key() {
                 return this.key;
@@ -82,9 +82,14 @@ public class Database {
             public Class get_class() {
                 return this._class;
             }
+
             private String key;
             private Class _class;
-            Field(String key, Class _class) {this.key = key; this._class = _class;}
+
+            Field(String key, Class _class) {
+                this.key = key;
+                this._class = _class;
+            }
         }
 
         public Object getField(Entity_Field field) {
@@ -95,15 +100,18 @@ public class Database {
             put(field.get_key(), field.get_class().cast(value));
         }
 
-        public Entity() {for (Field field : Field.values())
-            try {
-                setField(field, field.get_class().newInstance());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        public Entity() {
+            for (Field field : Field.values())
+                try {
+                    setField(field, field.get_class().newInstance());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
         }
 
-        public Entity(Document doc) {super(doc);}
+        public Entity(Document doc) {
+            super(doc);
+        }
     }
 
     private Database() {
