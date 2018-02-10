@@ -42,6 +42,7 @@ public class Protocol {
         SESSION_ID("moduleID"),
         COMMAND_NAME("cmd"),
         COMMAND_PARAMS("params"),
+        PRODUCTION("production"),
         ;
         public String key;
         Field(String key) {
