@@ -29,13 +29,13 @@ public class ModuleGetIds {
                 if (rApiKey == null) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_KO.code);
-                    LogManager.write("Missing key apiKey");
+                    LogManager.write("Missing key " + Protocol.Field.APIKEY);
                     break label;
                 }
                 if (rUUID == null) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_KO.code);
-                    LogManager.write("Missing key UUID");
+                    LogManager.write("Missing key " + Protocol.Field.UUID.key);
                     break label;
                 }
                 Fitness_Center fitness_center = (Fitness_Center) Database.find_entity(Database.Collections.Fitness_Centers, Fitness_Center.Field.API_KEY, rApiKey);
