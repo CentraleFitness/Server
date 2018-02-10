@@ -49,19 +49,19 @@ public class ElectricProduction extends Database.Entity {
         super(doc);
     }
 
-    public void updatePoduction() {
+    public void updateProduction() {
         LocalDateTime lastUpdate = (LocalDateTime) getField(Field.LAST_UPDATE);
         LocalDateTime now = LocalDateTime.now();
         setField(Field.LAST_UPDATE, LocalDateTime.now());
         if (lastUpdate.getYear() < now.getYear()) {
-            setField(Field.PRODUCTION_YEAR, 0f);
-            setField(Field.PRODUCTION_MONTH, 0f);
-            setField(Field.PRODUCTION_DAY, 0f);
+            setField(Field.PRODUCTION_YEAR, 0d);
+            setField(Field.PRODUCTION_MONTH, 0d);
+            setField(Field.PRODUCTION_DAY, 0d);
         } else if (lastUpdate.getMonth().getValue() < now.getMonth().getValue()) {
-            setField(Field.PRODUCTION_MONTH, 0f);
-            setField(Field.PRODUCTION_DAY, 0f);
+            setField(Field.PRODUCTION_MONTH, 0d);
+            setField(Field.PRODUCTION_DAY, 0d);
         } else if (lastUpdate.getDayOfMonth() < now.getDayOfMonth()) {
-            setField(Field.PRODUCTION_DAY, 0f);
+            setField(Field.PRODUCTION_DAY, 0d);
         }
     }
 
@@ -72,11 +72,10 @@ public class ElectricProduction extends Database.Entity {
             production += (double)pl.get(i);
         }
         double finalProduction = production;
-        compute(Field.PRODUCTION_TOTAL.key, (key, value) -> {return (double)value + (double) finalProduction;});
-        compute(Field.PRODUCTION_YEAR.key, (key, value) -> {return (double)value + (double)finalProduction;});
-        compute(Field.PRODUCTION_MONTH.key, (key, value) -> {return (double)value + (double)finalProduction;});
-        compute(Field.PRODUCTION_DAY.key, (key, value) -> {return (double)value + (double)finalProduction;});
-        updatePoduction();
+        compute(Field.PRODUCTION_TOTAL.key, (key, value) -> (double)value + finalProduction);
+        compute(Field.PRODUCTION_YEAR.key, (key, value) -> (double)value + finalProduction);
+        compute(Field.PRODUCTION_MONTH.key, (key, value) -> (double)value + finalProduction);
+        compute(Field.PRODUCTION_DAY.key, (key, value) -> (double)value + finalProduction);
+        updateProduction();
     }
-
 }
