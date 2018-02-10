@@ -25,7 +25,7 @@ public class ModulePairStop {
     public ModulePairStop(Router router) {
         router.route(HttpMethod.POST, Protocol.Path.MODULE_GET_IDS.path).handler(routingContext -> {
 
-            ResponseObject sending = null;
+            ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
 
             label:try {
@@ -36,13 +36,13 @@ public class ModulePairStop {
                 if (rApiKey == null) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_KO.code);
-                    LogManager.write("Missing key apiKey");
+                    LogManager.write("Missing key " + Protocol.Field.APIKEY.key);
                     break label;
                 }
                 if (rUUID == null) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_KO.code);
-                    LogManager.write("Missing key UUID");
+                    LogManager.write("Missing key " + Protocol.Field.PRODUCTION.key);
                     break label;
                 }
                 Fitness_Center fitness_center = (Fitness_Center) Database.find_entity(Database.Collections.Fitness_Centers, Fitness_Center.Field.API_KEY, rApiKey);
@@ -56,7 +56,10 @@ public class ModulePairStop {
                 Map commande_setModuleIds = new TreeMap();
                 ArrayList commande_setModuleIds_params = new ArrayList();
                 commande_setModuleIds.put(Protocol.Field.COMMAND_NAME.key, Protocol.Command.SET_MODULE_ID.key);
+                commande_setModuleIds.put(Protocol.Field.COMMAND_PARAMS.key, commande_setModuleIds_params);
                 commande.add(commande_setModuleIds);
+
+                //Stop every pairs
                 for (int i = 0, j = rUUID.size(); i < j; ++i) {
                     String uuid = rUUID.get(i);
                     if (uuid == null) continue ;
@@ -66,6 +69,8 @@ public class ModulePairStop {
                     module.setField(Module.Field.SESSION_ID, sessionID);
                     Database.update_entity(Database.Collections.Modules, module);
                     SportSession sportSession = (SportSession) Database.find_entity(Database.Collections.SportSessions, SportSession.Field.MODULE_ID, module.getField(Module.Field.ID));
+
+                    //Delete sportSession and add production to electricalProduction
                     if (sportSession != null) {
                         ElectricProduction electricProduction = (ElectricProduction) Database.find_entity(
                                 Database.Collections.ElectricProductions,
