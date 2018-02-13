@@ -24,7 +24,7 @@ public class ModuleVerticle extends AbstractVerticle {
 
     @Override
     public void start() {
-        System.out.println("...MobileVerticle creation...");
+        System.out.println("...MobileVerticle creation... port: " + this.port);
         this.httpServer = this.vertx.createHttpServer();
         this.router = Router.router(this.vertx);
         routing();

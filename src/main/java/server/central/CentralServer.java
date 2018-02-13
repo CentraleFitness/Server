@@ -30,7 +30,7 @@ public class CentralServer {
     private Database database = null;
 
     public CentralServer() {
-        System.out.println("...CentralServer creation et ma bite en salade...");
+        System.out.println("...CentralServer creation...");
 
         this.database = Database.getInstance();
 
