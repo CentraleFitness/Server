@@ -33,7 +33,7 @@ public class UserGetInstantproduction {
                     break label;
                 }
                 User user = (User) Database.find_entity(Database.Collections.Users, User.Field.LOGIN, Token.decodeToken(rToken).getIssuer());
-                if (user == null || rToken.equals(user.getField(User.Field.TOKEN)) == false) {
+                if (user == null || !rToken.equals(user.getField(User.Field.TOKEN))) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
                     LogManager.write("Bad token");
@@ -48,6 +48,9 @@ public class UserGetInstantproduction {
                     break label;
                 }
                 ArrayList production = (ArrayList) sportSession.getField(SportSession.Field.PRODUCTION);
+                ArrayList emptyProd = new ArrayList();
+                sportSession.setField(SportSession.Field.PRODUCTION, emptyProd);
+                Database.update_entity(Database.Collections.SportSessions, sportSession);
                 sending = new ResponseObject(false);
                 sending.put(Protocol.Field.PRODUCTION.key, production);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK);
