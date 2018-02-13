@@ -21,7 +21,7 @@ import java.util.Map;
 
 public class UserPairStart {
     public UserPairStart(Router router) {
-        router.route(HttpMethod.POST, Protocol.Path.USER_GET_INSTANTPRODUCTION.path).handler(routingContext -> {
+        router.route(HttpMethod.POST, Protocol.Path.USER_PAIR_START.path).handler(routingContext -> {
 
             ResponseObject sending = null;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");

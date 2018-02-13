@@ -24,7 +24,7 @@ import static com.mongodb.client.model.Filters.and;
 
 public class ModulePairStop {
     public ModulePairStop(Router router) {
-        router.route(HttpMethod.POST, Protocol.Path.MODULE_GET_IDS.path).handler(routingContext -> {
+        router.route(HttpMethod.POST, Protocol.Path.MODULE_PAIR_STOP.path).handler(routingContext -> {
 
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");

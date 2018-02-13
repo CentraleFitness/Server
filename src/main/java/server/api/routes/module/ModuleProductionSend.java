@@ -23,7 +23,7 @@ import static com.mongodb.client.model.Filters.eq;
 
 public class ModuleProductionSend {
     public ModuleProductionSend(Router router) {
-        router.route(HttpMethod.POST, Protocol.Path.MODULE_GET_IDS.path).handler(routingContext -> {
+        router.route(HttpMethod.POST, Protocol.Path.MODULE_PRODUCTION_SEND.path).handler(routingContext -> {
 
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
