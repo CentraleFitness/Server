@@ -40,6 +40,8 @@ public class MobileVerticle extends AbstractVerticle {
 
         new UserGetProfile(this.router);
         new UserGetPicture(this.router);
+        new UserGetInstantproduction(this.router);
+
         new UserUpdatePassword(this.router);
         new UserUpdateProfile(this.router);
         new UserUpdatePicture(this.router);
