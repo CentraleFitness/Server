@@ -45,5 +45,7 @@ public class MobileVerticle extends AbstractVerticle {
         new UserUpdatePassword(this.router);
         new UserUpdateProfile(this.router);
         new UserUpdatePicture(this.router);
+
+        new UserPairStart(this.router);
     }
 }

@@ -43,7 +43,7 @@ public class UserGetInstantproduction {
                 SportSession sportSession = (SportSession) Database.find_entity(Database.Collections.SportSessions, SportSession.Field.USER_ID, user_id);
                 if (sportSession == null) {
                     sending = new ResponseObject(false);
-                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.NO_SPORT_SESSION.code);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.SPORT_SESSION_NO_SESSION.code);
                     LogManager.write("Not in sport session");
                     break label;
                 }
