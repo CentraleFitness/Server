@@ -50,7 +50,7 @@ public class CentralServer {
 
         if (Boolean.parseBoolean(this.settings.get("EnableLogManager")) == true) LogManager.enable();
         this.mobileVerticle = new MobileVerticle(Integer.parseInt(this.settings.get("Mobile Server Http Port")));
-        this.moduleVerticle = new ModuleVerticle(Integer.parseInt(this.settings.get("Module Server TCP Port")));
+        this.moduleVerticle = new ModuleVerticle(Integer.parseInt(this.settings.get("Module Server HTTP Port")));
         this.intranetVerticle = new IntranetVerticle(Integer.parseInt(this.settings.get("Intranet Server Http Port")));
         this.intranetVerticle.setDatabase(database);
 
