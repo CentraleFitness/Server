@@ -2,6 +2,7 @@ package server.api.routes.mobile;
 
 import Tools.LogManager;
 import Tools.Token;
+import com.auth0.jwt.JWT;
 import com.google.gson.GsonBuilder;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
@@ -29,20 +30,28 @@ public class UserPairStart {
             label:try {
                 Map<String, Object> received = routingContext.getBodyAsJson().getMap();
                 String rToken = (String) received.get(Protocol.Field.TOKEN.key);
-                ObjectId rSessionId = (ObjectId) received.get(Protocol.Field.SESSIONID.key);
+                String rSessionIdString = (String) received.get(Protocol.Field.SESSIONID.key);
                 if (rToken == null) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_KO.code);
                     LogManager.write("Missing key " + Protocol.Field.TOKEN.key);
                     break label;
                 }
-                if (rSessionId == null) {
+                if (rSessionIdString == null) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_KO.code);
                     LogManager.write("Missing key " + Protocol.Field.SESSIONID.key);
                     break label;
                 }
-                User user = (User) Database.find_entity(Database.Collections.Users, User.Field.LOGIN, Token.decodeToken(rToken).getIssuer());
+                ObjectId rSessionId = new ObjectId(rSessionIdString.getBytes());
+                JWT token = Token.decodeToken(rToken);
+                if (token == null) {
+                    sending = new ResponseObject(true);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
+                    LogManager.write("Bad token");
+                    break label;
+                }
+                User user = (User) Database.find_entity(Database.Collections.Users, User.Field.LOGIN, token.getIssuer());
                 if (user == null || !rToken.equals(user.getField(User.Field.TOKEN))) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
@@ -73,6 +82,7 @@ public class UserPairStart {
             } catch (Exception e) {
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.INTERNAL_SERVER_ERROR.code);
+                System.out.println(e.getStackTrace()[0].getLineNumber());
                 LogManager.write(e);
             }
             response.end(new GsonBuilder().create().toJson(sending));
