@@ -51,13 +51,13 @@ public class UserPairStart {
                     LogManager.write("Bad token");
                     break label;
                 }
-                if (!ObjectId.isValid(String.format("%040x", new BigInteger(1, rSessionIdString.getBytes())))) {
+                if (!ObjectId.isValid(rSessionIdString)) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_KO.code);
                     LogManager.write("Bad session id");
                     break label;
                 }
-                ObjectId rSessionId = new ObjectId(rSessionIdString.getBytes());
+                ObjectId rSessionId = new ObjectId(rSessionIdString);
                 User user = (User) Database.find_entity(Database.Collections.Users, User.Field.LOGIN, token.getIssuer());
                 if (user == null || !rToken.equals(user.getField(User.Field.TOKEN))) {
                     sending = new ResponseObject(true);

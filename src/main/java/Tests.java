@@ -73,9 +73,10 @@ public class Tests {
 
     public static class TestRandom {
         public static void main(String[] args) throws IllegalAccessException, InstantiationException {
-            String str = "18";
+            String str = new ObjectId().toString();
+            ObjectId objid = new ObjectId(str);
             System.out.println(str);
-            System.out.println(String.format("%040x", new BigInteger(1, str.getBytes())));
+            System.out.println(objid.toString());
         }
     }
 }
