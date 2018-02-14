@@ -32,8 +32,8 @@ public class SportSession extends Database.Entity {
     public SportSession() {
         super();
         setField(Field.ID, new ObjectId());
-        setField(Field.MODULE_ID, "");
-        setField(Field.USER_ID, "");
+        setField(Field.MODULE_ID, null);
+        setField(Field.USER_ID, null);
         setField(Field.EXPIRATION, LocalDateTime.now());
         setField(Field.PRODUCTION, new ArrayList());
     }
