@@ -43,7 +43,6 @@ public class UserPairStart {
                     LogManager.write("Missing key " + Protocol.Field.SESSIONID.key);
                     break label;
                 }
-                ObjectId rSessionId = new ObjectId(rSessionIdString.getBytes());
                 JWT token = Token.decodeToken(rToken);
                 if (token == null) {
                     sending = new ResponseObject(true);
@@ -51,6 +50,13 @@ public class UserPairStart {
                     LogManager.write("Bad token");
                     break label;
                 }
+                if (!ObjectId.isValid(String.valueOf(rSessionIdString.getBytes()))) {
+                    sending = new ResponseObject(true);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_KO.code);
+                    LogManager.write("Bad session id");
+                    break label;
+                }
+                ObjectId rSessionId = new ObjectId(rSessionIdString.getBytes());
                 User user = (User) Database.find_entity(Database.Collections.Users, User.Field.LOGIN, token.getIssuer());
                 if (user == null || !rToken.equals(user.getField(User.Field.TOKEN))) {
                     sending = new ResponseObject(true);

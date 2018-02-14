@@ -72,9 +72,9 @@ public class Tests {
 
     public static class TestRandom {
         public static void main(String[] args) throws IllegalAccessException, InstantiationException {
-            System.out.println(LocalDateTime.now().getYear());
-            System.out.println(LocalDateTime.now().getMonth().getValue());
-            System.out.println(LocalDateTime.now().getDayOfMonth());
+            String str = "123456789";
+            System.out.println(str);
+            System.out.println(String.valueOf(str.getBytes()));
         }
     }
 }
