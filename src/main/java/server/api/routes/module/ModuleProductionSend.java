@@ -70,7 +70,7 @@ public class ModuleProductionSend {
 
                     SportSession sportSession = (SportSession) Database.find_entity(Database.Collections.SportSessions, SportSession.Field.MODULE_ID, module_id);
                     if (sportSession == null) {
-                        ObjectId sessionID = new ObjectId();
+                        String sessionID = new ObjectId().toString();
                         Map param = new TreeMap();
                         param.put(Protocol.Field.UUID.key, uuid);
                         param.put(Protocol.Field.SESSION_ID.key, sessionID);

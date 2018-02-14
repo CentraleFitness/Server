@@ -31,14 +31,14 @@ public class UserPairStart {
             label:try {
                 Map<String, Object> received = routingContext.getBodyAsJson().getMap();
                 String rToken = (String) received.get(Protocol.Field.TOKEN.key);
-                String rSessionIdString = (String) received.get(Protocol.Field.SESSIONID.key);
+                String rSessionId = (String) received.get(Protocol.Field.SESSIONID.key);
                 if (rToken == null) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_KO.code);
                     LogManager.write("Missing key " + Protocol.Field.TOKEN.key);
                     break label;
                 }
-                if (rSessionIdString == null) {
+                if (rSessionId == null) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_KO.code);
                     LogManager.write("Missing key " + Protocol.Field.SESSIONID.key);
@@ -51,13 +51,6 @@ public class UserPairStart {
                     LogManager.write("Bad token");
                     break label;
                 }
-                if (!ObjectId.isValid(rSessionIdString)) {
-                    sending = new ResponseObject(true);
-                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_KO.code);
-                    LogManager.write("Bad session id");
-                    break label;
-                }
-                ObjectId rSessionId = new ObjectId(rSessionIdString);
                 User user = (User) Database.find_entity(Database.Collections.Users, User.Field.LOGIN, token.getIssuer());
                 if (user == null || !rToken.equals(user.getField(User.Field.TOKEN))) {
                     sending = new ResponseObject(true);
