@@ -75,7 +75,7 @@ public class UserPairStart {
                 userSession.setField(SportSession.Field.USER_ID, userID);
                 userSession.setField(SportSession.Field.MODULE_ID, moduleID);
                 userSession.setField(SportSession.Field.PRODUCTION, new ArrayList());
-                userSession.setField(SportSession.Field.EXPIRATION, LocalDateTime.now());
+                userSession.setField(SportSession.Field.EXPIRATION, 0L);
                 Database.update_entity(Database.Collections.SportSessions, userSession);
                 sending = new ResponseObject(false);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK);
