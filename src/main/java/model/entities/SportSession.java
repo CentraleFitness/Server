@@ -34,7 +34,7 @@ public class SportSession extends Database.Entity {
         setField(Field.ID, new ObjectId());
         setField(Field.MODULE_ID, null);
         setField(Field.USER_ID, null);
-        setField(Field.EXPIRATION, 0);
+        setField(Field.EXPIRATION, 0L);
         setField(Field.PRODUCTION, new ArrayList());
     }
 
