@@ -14,12 +14,12 @@ import java.util.TimeZone;
 public class ElectricProduction extends Database.Entity {
     public enum Field implements Database.Entity_Field {
         ID("_id", ObjectId.class),
-        MODULE_ID("module_id", String.class),
+        MODULE_ID("module_id", ObjectId.class),
         PRODUCTION_TOTAL("production_total", Double.class),
         PRODUCTION_YEAR("production_year", Double.class),
         PRODUCTION_MONTH("production_month", Double.class),
         PRODUCTION_DAY("production_day", Double.class),
-        USER_ID("user_id", String.class),
+        USER_ID("user_id", ObjectId.class),
         LAST_UPDATE("last_update", Long.class),
         ;
         @Override
@@ -39,8 +39,8 @@ public class ElectricProduction extends Database.Entity {
     public ElectricProduction() {
         super();
         setField(Field.ID, new ObjectId());
-        setField(Field.MODULE_ID, "");
-        setField(Field.USER_ID, "");
+        setField(Field.MODULE_ID, null);
+        setField(Field.USER_ID, null);
         setField(Field.PRODUCTION_TOTAL, 0d);
         setField(Field.PRODUCTION_YEAR, 0d);
         setField(Field.PRODUCTION_MONTH, 0d);
