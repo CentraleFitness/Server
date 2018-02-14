@@ -10,8 +10,8 @@ import java.util.ArrayList;
 public class SportSession extends Database.Entity {
     public enum Field implements Database.Entity_Field {
         ID("_id", ObjectId.class),
-        MODULE_ID("module_id", String.class),
-        USER_ID("user_id", String.class),
+        MODULE_ID("module_id", ObjectId.class),
+        USER_ID("user_id", ObjectId.class),
         EXPIRATION("expiration", LocalDateTime.class),
         PRODUCTION("production", ArrayList.class),
         ;
