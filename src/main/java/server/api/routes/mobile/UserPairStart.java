@@ -88,7 +88,6 @@ public class UserPairStart {
             } catch (Exception e) {
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.INTERNAL_SERVER_ERROR.code);
-                System.out.println(e.getStackTrace()[0].getLineNumber());
                 LogManager.write(e);
             }
             response.end(new GsonBuilder().create().toJson(sending));
