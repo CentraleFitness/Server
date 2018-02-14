@@ -16,6 +16,7 @@ import org.bson.types.ObjectId;
 import protocol.ResponseObject;
 import protocol.mobile.Protocol;
 
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Map;
@@ -50,7 +51,7 @@ public class UserPairStart {
                     LogManager.write("Bad token");
                     break label;
                 }
-                if (!ObjectId.isValid(String.valueOf(rSessionIdString.getBytes()))) {
+                if (!ObjectId.isValid(String.format("%040x", new BigInteger(1, rSessionIdString.getBytes())))) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_KO.code);
                     LogManager.write("Bad session id");

@@ -9,6 +9,7 @@ import org.bson.types.ObjectId;
 import protocol.ResponseObject;
 
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -72,9 +73,9 @@ public class Tests {
 
     public static class TestRandom {
         public static void main(String[] args) throws IllegalAccessException, InstantiationException {
-            String str = "123456789";
+            String str = "18";
             System.out.println(str);
-            System.out.println(String.valueOf(str.getBytes()));
+            System.out.println(String.format("%040x", new BigInteger(1, str.getBytes())));
         }
     }
 }
