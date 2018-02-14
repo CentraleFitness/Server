@@ -5,8 +5,11 @@ import org.bson.Document;
 import org.bson.types.ObjectId;
 
 import java.math.BigInteger;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.TimeZone;
 
 public class ElectricProduction extends Database.Entity {
     public enum Field implements Database.Entity_Field {
@@ -17,7 +20,7 @@ public class ElectricProduction extends Database.Entity {
         PRODUCTION_MONTH("production_month", Double.class),
         PRODUCTION_DAY("production_day", Double.class),
         USER_ID("user_id", String.class),
-        LAST_UPDATE("last_update", LocalDateTime.class),
+        LAST_UPDATE("last_update", Long.class),
         ;
         @Override
         public String get_key() {
@@ -42,7 +45,7 @@ public class ElectricProduction extends Database.Entity {
         setField(Field.PRODUCTION_YEAR, 0f);
         setField(Field.PRODUCTION_MONTH, 0f);
         setField(Field.PRODUCTION_DAY, 0f);
-        setField(Field.LAST_UPDATE, LocalDateTime.now());
+        setField(Field.LAST_UPDATE, Timestamp.valueOf(LocalDateTime.now()).getTime());
     }
 
     public ElectricProduction(Document doc) {
@@ -50,9 +53,9 @@ public class ElectricProduction extends Database.Entity {
     }
 
     public void updateProduction() {
-        LocalDateTime lastUpdate = (LocalDateTime) getField(Field.LAST_UPDATE);
+        LocalDateTime lastUpdate = LocalDateTime.ofInstant(Instant.ofEpochMilli((Long) getField(Field.LAST_UPDATE)), TimeZone.getDefault().toZoneId());
         LocalDateTime now = LocalDateTime.now();
-        setField(Field.LAST_UPDATE, LocalDateTime.now());
+        setField(Field.LAST_UPDATE, Timestamp.valueOf(now).getTime());
         if (lastUpdate.getYear() < now.getYear()) {
             setField(Field.PRODUCTION_YEAR, 0d);
             setField(Field.PRODUCTION_MONTH, 0d);

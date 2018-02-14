@@ -12,7 +12,7 @@ public class SportSession extends Database.Entity {
         ID("_id", ObjectId.class),
         MODULE_ID("module_id", ObjectId.class),
         USER_ID("user_id", ObjectId.class),
-        EXPIRATION("expiration", LocalDateTime.class),
+        EXPIRATION("expiration", Long.class),
         PRODUCTION("production", ArrayList.class),
         ;
         @Override
@@ -34,7 +34,7 @@ public class SportSession extends Database.Entity {
         setField(Field.ID, new ObjectId());
         setField(Field.MODULE_ID, null);
         setField(Field.USER_ID, null);
-        setField(Field.EXPIRATION, LocalDateTime.now());
+        setField(Field.EXPIRATION, 0);
         setField(Field.PRODUCTION, new ArrayList());
     }
 
