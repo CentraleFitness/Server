@@ -29,7 +29,7 @@ public class UserPairStart {
             label:try {
                 Map<String, Object> received = routingContext.getBodyAsJson().getMap();
                 String rToken = (String) received.get(Protocol.Field.TOKEN.key);
-                ObjectId rSessionId = (ObjectId) received.get(Protocol.Field.SESSIONID);
+                ObjectId rSessionId = (ObjectId) received.get(Protocol.Field.SESSIONID.key);
                 if (rToken == null) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_KO.code);
