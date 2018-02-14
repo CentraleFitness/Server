@@ -41,10 +41,10 @@ public class ElectricProduction extends Database.Entity {
         setField(Field.ID, new ObjectId());
         setField(Field.MODULE_ID, "");
         setField(Field.USER_ID, "");
-        setField(Field.PRODUCTION_TOTAL, 0.f);
-        setField(Field.PRODUCTION_YEAR, 0f);
-        setField(Field.PRODUCTION_MONTH, 0f);
-        setField(Field.PRODUCTION_DAY, 0f);
+        setField(Field.PRODUCTION_TOTAL, 0d);
+        setField(Field.PRODUCTION_YEAR, 0d);
+        setField(Field.PRODUCTION_MONTH, 0d);
+        setField(Field.PRODUCTION_DAY, 0d);
         setField(Field.LAST_UPDATE, Timestamp.valueOf(LocalDateTime.now()).getTime());
     }
 
