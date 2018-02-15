@@ -63,6 +63,7 @@ public class IntranetVerticle extends AbstractVerticle {
         new AddEvent(this.router);
         new GetEvents(this.router);
         new UpdateEvent(this.router);
+        new DeleteEvent(this.router);
     }
 
 

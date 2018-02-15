@@ -1,6 +1,6 @@
-package protocol;
+package protocol.intranet;
 
-public class ProtocolIntranet {
+public class Protocol {
 
     public enum Path {
 
@@ -175,6 +175,13 @@ public class ProtocolIntranet {
         UPDATE_EVENT("/center/update/event"),
 
         /**
+         * @path: ADD_EVENT:
+         * @param: TOKEN.
+         * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
+         */
+        DELETE_EVENT("/center/delete/event"),
+
+        /**
          * @path: ADD_FEEDBACK:
          * @param: TOKEN.
          * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
@@ -210,6 +217,7 @@ public class ProtocolIntranet {
         TEXT("text"),
         CREATION_DATE("creation_date"),
         PUBLICATIONS("publications"),
+        PUBLICATION_ID("publication_id"),
         UPDATE_DATE("update_date"),
         START_DATE("start_date"),
         END_DATE("end_date"),
@@ -219,6 +227,7 @@ public class ProtocolIntranet {
         EVENTS("events"),
         FEEDBACK_STATES("feedback_states"),
         NB_SUBSCRIBERS("nb_subscribers"),
+        DELETION_CAUSE("deletion_cause"),
         ;
         public String key;
         Field(String key) {
