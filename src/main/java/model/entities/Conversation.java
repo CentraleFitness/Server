@@ -4,9 +4,13 @@ import model.Database;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
+import java.util.Map;
+import java.util.TreeMap;
+
 public class Conversation extends Database.Entity {
     public enum Field implements Database.Entity_Field {
         ID("_id", ObjectId.class),
+        USERS_ID("users_id", TreeMap.class),
         ;
         @Override
         public String get_key() {
@@ -24,6 +28,8 @@ public class Conversation extends Database.Entity {
 
     public Conversation() {
         super();
+        setField(Field.ID, new ObjectId());
+        setField(Field.USERS_ID, new TreeMap<>());
     }
 
     public Conversation(Document doc) {super(doc);}

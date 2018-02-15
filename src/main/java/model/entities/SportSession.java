@@ -3,15 +3,17 @@ package model.entities;
 import model.Database;
 import org.bson.Document;
 import org.bson.types.ObjectId;
-
 import java.math.BigInteger;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class SportSession extends Database.Entity {
     public enum Field implements Database.Entity_Field {
         ID("_id", ObjectId.class),
-        MODULE_ID("module_id", String.class),
-        USER_ID("user_id", String.class),
-        EXPIRATION("expiration", BigInteger.class),
+        MODULE_ID("module_id", ObjectId.class),
+        USER_ID("user_id", ObjectId.class),
+        EXPIRATION("expiration", Long.class),
+        PRODUCTION("production", ArrayList.class),
         ;
         @Override
         public String get_key() {
@@ -29,6 +31,11 @@ public class SportSession extends Database.Entity {
 
     public SportSession() {
         super();
+        setField(Field.ID, new ObjectId());
+        setField(Field.MODULE_ID, null);
+        setField(Field.USER_ID, null);
+        setField(Field.EXPIRATION, 0L);
+        setField(Field.PRODUCTION, new ArrayList());
     }
 
     public SportSession(Document doc) {

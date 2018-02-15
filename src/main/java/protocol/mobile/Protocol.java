@@ -101,7 +101,7 @@ public class Protocol {
         EMAIL("email address"),
         PICTURE("picture"),
         PRODUCTION("production"),
-        MODULEID("moduleID"),
+        SESSIONID("session id"),
         ;
         public String key;
         Field(String key) {
@@ -118,8 +118,10 @@ public class Protocol {
         AUTH_SUCCESS("201", "authentication successful"),
         AUTH_ERROR_TOKEN("202", "authentication failed, bad token"),
         AUTH_ERROR_CREDENTIALS("501", "authentication failed, bad credentials"),
-        MISC_ERROR("401", "database problem"),
-        MISC_RANDOM("666", "Random error");
+        GENERIC_KO("401", "ko"),
+        INTERNAL_SERVER_ERROR("666", "Random error"),
+        SPORT_SESSION_NO_SESSION("410", "No sport session"),
+        SPORT_SESSION_BAD_SESSIONID("411", "Bad session id"),
         ;
         public String code;
         public String message;

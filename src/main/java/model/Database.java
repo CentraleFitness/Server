@@ -5,8 +5,10 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 import model.entities.*;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
 import java.lang.reflect.Constructor;
@@ -21,6 +23,7 @@ import java.util.function.Consumer;
 
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.set;
+import static model.Database.Entity.Field.ID;
 
 /**
  * Created by hadrien on 14/03/2017.
@@ -69,8 +72,8 @@ public class Database {
 
     public static abstract class Entity extends Document {
         public enum Field implements Entity_Field {
-            ID("_id", ObjectId.class),
-            ;
+            ID("_id", ObjectId.class),;
+
             @Override
             public String get_key() {
                 return this.key;
@@ -80,9 +83,14 @@ public class Database {
             public Class get_class() {
                 return this._class;
             }
+
             private String key;
             private Class _class;
-            Field(String key, Class _class) {this.key = key; this._class = _class;}
+
+            Field(String key, Class _class) {
+                this.key = key;
+                this._class = _class;
+            }
         }
 
         public Object getField(Entity_Field field) {
@@ -93,15 +101,13 @@ public class Database {
             put(field.get_key(), field.get_class().cast(value));
         }
 
-        public Entity() {for (Field field : Field.values())
-            try {
-                setField(field, field.get_class().newInstance());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        public Entity() {
+            setField(ID, new ObjectId());
         }
 
-        public Entity(Document doc) {super(doc);}
+        public Entity(Document doc) {
+            super(doc);
+        }
     }
 
     private Database() {
@@ -154,6 +160,18 @@ public class Database {
         }
     }
 
+    public static Document find_entity(Collections collection, Bson filters) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        Constructor c = null;
+        try {
+            c = collection._class.getConstructor(Document.class);
+            Document entity = (Document) collections.get(collection).find(filters).first();
+            return (entity != null ? (Document) c.newInstance(entity) : entity);
+        } catch (Exception e) {
+            LogManager.write(e);
+            throw e;
+        }
+    }
+
     public static LinkedList<Entity> find_entities(Collections collection, Entity_Field field, Object value) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         Constructor c = null;
         try {
@@ -169,11 +187,34 @@ public class Database {
         }
     }
 
+    public static LinkedList<Entity> find_entities(Collections collection, Bson filters) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        Constructor c = null;
+        try {
+            LinkedList entities = new LinkedList<Document>();
+            c = collection._class.getConstructor(Document.class);
+            for (Document doc : (FindIterable<Document>) collections.get(collection).find(filters)) {
+                entities.push(c.newInstance(doc));
+            }
+            return entities;
+        } catch (Exception e) {
+            LogManager.write(e);
+            throw e;
+        }
+    }
+
     public static void delete_entity(Collections collection, Entity_Field field, Object value) {
         collections.get(collection).deleteOne(eq(field.get_key(), field.get_class().cast(value)));
     }
 
+    public static void delete_entity(Collections collection, Bson filters) {
+        collections.get(collection).deleteOne(filters);
+    }
+
     public static void delete_entities(Collections collection, Entity_Field field, Object value) {
         collections.get(collection).deleteMany(eq(field.get_key(), field.get_class().cast(value)));
+    }
+
+    public static void delete_entities(Collections collection, Bson filters) {
+        collections.get(collection).deleteMany(filters);
     }
 }

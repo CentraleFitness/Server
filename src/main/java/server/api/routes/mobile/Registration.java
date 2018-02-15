@@ -41,19 +41,19 @@ public class Registration {
                     LogManager.write("Missing password key");
                 } else if (rFirstname == null) {
                     sending = new ResponseObject(true);
-                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_RANDOM.code);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.INTERNAL_SERVER_ERROR.code);
                     LogManager.write("Missing firstname key");
                 } else if (rLasname == null) {
                     sending = new ResponseObject(true);
-                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_RANDOM.code);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.INTERNAL_SERVER_ERROR.code);
                     LogManager.write("Missing lastname key");
                 } else if (rPhone == null) {
                     sending = new ResponseObject(true);
-                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_RANDOM.code);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.INTERNAL_SERVER_ERROR.code);
                     LogManager.write("Missing phone key");
                 } else if (rEmail == null) {
                     sending = new ResponseObject(true);
-                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_RANDOM.code);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.INTERNAL_SERVER_ERROR.code);
                     LogManager.write("Missing email key");
                 } else if (Database.find_entity(Database.Collections.Users, User.Field.LOGIN, rLogin) == null) {
                     user = (User) Database.new_entity(Database.Collections.Users);
@@ -75,7 +75,7 @@ public class Registration {
                 }
             } catch (Exception e) {
                 sending = new ResponseObject(true);
-                sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_RANDOM.code);
+                sending.put(Protocol.Field.STATUS.key, Protocol.Status.INTERNAL_SERVER_ERROR.code);
                 LogManager.write(e);
             }
             response.end(new GsonBuilder().create().toJson(sending));

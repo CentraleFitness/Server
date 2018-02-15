@@ -23,7 +23,7 @@ public class MobileVerticle extends AbstractVerticle {
 
     @Override
     public void start() {
-        System.out.println("...MobileVerticle creation...");
+        System.out.println("...MobileVerticle creation... port: " + this.port);
         this.httpServer = this.vertx.createHttpServer();
         this.router = Router.router(this.vertx);
         routing();
@@ -40,8 +40,12 @@ public class MobileVerticle extends AbstractVerticle {
 
         new UserGetProfile(this.router);
         new UserGetPicture(this.router);
+        new UserGetInstantproduction(this.router);
+
         new UserUpdatePassword(this.router);
         new UserUpdateProfile(this.router);
         new UserUpdatePicture(this.router);
+
+        new UserPairStart(this.router);
     }
 }

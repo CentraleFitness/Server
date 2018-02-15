@@ -36,7 +36,7 @@ public class UserUpdatePicture {
                     LogManager.write("Bad token");
                 } else if ((pic64 = rPicture) == null) {
                     sending = new ResponseObject(true);
-                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_RANDOM.code);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.INTERNAL_SERVER_ERROR.code);
                     LogManager.write("Missing picture key");
                 }
                 else {

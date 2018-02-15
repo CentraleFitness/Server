@@ -3,13 +3,15 @@ import com.google.gson.*;
 import io.vertx.ext.web.handler.FormLoginHandler;
 import model.Database;
 import model.entities.Feedback;
+import model.entities.SportSession;
+import model.entities.User;
+import org.bson.types.ObjectId;
 import protocol.ResponseObject;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.math.BigInteger;
+import java.time.LocalDateTime;
+import java.util.*;
 
 import static com.mongodb.client.model.Filters.eq;
 
@@ -52,32 +54,29 @@ public class Tests {
 
     public static class TestGetField {
         public static void main(String[] args) {
-            Map<String, LinkedList<Integer>> map1 = new HashMap<>();
-            LinkedList<Integer> list1 = new LinkedList<Integer>();
-
-            list1.push(0);
-            list1.push(1);
-
-            map1.put("list1", list1);
-
-            for (Integer i : map1.get("list1")) {
-                System.out.println(i);
-            }
-
-            map1.get("list1").push(4);
-
-            for (Integer i : map1.get("list1")) {
-                System.out.println(i);
-            }
+            Map map = new TreeMap();
+            map.put("Test", 15f);
+            map.compute("Test", (key, value) -> {
+                System.out.println(key);
+                System.out.println(value);
+                return ((float)value + 1.0f);
+            });
+            System.out.println(map.get("Test"));
         }
     }
 
     public static class TestDB {
         public static void main(String[] args) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-            Database db = Database.getInstance();
+            LinkedList<Database.Entity> feedBacks = Database.find_entities(Database.Collections.Feedbacks, Feedback.Field.ID, "");
+        }
+    }
 
-            LinkedList<Database.Entity> feedBacks = db.find_entities(Database.Collections.Feedbacks, Feedback.Field.ID, "");
-            Feedback feedback = (Feedback) feedBacks.getFirst();
+    public static class TestRandom {
+        public static void main(String[] args) throws IllegalAccessException, InstantiationException {
+            String str = new ObjectId().toString();
+            ObjectId objid = new ObjectId(str);
+            System.out.println(str);
+            System.out.println(objid.toString());
         }
     }
 }
