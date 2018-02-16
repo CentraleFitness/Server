@@ -16,6 +16,8 @@ public class Event extends Database.Entity {
         FITNESS_CENTER_ID("fitness_center_id", ObjectId.class),
         UPDATE_DATE("update_date", Long.class),
         CREATION_DATE("creation_date", Long.class),
+        IS_DELETED("is_deleted", Boolean.class),
+        DELETION_CAUSE("deletion_cause", String.class),
         ;
         @Override
         public String get_key() {
