@@ -31,7 +31,7 @@ public class ModuleProductionSend {
             label:try {
                 Map<String, Object> received = routingContext.getBodyAsJson().getMap();
                 String rApiKey = (String) received.get(Protocol.Field.APIKEY.key);
-                Map<String, Double> rProduction = (Map) received.get(Protocol.Field.UUID.key);
+                Map<String, Double> rProduction = (Map) received.get(Protocol.Field.PRODUCTION.key);
 
                 if (rApiKey == null) {
                     sending = new ResponseObject(true);
