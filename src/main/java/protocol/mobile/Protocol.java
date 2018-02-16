@@ -81,7 +81,7 @@ public class Protocol {
          * @param: TOKEN.
          * @return: STATUS, LIST PRODUCTION.
          */
-        USER_GET_INSTANTPRODUCTION("/user/get/instantprodution"),
+        USER_GET_INSTANTPRODUCTION("/user/get/instantproduction"),
         ;
         public String path;
         Path(String path) {
