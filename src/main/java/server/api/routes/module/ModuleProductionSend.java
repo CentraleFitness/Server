@@ -74,7 +74,8 @@ public class ModuleProductionSend {
                     ObjectId module_id = (ObjectId) module.getField(Module.Field.ID);
 
                     SportSession sportSession = (SportSession) Database.find_entity(Database.Collections.SportSessions, SportSession.Field.MODULE_ID, module_id);
-                    if (sportSession == null) {
+                    Boolean change_session_id = false;
+                    if ((sportSession == null) && change_session_id == true) {
                         String sessionID = new ObjectId().toString();
                         Map param = new TreeMap();
                         param.put(Protocol.Field.UUID.key, uuid);

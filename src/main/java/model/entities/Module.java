@@ -15,6 +15,7 @@ public class Module extends Database.Entity {
         SESSION_ID("session_id", String.class),
         FITNESS_CENTER_ID("fitness_center_id", ObjectId.class),
         MACHINE_TYPE("machine_type", String.class),
+        NEED_NEW_SESSION_ID("need_new_session_id", Boolean.class),
         ;
         @Override
         public String get_key() {
@@ -36,6 +37,7 @@ public class Module extends Database.Entity {
         setField(Field.UUID, "");
         setField(Field.SESSION_ID, "");
         setField(Field.MACHINE_TYPE, "");
+        setField(Field.NEED_NEW_SESSION_ID, false);
     }
 
     public Module(Document doc) {
