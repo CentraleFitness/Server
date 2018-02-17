@@ -83,7 +83,8 @@ public class ModuleProductionSend {
                         commande_setModuleIds_params.add(param);
                         module.setField(Module.Field.SESSION_ID, sessionID);
                         Database.update_entity(Database.Collections.Modules, module);
-                    } else {
+                    }
+                    if (sportSession != null) {
                         ArrayList sportSessionProduction = (ArrayList) sportSession.getField(SportSession.Field.PRODUCTION);
                         sportSessionProduction.add(production);
                         Database.update_entity(Database.Collections.SportSessions, sportSession);
