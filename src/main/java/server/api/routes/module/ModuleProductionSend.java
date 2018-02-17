@@ -62,7 +62,12 @@ public class ModuleProductionSend {
 
                 for (Map.Entry entry : rProduction.entrySet()) {
                     String uuid = (String) entry.getKey();
-                    Double production = (Double) entry.getValue();
+                    Double production;
+                    try {
+                        production = (Double) entry.getValue();
+                    } catch (ClassCastException cce) {
+                        production = ((Integer) entry.getValue()).doubleValue();
+                    }
 
                     Module module = (Module) Database.find_entity(Database.Collections.Modules, Module.Field.UUID, uuid);
                     if (module == null) continue ;
