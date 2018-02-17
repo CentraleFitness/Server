@@ -25,6 +25,11 @@ public class EndSportSession {
                 electricProduction.setField(ElectricProduction.Field.MODULE_ID, sportSession.getField(SportSession.Field.MODULE_ID));
                 electricProduction.setField(ElectricProduction.Field.USER_ID, sportSession.getField(SportSession.Field.USER_ID));
             }
+            Module module = (Module) Database.find_entity(Database.Collections.Modules, Module.Field.ID, sportSession.getField(SportSession.Field.MODULE_ID));
+            if (module != null) {
+                module.setField(Module.Field.NEED_NEW_SESSION_ID, true);
+                Database.update_entity(Database.Collections.Modules, module);
+            }
             electricProduction.addProduction(sportSession.getField(SportSession.Field.PRODUCTION));
             Database.update_entity(Database.Collections.ElectricProductions, electricProduction);
             Database.delete_entity(Database.Collections.SportSessions, SportSession.Field.ID, sportSession.getField(SportSession.Field.ID));
