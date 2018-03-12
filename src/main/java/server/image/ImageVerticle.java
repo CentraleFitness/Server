@@ -16,7 +16,6 @@ public class ImageVerticle extends AbstractVerticle {
     private HttpServer mHttpServer = null;
     private Router mRouter = null;
     private String mRoot = "./";
-    private Vertx mVertx = this.vertx;
 
     public ImageVerticle(int port) {
         mPort = port;
@@ -25,8 +24,8 @@ public class ImageVerticle extends AbstractVerticle {
     @Override
     public void start() {
         System.out.println("...ImageVerticle creation... port: " + mPort);
-        mHttpServer = mVertx.createHttpServer();
-        mRouter = Router.router(mVertx);
+        mHttpServer = this.vertx.createHttpServer();
+        mRouter = Router.router(this.vertx);
         routing();
         mHttpServer.requestHandler(mRouter::accept).listen(mPort);
     }
