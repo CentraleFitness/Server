@@ -7,26 +7,26 @@ public class Protocol {
 
     public enum Path {
         /**
-         * @param: NA.
-         * @return: STATUS.
+         * @param: TOKEN, B64_PICTURE.
+         * @return: PICTURE_ID, STATUS.
          */
         STORE("/store"),
 
         /**
-         * @param: NA.
-         * @return: STATUS.
+         * @param: TEMPORARY_URL.
+         * @return: B64_PICTURE, STATUS.
          */
         GET("/get"),
 
         /**
-         * @param: NA.
+         * @param: TOKEN, PICUTRE_ID.
          * @return: STATUS.
          */
         DELETE("/delete"),
 
         /**
-         * @param: NA.
-         * @return: STATUS.
+         * @param: TOKEN, PICUTRE_ID.
+         * @return: TEMPORARY_URL, STATUS.
          */
         GENERATE_TEMPORARY_URL("/generatetemporaryurl"),
         ;
@@ -38,6 +38,10 @@ public class Protocol {
 
     public enum Field {
         STATUS("code"),
+        TOKEN("token"),
+        TEMPORARY_URL("temporary url"),
+        PICUTRE_ID("picture id"),
+        B64_PICTURE("base64 picture"),
         ;
         public String key;
         Field(String key) {

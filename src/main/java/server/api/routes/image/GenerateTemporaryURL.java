@@ -12,12 +12,9 @@ import server.image.ImageVerticle;
 import java.util.Map;
 
 public class GenerateTemporaryURL {
-
-    private ImageVerticle mImageVerticle = null;
-
-    public GenerateTemporaryURL(Router router, ImageVerticle imageVerticle) {
+    public GenerateTemporaryURL(ImageVerticle imageVerticle) {
         final String fRoot = imageVerticle.getRoot();
-        router.route(HttpMethod.POST, Protocol.Path.GENERATE_TEMPORARY_URL.path).handler(routingContext -> {
+        imageVerticle.getRouter().route(HttpMethod.POST, Protocol.Path.GENERATE_TEMPORARY_URL.path).handler(routingContext -> {
 
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
