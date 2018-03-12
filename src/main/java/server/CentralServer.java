@@ -29,28 +29,22 @@ public class CentralServer {
 
     private Vertx mVertx = null;
     private Settings mSettings = null;
-    private Database mDatabase = null;
     private HashMap<String, AbstractVerticle> mVerticles = null;
 
     public CentralServer() {
         try {
             System.out.println("...CentralServer creation...");
 
-            mDatabase = Database.getInstance();
             mSettings = new Gson().fromJson(new JsonParser().parse(new JsonReader(new FileReader("ServerSettings.ini"))), Settings.class);
             mVertx = Vertx.vertx();
             mVerticles = new HashMap<>();
 
-            if (Boolean.parseBoolean(mSettings.get("EnableLogManager")) == true) LogManager.enable();
+            if (Boolean.parseBoolean(mSettings.get("EnableLogManager"))) LogManager.enable();
 
             mVerticles.put(MobileVerticle.class.getName(), new MobileVerticle(Integer.parseInt(mSettings.get("Mobile Server Http Port"))));
             mVerticles.put(ModuleVerticle.class.getName(), new ModuleVerticle(Integer.parseInt(mSettings.get("Module Server Http Port"))));
             mVerticles.put(IntranetVerticle.class.getName(), new IntranetVerticle(Integer.parseInt(mSettings.get("Intranet Server Http Port"))));
             mVerticles.put(ImageVerticle.class.getName(), new ImageVerticle(Integer.parseInt(mSettings.get("Image Server Http Port"))));
-
-            //   !! @Deprecated !!   ////////////////////////////////////////////////////////////////////
-            ((IntranetVerticle) mVerticles.get(IntranetVerticle.class.getName())).setDatabase(mDatabase);
-            /////////////////////////////////////////////////////////////////////////////////////////////
 
             mVerticles.forEach((key, value)-> mVertx.deployVerticle(value));
         } catch (Exception e) {
