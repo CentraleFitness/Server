@@ -1,30 +1,46 @@
 package server.image;
 
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServer;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
+import server.api.routes.image.Delete;
+import server.api.routes.image.GenerateTemporaryURL;
+import server.api.routes.image.Get;
+import server.api.routes.image.Store;
 
 public class ImageVerticle extends AbstractVerticle {
 
-    private int port;
-    private HttpServer httpServer = null;
-    private Router router = null;
+    private int mPort;
+    private HttpServer mHttpServer = null;
+    private Router mRouter = null;
+    private String mRoot = "./";
+    private Vertx mVertx = this.vertx;
 
     public ImageVerticle(int port) {
-        this.port = port;
+        mPort = port;
     }
 
     @Override
     public void start() {
-        System.out.println("...ImageVerticle creation... port: " + this.port);
-        this.httpServer = this.vertx.createHttpServer();
-        this.router = Router.router(this.vertx);
+        System.out.println("...ImageVerticle creation... port: " + mPort);
+        mHttpServer = mVertx.createHttpServer();
+        mRouter = Router.router(mVertx);
         routing();
-        this.httpServer.requestHandler(this.router::accept).listen(this.port);
+        mHttpServer.requestHandler(mRouter::accept).listen(mPort);
     }
 
     public void routing() {
-        this.router.route().handler(BodyHandler.create());
+        mRouter.route().handler(BodyHandler.create());
+
+        new Store(mRouter, this);
+        new Get(mRouter, this);
+        new Delete(mRouter, this);
+        new GenerateTemporaryURL(mRouter, this);
+    }
+
+    public String getRoot() {
+        return mRoot;
     }
 }
