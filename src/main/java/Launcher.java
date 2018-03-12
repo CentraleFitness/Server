@@ -1,4 +1,4 @@
-import server.central.CentralServer;
+import server.CentralServer;
 
 /**
  * Created by hadrien on 14/03/2017.
