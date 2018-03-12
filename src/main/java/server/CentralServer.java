@@ -2,23 +2,17 @@ package server;
 
 import Tools.LogManager;
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Verticle;
 import io.vertx.core.Vertx;
-import model.Database;
-import server.Settings;
 import server.image.ImageVerticle;
 import server.intranet.IntranetVerticle;
 import server.mobile.MobileVerticle;
 import server.module.ModuleVerticle;
-
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.HashMap;
-import java.util.concurrent.Callable;
 
 /**
  * Created by hadrien on 13/03/2017.
@@ -28,14 +22,14 @@ import java.util.concurrent.Callable;
 public class CentralServer {
 
     private Vertx mVertx = null;
-    private Settings mSettings = null;
+    private HashMap<String, String> mSettings = null;
     private HashMap<String, AbstractVerticle> mVerticles = null;
 
     public CentralServer() {
         try {
             System.out.println("...CentralServer creation...");
 
-            mSettings = new Gson().fromJson(new JsonParser().parse(new JsonReader(new FileReader("ServerSettings.ini"))), Settings.class);
+            mSettings = new Gson().fromJson(new JsonParser().parse(new JsonReader(new FileReader("ServerSettings.ini"))), new TypeToken<HashMap<String, String>>(){}.getType());
             mVertx = Vertx.vertx();
             mVerticles = new HashMap<>();
 
@@ -45,7 +39,6 @@ public class CentralServer {
             mVerticles.put(ModuleVerticle.class.getName(), new ModuleVerticle(Integer.parseInt(mSettings.get("Module Server Http Port"))));
             mVerticles.put(IntranetVerticle.class.getName(), new IntranetVerticle(Integer.parseInt(mSettings.get("Intranet Server Http Port"))));
             mVerticles.put(ImageVerticle.class.getName(), new ImageVerticle(Integer.parseInt(mSettings.get("Image Server Http Port"))));
-
             mVerticles.forEach((key, value)-> mVertx.deployVerticle(value));
         } catch (Exception e) {
             e.printStackTrace();
