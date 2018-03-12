@@ -48,7 +48,9 @@ public class CentralServer {
             mVerticles.put(IntranetVerticle.class.getName(), new IntranetVerticle(Integer.parseInt(mSettings.get("Intranet Server Http Port"))));
             mVerticles.put(ImageVerticle.class.getName(), new ImageVerticle(Integer.parseInt(mSettings.get("Image Server Http Port"))));
 
+            //   !! @Deprecated !!   ////////////////////////////////////////////////////////////////////
             ((IntranetVerticle) mVerticles.get(IntranetVerticle.class.getName())).setDatabase(mDatabase);
+            /////////////////////////////////////////////////////////////////////////////////////////////
 
             mVerticles.forEach((key, value)-> mVertx.deployVerticle(value));
         } catch (Exception e) {
