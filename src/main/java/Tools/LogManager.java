@@ -3,6 +3,7 @@ package Tools;
 import sun.reflect.Reflection;
 
 import java.io.Console;
+import java.io.File;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -19,7 +20,10 @@ public class LogManager {
     private static void logFile() {
         if (mEnabled == true) {
             try {
-                mLog = new PrintWriter(new Date().getTime() + ".log", "UTF-8");
+
+                File theDir = new File("Log");
+                if (!theDir.exists()) theDir.mkdir();
+                mLog = new PrintWriter("Log/" + new Date().getTime() + ".log", "UTF-8");
             } catch (Exception e) {
                 System.err.println("LogManager: Could not open file");
             }
