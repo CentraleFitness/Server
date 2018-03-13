@@ -44,8 +44,7 @@ public class Delete {
                     LogManager.write("Bad token");
                     break label;
                 }
-                String cleanedPictureId = FilenameUtils.getBaseName(rPictureId);
-                FileUtils.deleteQuietly(FileUtils.getFile(imageVerticle.getRoot() + "/" + cleanedPictureId));
+                FileUtils.deleteQuietly(FileUtils.getFile(imageVerticle.getRoot() + "/" + FilenameUtils.getBaseName(rPictureId)));
                 sending = new ResponseObject(false);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
             } catch (Exception e) {
