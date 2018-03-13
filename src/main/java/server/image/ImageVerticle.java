@@ -1,8 +1,9 @@
 package server.image;
 
-import com.mongodb.MongoClient;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.RemovalListener;
+import com.google.common.cache.RemovalNotification;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.http.HttpServer;
 import io.vertx.ext.web.Router;
@@ -13,7 +14,7 @@ import server.api.routes.image.Get;
 import server.api.routes.image.Store;
 
 import java.io.File;
-import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 public class ImageVerticle extends AbstractVerticle {
 
@@ -21,21 +22,16 @@ public class ImageVerticle extends AbstractVerticle {
     private HttpServer mHttpServer = null;
     private Router mRouter = null;
     private String mRoot = "./Pictures";
-    private String mDBIP = "localhost";
-    private int mDBPort = 27017;
-    private String mDBName = "ImageVerticle";
-    private MongoClient mDBClient;
-    private MongoDatabase mDB;
-    private MongoCollection mDBCUrls;
+    private Cache<String, String> mUrls = null;
 
     public ImageVerticle(int port) {
         mPort = port;
-        mDBClient = new MongoClient(mDBIP, mPort);
-        mDB = mDBClient.getDatabase(mDBName);
-        mDBCUrls = mDB.getCollection("urls");
-
-        File theDir = new File(mRoot);
+       File theDir = new File(mRoot);
         if (!theDir.exists()) theDir.mkdir();
+        mUrls = CacheBuilder.newBuilder()
+                .maximumSize(10000) // Taille Max
+                .expireAfterWrite(5, TimeUnit.SECONDS) // TTL
+                .build();
     }
 
     @Override
@@ -64,8 +60,8 @@ public class ImageVerticle extends AbstractVerticle {
         return mRouter;
     }
 
-    public MongoCollection getDBCUrls() {
-        return mDBCUrls;
+    public Cache<String, String> getUrls() {
+        return mUrls;
     }
 
     @Deprecated

@@ -22,7 +22,7 @@ public class Get {
                 Map<String, Object> received = routingContext.getBodyAsJson().getMap();
 
                 sending = new ResponseObject(false);
-                sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK);
+                sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
             } catch (Exception e) {
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.INTERNAL_SERVER_ERROR.code);
