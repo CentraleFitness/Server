@@ -48,7 +48,7 @@ public class Get {
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.INTERNAL_SERVER_ERROR.code);
                 LogManager.write(e);
             }
-            response.end(new GsonBuilder().create().toJson(sending));
+            response.end(new GsonBuilder().disableHtmlEscaping().create().toJson(sending));
         });
     }
 }
