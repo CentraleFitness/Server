@@ -19,13 +19,31 @@ public class Delete {
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
 
-            System.out.println(fRoot);
-
             label:try {
                 Map<String, Object> received = routingContext.getBodyAsJson().getMap();
+                String rToken = (String) received.get(Protocol.Field.TOKEN.key);
+                String rPictureId = (String) received.get(Protocol.Field.PICUTRE_ID.key);
 
+                if (rToken == null) {
+                    sending = new ResponseObject(true);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_KO.code);
+                    LogManager.write("Missing key " + Protocol.Field.TOKEN.key);
+                    break label;
+                }
+                if (rPictureId == null) {
+                    sending = new ResponseObject(true);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_KO.code);
+                    LogManager.write("Missing key " + Protocol.Field.PICUTRE_ID.key);
+                    break label;
+                }
+                if (!rToken.equals(imageVerticle.getToken())) {
+                    sending = new ResponseObject(true);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_KO.code);
+                    LogManager.write("Bad token");
+                    break label;
+                }
                 sending = new ResponseObject(false);
-                sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK);
+                sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
             } catch (Exception e) {
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.INTERNAL_SERVER_ERROR.code);

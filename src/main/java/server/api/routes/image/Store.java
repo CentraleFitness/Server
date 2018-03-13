@@ -6,12 +6,14 @@ import com.google.gson.GsonBuilder;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
+import org.apache.commons.io.FileUtils;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import protocol.ResponseObject;
 import protocol.image.Protocol;
 import server.image.ImageVerticle;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Base64;
 import java.util.Map;
@@ -32,13 +34,13 @@ public class Store {
                 if (rToken == null) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_KO.code);
-                    LogManager.write("Missing key " + Protocol.Field.TOKEN);
+                    LogManager.write("Missing key " + Protocol.Field.TOKEN.key);
                     break label;
                 }
                 if (rPicture == null) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_KO.code);
-                    LogManager.write("Missing key " + Protocol.Field.B64_PICTURE);
+                    LogManager.write("Missing key " + Protocol.Field.B64_PICTURE.key);
                     break label;
                 }
                 if (!rToken.equals(imageVerticle.getToken())) {
@@ -50,9 +52,7 @@ public class Store {
                 byte[] rawPicture = Base64.getDecoder().decode(rPicture);
                 byte[] compressedPicture = CompressionUtils.compress(rawPicture);
                 ObjectId pictureId = new ObjectId();
-                FileOutputStream fos = new FileOutputStream(imageVerticle.getRoot() + "/" + pictureId.toString());
-                fos.write(compressedPicture);
-                fos.close();
+                FileUtils.writeByteArrayToFile(new File(imageVerticle.getRoot() + "/" + pictureId.toString()), compressedPicture);
                 sending = new ResponseObject(false);
                 sending.put(Protocol.Field.PICUTRE_ID.key, pictureId.toString());
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
