@@ -30,7 +30,7 @@ public class ImageVerticle extends AbstractVerticle {
         if (!theDir.exists()) theDir.mkdir();
         mUrls = CacheBuilder.newBuilder()
                 .maximumSize(10000) // Taille Max
-                .expireAfterWrite(5, TimeUnit.SECONDS) // TTL
+                .expireAfterWrite(1, TimeUnit.MINUTES) // TTL
                 .build();
     }
 

@@ -16,7 +16,7 @@ public class Protocol {
          * @param: TEMPORARY_URL.
          * @return: B64_PICTURE, STATUS.
          */
-        GET("/get"),
+        GET("/get/:param"),
 
         /**
          * @param: TOKEN, PICUTRE_ID.
