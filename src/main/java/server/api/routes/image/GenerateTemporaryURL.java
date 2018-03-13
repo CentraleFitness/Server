@@ -13,13 +13,10 @@ import java.util.Map;
 
 public class GenerateTemporaryURL {
     public GenerateTemporaryURL(ImageVerticle imageVerticle) {
-        final String fRoot = imageVerticle.getRoot();
         imageVerticle.getRouter().route(HttpMethod.POST, Protocol.Path.GENERATE_TEMPORARY_URL.path).handler(routingContext -> {
 
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
-
-            System.out.println(fRoot);
 
             label:try {
                 Map<String, Object> received = routingContext.getBodyAsJson().getMap();

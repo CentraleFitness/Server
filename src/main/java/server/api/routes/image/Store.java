@@ -20,7 +20,6 @@ import java.util.Map;
 
 public class Store {
     public Store(ImageVerticle imageVerticle) {
-        final String fRoot = imageVerticle.getRoot();
         imageVerticle.getRouter().route(HttpMethod.POST, Protocol.Path.STORE.path).handler(routingContext -> {
 
             ResponseObject sending;

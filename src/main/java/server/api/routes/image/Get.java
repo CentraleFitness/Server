@@ -13,13 +13,10 @@ import java.util.Map;
 
 public class Get {
     public Get(ImageVerticle imageVerticle) {
-        final String fRoot = imageVerticle.getRoot();
         imageVerticle.getRouter().route(HttpMethod.POST, Protocol.Path.GET.path).handler(routingContext -> {
 
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
-
-            System.out.println(fRoot);
 
             label:try {
                 Map<String, Object> received = routingContext.getBodyAsJson().getMap();

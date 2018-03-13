@@ -15,7 +15,6 @@ import java.util.Map;
 
 public class Delete {
     public Delete(ImageVerticle imageVerticle) {
-        final String fRoot = imageVerticle.getRoot();
         imageVerticle.getRouter().route(HttpMethod.POST, Protocol.Path.DELETE.path).handler(routingContext -> {
 
             ResponseObject sending;
