@@ -5,6 +5,8 @@ import com.google.gson.GsonBuilder;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import protocol.ResponseObject;
 import protocol.image.Protocol;
 import server.image.ImageVerticle;
@@ -42,6 +44,8 @@ public class Delete {
                     LogManager.write("Bad token");
                     break label;
                 }
+                String cleanedPictureId = FilenameUtils.getBaseName(rPictureId);
+                FileUtils.deleteQuietly(FileUtils.getFile(imageVerticle.getRoot() + "/" + cleanedPictureId));
                 sending = new ResponseObject(false);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
             } catch (Exception e) {
