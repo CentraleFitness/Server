@@ -2,8 +2,6 @@ package server.image;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.RemovalListener;
-import com.google.common.cache.RemovalNotification;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.http.HttpServer;
 import io.vertx.ext.web.Router;
@@ -12,7 +10,6 @@ import server.api.routes.image.Delete;
 import server.api.routes.image.GenerateTemporaryURL;
 import server.api.routes.image.Get;
 import server.api.routes.image.Store;
-
 import java.io.File;
 import java.util.concurrent.TimeUnit;
 
@@ -26,7 +23,7 @@ public class ImageVerticle extends AbstractVerticle {
 
     public ImageVerticle(int port) {
         mPort = port;
-       File theDir = new File(mRoot);
+        File theDir = new File(mRoot);
         if (!theDir.exists()) theDir.mkdir();
         mUrls = CacheBuilder.newBuilder()
                 .maximumSize(10000) // Taille Max

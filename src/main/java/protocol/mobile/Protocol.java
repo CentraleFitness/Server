@@ -82,6 +82,27 @@ public class Protocol {
          * @return: STATUS, LIST PRODUCTION.
          */
         USER_GET_INSTANTPRODUCTION("/user/get/instantproduction"),
+
+        /**
+         * @path: USER_GET_INSTANTPRODUCTION:
+         * @param: TOKEN, START, END.
+         * @return: STATUS, LIST EVENTS.
+         */
+        GET_EVENTS("/get/events"),
+
+        /**
+         * @path: USER_GET_INSTANTPRODUCTION:
+         * @param: TOKEN, EVENT_ID.
+         * @return: STATUS, DESCRIPTION, BASE64IMAGE, START_DATE, END_DATE, USER_REGISTERED.
+         */
+        GET_EVENTPREVIEW("/get/eventpreview"),
+
+        /**
+         * @path: USER_GET_INSTANTPRODUCTION:
+         * @param: TOKEN, EVENT_ID.
+         * @return: STATUS, LIST USERS_LOGIN.
+         */
+        GET_EVENTSUSERS("/get/eventusers"),
         ;
         public String path;
         Path(String path) {

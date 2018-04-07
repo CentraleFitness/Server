@@ -4,7 +4,10 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.http.HttpServer;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
+import server.api.routes.intranet.GetEvents;
 import server.api.routes.mobile.*;
+import server.api.routes.unfinished.mobile.GetEventPreview;
+import server.api.routes.unfinished.mobile.GetEventUsers;
 
 /**
  * Created by hadrien on 14/03/2017.
@@ -48,5 +51,9 @@ public class MobileVerticle extends AbstractVerticle {
 
         new UserPairStart(this.router);
         new UserPairStop(this.router);
+
+        new GetEvents(this.router);
+        new GetEventPreview(this.router);
+        new GetEventUsers(this.router);
     }
 }
