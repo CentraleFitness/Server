@@ -4,10 +4,10 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.http.HttpServer;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
-import server.api.routes.intranet.GetEvents;
 import server.api.routes.mobile.*;
 import server.api.routes.unfinished.mobile.GetEventPreview;
 import server.api.routes.unfinished.mobile.GetEventUsers;
+import server.api.routes.unfinished.mobile.GetEvents;
 
 /**
  * Created by hadrien on 14/03/2017.
