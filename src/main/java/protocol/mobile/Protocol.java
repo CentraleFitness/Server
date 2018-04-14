@@ -123,7 +123,9 @@ public class Protocol {
         PICTURE("picture"),
         PRODUCTION("production"),
         SESSIONID("session id"),
-        ;
+        START("start"),
+        END("end"),
+        EVENTS("events");
         public String key;
         Field(String key) {
             this.key = key;
@@ -143,7 +145,7 @@ public class Protocol {
         INTERNAL_SERVER_ERROR("666", "Random error"),
         SPORT_SESSION_NO_SESSION("410", "No sport session"),
         SPORT_SESSION_BAD_SESSIONID("411", "Bad session id"),
-        ;
+        NO_AFFILIATION("412", "Not affiliated with sport center");
         public String code;
         public String message;
         Status(String code, String message) {
