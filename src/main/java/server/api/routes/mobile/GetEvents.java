@@ -1,4 +1,4 @@
-package server.api.routes.unfinished.mobile;
+package server.api.routes.mobile;
 
 import Tools.LogManager;
 import Tools.Token;
@@ -23,8 +23,6 @@ import static com.mongodb.client.model.Filters.eq;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static com.mongodb.client.model.Filters.eq;
 
 public class GetEvents {
     public GetEvents(Router router) {
