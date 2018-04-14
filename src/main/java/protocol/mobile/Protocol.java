@@ -125,7 +125,13 @@ public class Protocol {
         SESSIONID("session id"),
         START("start"),
         END("end"),
-        EVENTS("events");
+        EVENTS("events"),
+        EVENTID("eventid"),
+        EVENTDESCRIPTION("description"),
+        EVENTPICTURE("picture"),
+        EVENTSTARTDATE("start date"),
+        EVENTENDDATE("end date"),
+        EVENTUSERREGISTERED("user_registered");
         public String key;
         Field(String key) {
             this.key = key;
