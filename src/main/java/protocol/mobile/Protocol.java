@@ -131,7 +131,8 @@ public class Protocol {
         EVENTPICTURE("picture"),
         EVENTSTARTDATE("start date"),
         EVENTENDDATE("end date"),
-        EVENTUSERREGISTERED("user_registered");
+        EVENTUSERREGISTERED("user_registered"),
+        EVENTUSERS("users");
         public String key;
         Field(String key) {
             this.key = key;
