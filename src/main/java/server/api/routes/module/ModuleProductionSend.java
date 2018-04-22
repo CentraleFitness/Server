@@ -53,13 +53,6 @@ public class ModuleProductionSend {
                     break label;
                 }
 
-                ArrayList commande = new ArrayList();
-                Map commande_setModuleIds = new TreeMap();
-                ArrayList commande_setModuleIds_params = new ArrayList();
-                commande_setModuleIds.put(Protocol.Field.COMMAND_NAME.key, Protocol.Command.SET_MODULE_ID.key);
-                commande_setModuleIds.put(Protocol.Field.COMMAND_PARAMS.key, commande_setModuleIds_params);
-                commande.add(commande_setModuleIds);
-
                 for (Map.Entry entry : rProduction.entrySet()) {
                     String uuid = (String) entry.getKey();
                     Double production;
@@ -74,16 +67,6 @@ public class ModuleProductionSend {
                     ObjectId module_id = (ObjectId) module.getField(Module.Field.ID);
 
                     SportSession sportSession = (SportSession) Database.find_entity(Database.Collections.SportSessions, SportSession.Field.MODULE_ID, module_id);
-                    Boolean change_session_id = false;
-                    if ((sportSession == null) && change_session_id == true) {
-                        String sessionID = new ObjectId().toString();
-                        Map param = new TreeMap();
-                        param.put(Protocol.Field.UUID.key, uuid);
-                        param.put(Protocol.Field.SESSION_ID.key, sessionID);
-                        commande_setModuleIds_params.add(param);
-                        module.setField(Module.Field.SESSION_ID, sessionID);
-                        Database.update_entity(Database.Collections.Modules, module);
-                    }
                     if (sportSession != null) {
                         ArrayList sportSessionProduction = (ArrayList) sportSession.getField(SportSession.Field.PRODUCTION);
                         sportSessionProduction.add(production);
@@ -92,8 +75,6 @@ public class ModuleProductionSend {
                 }
                 sending = new ResponseObject(false);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK);
-                if (commande_setModuleIds_params.size() > 0)
-                    sending.put(Protocol.Field.COMMAND.key, commande);
             } catch (Exception e) {
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.INTERNAL_SERVER_ERROR.code);
