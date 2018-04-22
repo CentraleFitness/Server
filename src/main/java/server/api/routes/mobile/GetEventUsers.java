@@ -1,4 +1,4 @@
-package server.api.routes.unfinished.mobile;
+package server.api.routes.mobile;
 
 import Tools.LogManager;
 import Tools.Token;
@@ -80,6 +80,7 @@ public class GetEventUsers {
                         .collect(Collectors.toList());
                 sending = new ResponseObject(false);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
+                sending.put(Protocol.Field.EVENTUSERS.key, users);
             } catch (Exception e) {
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.INTERNAL_SERVER_ERROR.code);
