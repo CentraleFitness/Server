@@ -67,11 +67,10 @@ public class ModulePairStop {
                     Database.update_entity(Database.Collections.Modules, module);
                     SportSession sportSession = (SportSession) Database.find_entity(Database.Collections.SportSessions, SportSession.Field.MODULE_ID, module.getField(Module.Field.ID));
                     EndSportSession.end(sportSession);
-                    Map setModuleId = new TreeMap();
-                    List params = new ArrayList();
-                    params.add(rUUID.get(i));
-                    params.add(sessionID);
-                    setModuleId.put(Protocol.Command.SET_MODULE_ID.key, params);
+                    List setModuleId = new ArrayList();
+                    setModuleId.add(Protocol.Command.SET_MODULE_ID.key);
+                    setModuleId.add(rUUID.get(i));
+                    setModuleId.add(sessionID);
                     commande.add(setModuleId);
                 }
                 sending = new ResponseObject(false);
