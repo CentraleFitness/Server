@@ -81,7 +81,7 @@ public class GetEvents {
                                 .collections
                                 .get(Database.Collections.Events)
                                 .find(eq(Event.Field.FITNESS_CENTER_ID.get_key(), fitnessCenterId))
-                                .sort(new BasicDBObject(Event.Field.FITNESS_CENTER_ID.get_key(), 1))
+                                .sort(new BasicDBObject(Event.Field.CREATION_DATE.get_key(), 1))
                                 .skip(rStart)
                                 .limit(rEnd)
                                 .into(new ArrayList())
