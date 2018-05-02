@@ -7,102 +7,112 @@ public class Protocol {
 
     public enum Path {
         /**
-         * @path: REGISTRATION:
          * @param: LOGIN, PASSWORD, FIRSTNAME, LASTNAME, PHONE, EMAIL.
          * @return: STATUS, TOKEN.
          */
         REGISTRATION("/registration"),
 
         /**
-         * @path: AUTHENTICATION:
          * @param: LOGIN, PASSWORD.
          * @return: STATUS, TOKEN.
          */
         AUTHENTICATION("/authentication"),
 
         /**
-         * @path: AUTHENTICATION_TOKEN:
          * @param: TOKEN.
          * @return: STATUS.
          */
         AUTHENTICATION_TOKEN("/authentication/token"),
 
         /**
-         * @path: USER_GET_PROFILE:
          * @param: TOKEN.
          * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
          */
         USER_GET_PROFILE("/user/get/profile"),
 
         /**
-         * @path: USER_GET_PROFILE:
          * @param: TOKEN.
          * @return: STATUS, PICTURE.
          */
         USER_GET_PICTURE("/user/get/picture"),
 
         /**
-         * @path: USER_UPDATE_PICTURE:
          * @param: TOKEN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
          * @return: STATUS.
          */
         USER_UPDATE_PROFILE("/user/update/profile"),
 
         /**
-         * @path: USER_UPDATE_PASSWORD:
          * @param: TOKEN, PASSWORD, NEW_PASSWORD.
          * @return: STATUS, TOKEN.
          */
         USER_UPDATE_PASSWORD("/user/update/password"),
 
         /**
-         * @path: USER_UPDATE_PICTURE:
          * @param: TOKEN, PICTURE.
          * @return: STATUS.
          */
         USER_UPDATE_PICTURE("/user/update/picture"),
 
         /**
-         * @path: USER_PAIR_START:
          * @param: TOKEN, MODULE_ID.
          * @return: STATUS.
          */
         USER_PAIR_START("/user/pair/start"),
 
         /**
-         * @path: USER_PAIR_STOP:
          * @param: TOKEN.
          * @return: STATUS.
          */
         USER_PAIR_STOP("/user/pair/stop"),
 
         /**
-         * @path: USER_GET_INSTANTPRODUCTION:
          * @param: TOKEN.
          * @return: STATUS, LIST PRODUCTION.
          */
         USER_GET_INSTANTPRODUCTION("/user/get/instantproduction"),
 
         /**
-         * @path: USER_GET_INSTANTPRODUCTION:
          * @param: TOKEN, START, END.
          * @return: STATUS, LIST EVENTS.
          */
         GET_EVENTS("/get/events"),
 
         /**
-         * @path: USER_GET_INSTANTPRODUCTION:
          * @param: TOKEN, EVENT_ID.
          * @return: STATUS, DESCRIPTION, BASE64IMAGE, START_DATE, END_DATE, USER_REGISTERED.
          */
         GET_EVENTPREVIEW("/get/eventpreview"),
 
         /**
-         * @path: USER_GET_INSTANTPRODUCTION:
          * @param: TOKEN, EVENT_ID.
          * @return: STATUS, LIST USERS_LOGIN.
          */
         GET_EVENTSUSERS("/get/eventusers"),
+
+        /**
+         * @param: TOKEN, AFFILIATIONTOKEN.
+         * @return: STATUS, SPORTCENTERID.
+         */
+        AFFILIATE("/affiliate"),
+
+        /**
+         * @param: TOKEN.
+         * @return: STATUS, SPORTCENTERID.
+         */
+        GET_AFFILIATION("/get/affiliation"),
+
+        /**
+         * @param: TOKEN, TARGERID, START, END.
+         * @return: STATUS, LIST POSTID.
+         */
+        GET_POSTS("/get/posts"),
+
+        /**
+         * @param: TOKEN, POSTID.
+         * @return: STATUS, POSTTYPE, POSTICON, POSTDATE, POSTCONTENT.
+         */
+        GET_POSTCONTENT("/get/postcontent"),
         ;
         public String path;
         Path(String path) {
@@ -132,7 +142,17 @@ public class Protocol {
         EVENTSTARTDATE("start date"),
         EVENTENDDATE("end date"),
         EVENTUSERREGISTERED("user_registered"),
-        EVENTUSERS("users");
+        EVENTUSERS("users"),
+        AFFILIATIONTOKEN("affiliation token"),
+        SPORTCENTERID("sport center id"),
+        TARGERID("target id"),
+        POSTS("posts"),
+        POSTID("post id"),
+        POSTTYPE("post type"),
+        POSTICON("post icon"),
+        POSTDATE("post date"),
+        POSTCONTENT("post content"),
+        ;
         public String key;
         Field(String key) {
             this.key = key;

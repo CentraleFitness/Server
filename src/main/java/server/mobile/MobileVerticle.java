@@ -4,6 +4,10 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.http.HttpServer;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
+import server.api.routes.fake.Affiliate;
+import server.api.routes.fake.GetAffiliation;
+import server.api.routes.fake.GetPostContent;
+import server.api.routes.fake.GetPosts;
 import server.api.routes.mobile.*;
 import server.api.routes.mobile.GetEventPreview;
 import server.api.routes.mobile.GetEventUsers;
@@ -33,26 +37,32 @@ public class MobileVerticle extends AbstractVerticle {
     }
 
     public void routing() {
-        this.router.route().handler(BodyHandler.create());
+        router.route().handler(BodyHandler.create());
 
-        new Registration(this.router);
+        new Registration(router);
 
-        new AuthenticationWithCredentials(this.router);
-        new AuthenticationWithToken(this.router);
+        new AuthenticationWithCredentials(router);
+        new AuthenticationWithToken(router);
 
-        new UserGetProfile(this.router);
-        new UserGetPicture(this.router);
-        new UserGetInstantproduction(this.router);
+        new UserGetProfile(router);
+        new UserGetPicture(router);
+        new UserGetInstantproduction(router);
 
-        new UserUpdatePassword(this.router);
-        new UserUpdateProfile(this.router);
-        new UserUpdatePicture(this.router);
+        new UserUpdatePassword(router);
+        new UserUpdateProfile(router);
+        new UserUpdatePicture(router);
 
-        new UserPairStart(this.router);
-        new UserPairStop(this.router);
+        new UserPairStart(router);
+        new UserPairStop(router);
 
-        new GetEvents(this.router);
-        new GetEventPreview(this.router);
-        new GetEventUsers(this.router);
+        new GetEvents(router);
+        new GetEventPreview(router);
+        new GetEventUsers(router);
+        
+        new Affiliate(router);
+        new GetAffiliation(router);
+        
+        new GetPosts(router);
+        new GetPostContent(router);
     }
 }

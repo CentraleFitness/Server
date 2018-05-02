@@ -3,3 +3,4 @@ out
 build
 *.log
 .gradle
+/bin/
