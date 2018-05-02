@@ -54,6 +54,7 @@ public class Database {
         Feedback_States("feedback_states", model.entities.Feedback_State.class, Feedback_State.Field.ID.get_key()),
         TUPLE_Event_Users("TUPLE_event_users", model.entities.TUPLE_Event_User.class, TUPLE_Event_User.Field.ID.get_key()),
         SportSessions("sportsession", model.entities.SportSession.class, SportSession.Field.ID.get_key()),
+        Posts("posts", model.entities.Post.class, Post.Field.ID.get_key()),
         ;
 
         public String key;
