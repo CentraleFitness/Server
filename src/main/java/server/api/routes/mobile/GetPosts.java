@@ -97,7 +97,7 @@ public class GetPosts {
                                 .collect(Collectors.toList());
                 sending = new ResponseObject(false);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
-                sending.put(Protocol.Field.EVENTS.key, postList);
+                sending.put(Protocol.Field.POSTS.key, postList);
             } catch (Exception e) {
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.INTERNAL_SERVER_ERROR.code);
