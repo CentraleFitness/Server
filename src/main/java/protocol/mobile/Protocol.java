@@ -145,7 +145,7 @@ public class Protocol {
         EVENTUSERS("users"),
         AFFILIATIONTOKEN("affiliation token"),
         SPORTCENTERID("sport center id"),
-        TARGERID("target id"),
+        TARGETID("target id"),
         POSTS("posts"),
         POSTID("post id"),
         POSTTYPE("post type"),
