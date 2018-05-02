@@ -173,7 +173,8 @@ public class Protocol {
         SPORT_SESSION_NO_SESSION("410", "No sport session"),
         SPORT_SESSION_BAD_SESSIONID("411", "Bad session id"),
         NO_AFFILIATION("412", "Not affiliated with sport center"),
-        POST_NOT_FOUND("413", "Post not found");
+        POST_NOT_FOUND("413", "Post not found"),
+        CENTER_NOT_FOUND("414", "Fitness center not found");
         public String code;
         public String message;
         Status(String code, String message) {

@@ -1,6 +1,10 @@
-package server.api.routes.fake;
+package server.api.routes.mobile;
 
 import java.util.Map;
+import java.util.Optional;
+
+import org.bson.types.ObjectId;
+
 import com.auth0.jwt.JWT;
 import com.google.gson.GsonBuilder;
 
@@ -10,6 +14,8 @@ import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import model.Database;
+import model.Database.Collections;
+import model.entities.Fitness_Center;
 import model.entities.User;
 import protocol.ResponseObject;
 import protocol.mobile.Protocol;
@@ -24,11 +30,18 @@ public class Affiliate {
             label:try {
                 Map<String, Object> received = routingContext.getBodyAsJson().getMap();
                 String rToken = (String) received.get(Protocol.Field.TOKEN.key);
-
+                String rAffiliationToken = (String) received.get(Protocol.Field.AFFILIATIONTOKEN.key);
+                
                 if (rToken == null) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_KO.code);
                     LogManager.write("Missing key " + Protocol.Field.TOKEN.key);
+                    break label;
+                }
+                if (rAffiliationToken == null) {
+                    sending = new ResponseObject(true);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_KO.code);
+                    LogManager.write("Missing key " + Protocol.Field.AFFILIATIONTOKEN.key);
                     break label;
                 }
                 JWT token = Token.decodeToken(rToken);
@@ -45,8 +58,17 @@ public class Affiliate {
                     LogManager.write(Protocol.Status.AUTH_ERROR_TOKEN.message);
                     break label;
                 }
+                ObjectId fitnessCenterId = new ObjectId(rAffiliationToken);
+                Fitness_Center fitness_Center = (Fitness_Center) Database.find_entity(Collections.Fitness_Centers, Fitness_Center.Field.ID, fitnessCenterId);
+                if (fitness_Center == null) {
+                    sending = new ResponseObject(true);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.CENTER_NOT_FOUND.code);
+                    LogManager.write(Protocol.Status.CENTER_NOT_FOUND.message);
+                    break label;
+                }
                 sending = new ResponseObject(false);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
+                sending.put(Protocol.Field.SPORTCENTERID.key, fitness_Center.getField(Fitness_Center.Field.ID));
             } catch (Exception e) {
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.INTERNAL_SERVER_ERROR.code);
