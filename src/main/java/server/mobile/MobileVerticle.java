@@ -5,12 +5,9 @@ import io.vertx.core.http.HttpServer;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 import server.api.routes.fake.Affiliate;
-import server.api.routes.fake.GetAffiliation;
 import server.api.routes.fake.GetPostContent;
 import server.api.routes.fake.GetPosts;
 import server.api.routes.mobile.*;
-import server.api.routes.mobile.GetEventPreview;
-import server.api.routes.mobile.GetEventUsers;
 
 /**
  * Created by hadrien on 14/03/2017.

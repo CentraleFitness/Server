@@ -1,9 +1,12 @@
-package server.api.routes.fake;
+package server.api.routes.mobile;
 
 import java.util.Map;
+import java.util.Optional;
 
 import com.auth0.jwt.JWT;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.google.gson.GsonBuilder;
+import com.sun.corba.se.spi.ior.ObjectId;
 
 import Tools.LogManager;
 import Tools.Token;
@@ -46,8 +49,16 @@ public class GetAffiliation {
                     LogManager.write(Protocol.Status.AUTH_ERROR_TOKEN.message);
                     break label;
                 }
+                String fitnessCenterId = Optional.ofNullable(user.getField(User.Field.FITNESS_CENTER_ID)).map(id -> id.toString()).orElse(null);
+                if (fitnessCenterId == null) {
+                    sending = new ResponseObject(true);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.NO_AFFILIATION.code);
+                    LogManager.write(Protocol.Status.NO_AFFILIATION.message);
+                    break label;
+                }
                 sending = new ResponseObject(false);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
+                sending.put(Protocol.Field.SPORTCENTERID.key, fitnessCenterId);
             } catch (Exception e) {
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.INTERNAL_SERVER_ERROR.code);
