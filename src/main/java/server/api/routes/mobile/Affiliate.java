@@ -66,6 +66,8 @@ public class Affiliate {
                     LogManager.write(Protocol.Status.CENTER_NOT_FOUND.message);
                     break label;
                 }
+                user.setField(User.Field.FITNESS_CENTER_ID, fitnessCenterId);
+                Database.update_entity(Collections.Users, user);
                 sending = new ResponseObject(false);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
                 sending.put(Protocol.Field.SPORTCENTERID.key, fitness_Center.getField(Fitness_Center.Field.ID));
