@@ -88,7 +88,7 @@ public class GetEvents {
                                 .stream()
                                 .map(doc -> {
                                     Event event = new Event((Document) doc);
-                                    return Stream.of(event.getField(Event.Field.TITLE), event.getField(Event.Field.ID)).collect(Collectors.toList());
+                                    return Stream.of(event.getField(Event.Field.TITLE), event.getField(Event.Field.ID).toString()).collect(Collectors.toList());
                                 })
                         .collect(Collectors.toList());
                 sending = new ResponseObject(false);
