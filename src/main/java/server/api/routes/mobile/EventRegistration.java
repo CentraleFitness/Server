@@ -24,7 +24,7 @@ import protocol.mobile.Protocol;
 
 public class EventRegistration {
     public EventRegistration(Router router) {
-        router.route(HttpMethod.POST, Protocol.Path.AFFILIATE.path).handler(routingContext -> {
+        router.route(HttpMethod.POST, Protocol.Path.EVENT_REGISTRATION.path).handler(routingContext -> {
 
             ResponseObject sending = null;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
