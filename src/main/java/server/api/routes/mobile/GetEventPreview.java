@@ -62,7 +62,7 @@ public class GetEventPreview {
                     LogManager.write("Unknown event id");
                     break label;
                 }
-                TUPLE_Event_User eventParticipation = (TUPLE_Event_User) Database.find_entity(Database.Collections.Events, Event.Field.ID, eventId);
+                TUPLE_Event_User eventParticipation = (TUPLE_Event_User) Database.find_entity(Database.Collections.TUPLE_Event_Users, TUPLE_Event_User.Field.ID, eventId);
                 sending = new ResponseObject(false);
                 sending.put(Protocol.Field.EVENTDESCRIPTION.key, event.getField(Event.Field.DESCRIPTION));
                 sending.put(Protocol.Field.EVENTPICTURE.key, event.getField(Event.Field.PICTURE));
