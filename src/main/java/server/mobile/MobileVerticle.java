@@ -52,6 +52,7 @@ public class MobileVerticle extends AbstractVerticle {
         new GetEvents(router);
         new GetEventPreview(router);
         new GetEventUsers(router);
+        new EventRegistration(router);
         
         new Affiliate(router);
         new GetAffiliation(router);

@@ -6,113 +6,25 @@ package protocol.mobile;
 public class Protocol {
 
     public enum Path {
-        /**
-         * @param: LOGIN, PASSWORD, FIRSTNAME, LASTNAME, PHONE, EMAIL.
-         * @return: STATUS, TOKEN.
-         */
         REGISTRATION("/registration"),
-
-        /**
-         * @param: LOGIN, PASSWORD.
-         * @return: STATUS, TOKEN.
-         */
         AUTHENTICATION("/authentication"),
-
-        /**
-         * @param: TOKEN.
-         * @return: STATUS.
-         */
         AUTHENTICATION_TOKEN("/authentication/token"),
-
-        /**
-         * @param: TOKEN.
-         * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
-         */
         USER_GET_PROFILE("/user/get/profile"),
-
-        /**
-         * @param: TOKEN.
-         * @return: STATUS, PICTURE.
-         */
         USER_GET_PICTURE("/user/get/picture"),
-
-        /**
-         * @param: TOKEN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
-         * @return: STATUS.
-         */
         USER_UPDATE_PROFILE("/user/update/profile"),
-
-        /**
-         * @param: TOKEN, PASSWORD, NEW_PASSWORD.
-         * @return: STATUS, TOKEN.
-         */
         USER_UPDATE_PASSWORD("/user/update/password"),
-
-        /**
-         * @param: TOKEN, PICTURE.
-         * @return: STATUS.
-         */
         USER_UPDATE_PICTURE("/user/update/picture"),
-
-        /**
-         * @param: TOKEN, MODULE_ID.
-         * @return: STATUS.
-         */
         USER_PAIR_START("/user/pair/start"),
-
-        /**
-         * @param: TOKEN.
-         * @return: STATUS.
-         */
         USER_PAIR_STOP("/user/pair/stop"),
-
-        /**
-         * @param: TOKEN.
-         * @return: STATUS, LIST PRODUCTION.
-         */
         USER_GET_INSTANTPRODUCTION("/user/get/instantproduction"),
-
-        /**
-         * @param: TOKEN, START, END.
-         * @return: STATUS, LIST EVENTS.
-         */
         GET_EVENTS("/get/events"),
-
-        /**
-         * @param: TOKEN, EVENT_ID.
-         * @return: STATUS, DESCRIPTION, BASE64IMAGE, START_DATE, END_DATE, USER_REGISTERED.
-         */
         GET_EVENTPREVIEW("/get/eventpreview"),
-
-        /**
-         * @param: TOKEN, EVENT_ID.
-         * @return: STATUS, LIST USERS_LOGIN.
-         */
         GET_EVENTSUSERS("/get/eventusers"),
-
-        /**
-         * @param: TOKEN, AFFILIATIONTOKEN.
-         * @return: STATUS, SPORTCENTERID.
-         */
         AFFILIATE("/affiliate"),
-
-        /**
-         * @param: TOKEN.
-         * @return: STATUS, SPORTCENTERID.
-         */
         GET_AFFILIATION("/get/affiliation"),
-
-        /**
-         * @param: TOKEN, TARGERID, START, END.
-         * @return: STATUS, LIST POSTID.
-         */
         GET_POSTS("/get/posts"),
-
-        /**
-         * @param: TOKEN, POSTID.
-         * @return: STATUS, POSTTYPE, POSTICON, POSTDATE, POSTCONTENT.
-         */
         GET_POSTCONTENT("/get/postcontent"),
+        EVENT_REGISTRATION("/event/registration"),
         ;
         public String path;
         Path(String path) {
@@ -174,7 +86,9 @@ public class Protocol {
         SPORT_SESSION_BAD_SESSIONID("411", "Bad session id"),
         NO_AFFILIATION("412", "Not affiliated with sport center"),
         POST_NOT_FOUND("413", "Post not found"),
-        CENTER_NOT_FOUND("414", "Fitness center not found");
+        CENTER_NOT_FOUND("414", "Fitness center not found"), 
+        EVENT_NOT_FOUND("413", "Event not found"),
+        ;
         public String code;
         public String message;
         Status(String code, String message) {
