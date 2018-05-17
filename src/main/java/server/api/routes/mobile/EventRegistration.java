@@ -65,7 +65,7 @@ public class EventRegistration {
                 if (event == null) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.EVENT_NOT_FOUND.code);
-                    LogManager.write(Protocol.Status.CENTER_NOT_FOUND.message);
+                    LogManager.write(Protocol.Status.EVENT_NOT_FOUND.message);
                     break label;
                 }
                 TUPLE_Event_User tuple_Event_User = (TUPLE_Event_User) Database.new_entity(Collections.TUPLE_Event_Users);
