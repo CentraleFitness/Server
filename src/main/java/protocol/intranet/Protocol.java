@@ -12,6 +12,13 @@ public class Protocol {
         REGISTRATION("/registration"),
 
         /**
+         * @path: REGISTRATION:
+         * @param: EMAIL, PASSWORD
+         * @return: STATUS, TOKEN.
+         */
+        MANAGER_REGISTER("/manager/register"),
+
+        /**
          * @path: AUTHENTICATION:
          * @param: LOGIN, PASSWORD.
          * @return: STATUS, TOKEN.
@@ -188,6 +195,55 @@ public class Protocol {
          */
         GET_EVENTS("/center/get/events"),
 
+        /**
+         * @path: ADD_FEEDBACK:
+         * @param: TOKEN.
+         * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
+         */
+        SET_CUSTOM_PROGRAMS_AVAILABILITY("/center/set/customprogramavailability"),
+
+        /**
+         * @path: ADD_FEEDBACK:
+         * @param: TOKEN.
+         * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
+         */
+        ADD_CUSTOM_PROGRAM("/center/add/customprogram"),
+
+        /**
+         * @path: ADD_FEEDBACK:
+         * @param: TOKEN.
+         * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
+         */
+        UPDATE_CUSTOM_PROGRAM("/center/update/customprogram"),
+
+        /**
+         * @path: ADD_FEEDBACK:
+         * @param: TOKEN.
+         * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
+         */
+        GET_CUSTOM_PROGRAMS("/center/get/customprograms"),
+
+        /**
+         * @path: ADD_FEEDBACK:
+         * @param: TOKEN.
+         * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
+         */
+        DELETE_CUSTOM_PROGRAM("/center/delete/customprogram"),
+
+        /**
+         * @path: ADD_FEEDBACK:
+         * @param: TOKEN.
+         * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
+         */
+        GET_ACTIVITIES("/center/get/activities"),
+
+        /**
+         * @path: ADD_FEEDBACK:
+         * @param: TOKEN.
+         * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
+         */
+        GET_FITNESS_CENTER_ID("/center/get/id"),
+
         ;
         public String path;
         Path(String path) {
@@ -203,6 +259,7 @@ public class Protocol {
         FIRSTNAME("first_name"),
         LASTNAME("last_name"),
         PHONE("phone_number"),
+        CENTER_PHONE("center_phone_number"),
         PICTURE("picture"),
         EMAIL("email"),
         NAME("name"),
@@ -228,6 +285,15 @@ public class Protocol {
         FEEDBACK_STATES("feedback_states"),
         NB_SUBSCRIBERS("nb_subscribers"),
         DELETION_CAUSE("deletion_cause"),
+        CUSTOM_PROGRAMS("custom_programs"),
+        NB_ACTIVITIES("nb_activities"),
+        TOTAL_TIME("total_time"),
+        AVAILABLE("available"),
+        ACTIVITIES("activities"),
+        CUSTOM_PROGRAM_ID("custom_program_id"),
+        ENABLED("enabled"),
+        DISABLED("disabled"),
+        FITNESS_CENTER_ID("fitness_center_id"),
         ;
         public String key;
         Field(String key) {

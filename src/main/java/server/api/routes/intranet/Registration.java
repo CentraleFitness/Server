@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class Registration {
     public Registration(Router router) {
-        router.route(HttpMethod.POST, Protocol.Path.REGISTRATION.path).handler(routingContext -> {
+        router.route(HttpMethod.POST, Protocol.Path.MANAGER_REGISTER.path).handler(routingContext -> {
             Map<String, Object> received = routingContext.getBodyAsJson().getMap();
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");

@@ -32,7 +32,7 @@ public class IntranetVerticle extends AbstractVerticle {
     public void routing() {
         this.router.route().handler(BodyHandler.create());
 
-        new Registration(this.router);
+        new RegisterManagerAndCenter(this.router);
 
         new AuthenticationWithCredentials(this.router);
         new AuthenticationWithToken(this.router);
@@ -43,7 +43,6 @@ public class IntranetVerticle extends AbstractVerticle {
         new ManagerUpdatePicture(this.router);
         new ManagerGetPicture(this.router);
 
-        new CenterRegistration(this.router);
         new CenterGetProfile(this.router);
         new CenterUpdateProfile(this.router);
         new CenterGetPicture(this.router);
@@ -64,6 +63,15 @@ public class IntranetVerticle extends AbstractVerticle {
         new GetEvents(this.router);
         new UpdateEvent(this.router);
         new DeleteEvent(this.router);
+
+        new GetFitnessCenterId(this.router);
+
+        new GetActivities(this.router);
+        new AddCustomProgram(this.router);
+        new UpdateCustomProgram(this.router);
+        new SetCustomProgramsAvailability(this.router);
+        new GetCustomPrograms(this.router);
+        new DeleteCustomProgram(this.router);
     }
 
 
