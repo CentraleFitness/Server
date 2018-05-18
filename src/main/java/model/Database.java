@@ -56,6 +56,7 @@ public class Database {
         SportSessions("sportsession", model.entities.SportSession.class, SportSession.Field.ID.get_key()),
         CustomPrograms("custom_programs", model.entities.CustomProgram.class, CustomProgram.Field.ID.get_key()),
         Activities("activities", model.entities.Activity.class, Activity.Field.ID.get_key()),
+        Posts("posts", model.entities.Post.class, Post.Field.ID.get_key()),
         ;
 
         public String key;

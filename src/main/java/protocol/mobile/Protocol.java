@@ -6,103 +6,25 @@ package protocol.mobile;
 public class Protocol {
 
     public enum Path {
-        /**
-         * @path: REGISTRATION:
-         * @param: LOGIN, PASSWORD, FIRSTNAME, LASTNAME, PHONE, EMAIL.
-         * @return: STATUS, TOKEN.
-         */
         REGISTRATION("/registration"),
-
-        /**
-         * @path: AUTHENTICATION:
-         * @param: LOGIN, PASSWORD.
-         * @return: STATUS, TOKEN.
-         */
         AUTHENTICATION("/authentication"),
-
-        /**
-         * @path: AUTHENTICATION_TOKEN:
-         * @param: TOKEN.
-         * @return: STATUS.
-         */
         AUTHENTICATION_TOKEN("/authentication/token"),
-
-        /**
-         * @path: USER_GET_PROFILE:
-         * @param: TOKEN.
-         * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
-         */
         USER_GET_PROFILE("/user/get/profile"),
-
-        /**
-         * @path: USER_GET_PROFILE:
-         * @param: TOKEN.
-         * @return: STATUS, PICTURE.
-         */
         USER_GET_PICTURE("/user/get/picture"),
-
-        /**
-         * @path: USER_UPDATE_PICTURE:
-         * @param: TOKEN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
-         * @return: STATUS.
-         */
         USER_UPDATE_PROFILE("/user/update/profile"),
-
-        /**
-         * @path: USER_UPDATE_PASSWORD:
-         * @param: TOKEN, PASSWORD, NEW_PASSWORD.
-         * @return: STATUS, TOKEN.
-         */
         USER_UPDATE_PASSWORD("/user/update/password"),
-
-        /**
-         * @path: USER_UPDATE_PICTURE:
-         * @param: TOKEN, PICTURE.
-         * @return: STATUS.
-         */
         USER_UPDATE_PICTURE("/user/update/picture"),
-
-        /**
-         * @path: USER_PAIR_START:
-         * @param: TOKEN, MODULE_ID.
-         * @return: STATUS.
-         */
         USER_PAIR_START("/user/pair/start"),
-
-        /**
-         * @path: USER_PAIR_STOP:
-         * @param: TOKEN.
-         * @return: STATUS.
-         */
         USER_PAIR_STOP("/user/pair/stop"),
-
-        /**
-         * @path: USER_GET_INSTANTPRODUCTION:
-         * @param: TOKEN.
-         * @return: STATUS, LIST PRODUCTION.
-         */
         USER_GET_INSTANTPRODUCTION("/user/get/instantproduction"),
-
-        /**
-         * @path: USER_GET_INSTANTPRODUCTION:
-         * @param: TOKEN, START, END.
-         * @return: STATUS, LIST EVENTS.
-         */
         GET_EVENTS("/get/events"),
-
-        /**
-         * @path: USER_GET_INSTANTPRODUCTION:
-         * @param: TOKEN, EVENT_ID.
-         * @return: STATUS, DESCRIPTION, BASE64IMAGE, START_DATE, END_DATE, USER_REGISTERED.
-         */
         GET_EVENTPREVIEW("/get/eventpreview"),
-
-        /**
-         * @path: USER_GET_INSTANTPRODUCTION:
-         * @param: TOKEN, EVENT_ID.
-         * @return: STATUS, LIST USERS_LOGIN.
-         */
         GET_EVENTSUSERS("/get/eventusers"),
+        AFFILIATE("/affiliate"),
+        GET_AFFILIATION("/get/affiliation"),
+        GET_POSTS("/get/posts"),
+        GET_POSTCONTENT("/get/postcontent"),
+        EVENT_REGISTRATION("/event/registration"),
         ;
         public String path;
         Path(String path) {
@@ -123,6 +45,25 @@ public class Protocol {
         PICTURE("picture"),
         PRODUCTION("production"),
         SESSIONID("session id"),
+        START("start"),
+        END("end"),
+        EVENTS("events"),
+        EVENTID("eventid"),
+        EVENTDESCRIPTION("description"),
+        EVENTPICTURE("picture"),
+        EVENTSTARTDATE("start date"),
+        EVENTENDDATE("end date"),
+        EVENTUSERREGISTERED("user_registered"),
+        EVENTUSERS("users"),
+        AFFILIATIONTOKEN("affiliation token"),
+        SPORTCENTERID("sport center id"),
+        TARGETID("target id"),
+        POSTS("posts"),
+        POSTID("post id"),
+        POSTTYPE("post type"),
+        POSTICON("post icon"),
+        POSTDATE("post date"),
+        POSTCONTENT("post content"),
         ;
         public String key;
         Field(String key) {
@@ -143,6 +84,10 @@ public class Protocol {
         INTERNAL_SERVER_ERROR("666", "Random error"),
         SPORT_SESSION_NO_SESSION("410", "No sport session"),
         SPORT_SESSION_BAD_SESSIONID("411", "Bad session id"),
+        NO_AFFILIATION("412", "Not affiliated with sport center"),
+        POST_NOT_FOUND("413", "Post not found"),
+        CENTER_NOT_FOUND("414", "Fitness center not found"), 
+        EVENT_NOT_FOUND("413", "Event not found"),
         ;
         public String code;
         public String message;

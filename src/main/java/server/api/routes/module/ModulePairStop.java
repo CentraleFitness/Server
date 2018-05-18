@@ -17,6 +17,7 @@ import protocol.ResponseObject;
 import protocol.module.Protocol;
 import static com.mongodb.client.model.Filters.eq;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -53,14 +54,9 @@ public class ModulePairStop {
                     LogManager.write("ApiKey not found in database");
                     break label;
                 }
-                ArrayList commande = new ArrayList();
-                Map commande_setModuleIds = new TreeMap();
-                ArrayList commande_setModuleIds_params = new ArrayList();
-                commande_setModuleIds.put(Protocol.Field.COMMAND_NAME.key, Protocol.Command.SET_MODULE_ID.key);
-                commande_setModuleIds.put(Protocol.Field.COMMAND_PARAMS.key, commande_setModuleIds_params);
-                commande.add(commande_setModuleIds);
 
                 //Stop every pairs
+                ArrayList commande = new ArrayList();
                 for (int i = 0, j = rUUID.size(); i < j; ++i) {
                     String uuid = rUUID.get(i);
                     if (uuid == null) continue ;
@@ -71,10 +67,11 @@ public class ModulePairStop {
                     Database.update_entity(Database.Collections.Modules, module);
                     SportSession sportSession = (SportSession) Database.find_entity(Database.Collections.SportSessions, SportSession.Field.MODULE_ID, module.getField(Module.Field.ID));
                     EndSportSession.end(sportSession);
-                    Map param = new TreeMap();
-                    param.put(Protocol.Field.UUID.key, rUUID.get(i));
-                    param.put(Protocol.Field.SESSION_ID.key, sessionID);
-                    commande_setModuleIds_params.add(param);
+                    List setModuleId = new ArrayList();
+                    setModuleId.add(Protocol.Command.SET_MODULE_ID.key);
+                    setModuleId.add(rUUID.get(i));
+                    setModuleId.add(sessionID);
+                    commande.add(setModuleId);
                 }
                 sending = new ResponseObject(false);
                 sending.put(Protocol.Field.COMMAND.key, commande);
