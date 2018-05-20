@@ -13,10 +13,12 @@ import model.entities.Fitness_Center;
 import model.entities.Fitness_Center_Manager;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 import protocol.ResponseObject;
 import protocol.intranet.Protocol;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -34,10 +36,7 @@ public class SetCustomProgramsAvailability {
                 if (!Objects.equals(manager.getField(Fitness_Center_Manager.Field.TOKEN), received.get(Protocol.Field.TOKEN.key))) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
-                } else if (received.get(Protocol.Field.ENABLED.key) == null) {
-                    sending = new ResponseObject(true);
-                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_MISSING_PARAM.code);
-                } else if (received.get(Protocol.Field.DISABLED.key) == null) {
+                } else if (received.get(Protocol.Field.CUSTOM_PROGRAMS.key) == null) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_MISSING_PARAM.code);
                 } else {
@@ -51,13 +50,15 @@ public class SetCustomProgramsAvailability {
                         sending = new ResponseObject(false);
                         sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
 
-
-                        /*Bson filter = Filters.and(
-                                Filters.eq(CustomProgram.Field.FITNESS_CENTER_ID.get_key(), center.getField(Fitness_Center.Field.ID)),
-                                Filters.eq(Event.Field.IS_DELETED.get_key(), false)
-                        );
                         @SuppressWarnings("unchecked")
-                        ArrayList<Document> events = (ArrayList<Document>) Database.collections.get(Database.Collections.Events).updateMany();*/
+                        ArrayList<HashMap<String, Object>> custom_programs = (ArrayList<HashMap<String, Object>>) received.get(Protocol.Field.CUSTOM_PROGRAMS.key);
+                        CustomProgram custom_program;
+
+                        for (HashMap<String, Object> cur : custom_programs) {
+                            custom_program = (CustomProgram) Database.find_entity(Database.Collections.CustomPrograms, CustomProgram.Field.ID, new ObjectId(cur.get("_id").toString()));
+                            custom_program.setField(CustomProgram.Field.AVAILABLE, cur.get("available"));
+                            Database.update_entity(Database.Collections.CustomPrograms, custom_program);
+                        }
                     }
                 }
             } catch (Exception e) {
