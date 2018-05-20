@@ -20,6 +20,7 @@ import protocol.ResponseObject;
 import protocol.mobile.Protocol;
 import static com.mongodb.client.model.Filters.eq;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -88,7 +89,14 @@ public class GetEvents {
                                 .stream()
                                 .map(doc -> {
                                     Event event = new Event((Document) doc);
-                                    return Stream.of(event.getField(Event.Field.TITLE), event.getField(Event.Field.ID).toString()).collect(Collectors.toList());
+                                    boolean isreg = Optional.ofNullable(received.get(Protocol.Field.ISREG.key)).map(tt -> (boolean) tt).orElse(false);
+                                    Document eventParticipation = null;
+                                    if (isreg)
+                                        try {
+                                            eventParticipation = Database.find_entity(Database.Collections.TUPLE_Event_Users, new BasicDBObject("$and", Arrays.asList(new BasicDBObject(TUPLE_Event_User.Field.EVENT_ID.get_key(), event.getField(Event.Field.ID)), new BasicDBObject(TUPLE_Event_User.Field.USER_ID.get_key(), user.getField(User.Field.ID)))));
+                                        } catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
+                                        }
+                                    return Arrays.asList(event.getField(Event.Field.TITLE), event.getField(Event.Field.ID).toString(), eventParticipation!=null);
                                 })
                         .collect(Collectors.toList());
                 sending = new ResponseObject(false);

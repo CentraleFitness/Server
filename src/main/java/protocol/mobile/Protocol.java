@@ -64,7 +64,7 @@ public class Protocol {
         POSTICON("post icon"),
         POSTDATE("post date"),
         POSTCONTENT("post content"),
-        ;
+        ISREG("isreg");
         public String key;
         Field(String key) {
             this.key = key;
