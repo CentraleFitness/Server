@@ -31,4 +31,9 @@ public class Runnable {
             fitness_center.setField(Fitness_Center.Field.API_KEY, "toto");
         }
     }
-}
+
+    public static class new_Event {
+        public static void main(String[] args) throws InstantiationException, IllegalAccessException {
+            Database.new_entity(Database.Collections.Events);
+        }
+    }}

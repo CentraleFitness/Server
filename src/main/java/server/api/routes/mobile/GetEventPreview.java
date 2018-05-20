@@ -4,6 +4,8 @@ import Tools.LogManager;
 import Tools.Token;
 import com.auth0.jwt.JWT;
 import com.google.gson.GsonBuilder;
+import com.mongodb.BasicDBObject;
+import com.mongodb.client.MongoCollection;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
@@ -11,11 +13,14 @@ import model.Database;
 import model.entities.Event;
 import model.entities.TUPLE_Event_User;
 import model.entities.User;
+import org.bson.Document;
 import org.bson.types.ObjectId;
 import protocol.ResponseObject;
 import protocol.mobile.Protocol;
 
+import java.util.Arrays;
 import java.util.Map;
+import java.util.Optional;
 
 public class GetEventPreview {
     public GetEventPreview(Router router) {
@@ -55,14 +60,14 @@ public class GetEventPreview {
                     break label;
                 }
                 ObjectId eventId = new ObjectId(rEventId);
-                Event event = (Event) Database.find_entity(Database.Collections.Events, User.Field.ID, eventId);
-                if (user == null) {
+                Event event = (Event) Database.find_entity(Database.Collections.Events, Event.Field.ID, eventId);
+                if (event == null) {
                     sending = new ResponseObject(true);
-                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_KO.code);
-                    LogManager.write("Unknown event id");
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.EVENT_NOT_FOUND.code);
+                    LogManager.write(Protocol.Status.EVENT_NOT_FOUND.message);
                     break label;
                 }
-                TUPLE_Event_User eventParticipation = (TUPLE_Event_User) Database.find_entity(Database.Collections.TUPLE_Event_Users, TUPLE_Event_User.Field.ID, eventId);
+                Document eventParticipation = Database.find_entity(Database.Collections.TUPLE_Event_Users, new BasicDBObject("$and", Arrays.asList(new BasicDBObject(TUPLE_Event_User.Field.EVENT_ID.get_key(), eventId), new BasicDBObject(TUPLE_Event_User.Field.USER_ID.get_key(), user.getField(User.Field.ID)))));
                 sending = new ResponseObject(false);
                 sending.put(Protocol.Field.EVENTDESCRIPTION.key, event.getField(Event.Field.DESCRIPTION));
                 sending.put(Protocol.Field.EVENTPICTURE.key, event.getField(Event.Field.PICTURE));
