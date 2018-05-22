@@ -9,9 +9,13 @@ import io.vertx.ext.web.Router;
 import model.Database;
 import model.entities.Fitness_Center;
 import model.entities.Fitness_Center_Manager;
+import model.entities.User;
+import org.bson.Document;
 import protocol.intranet.Protocol;
 import protocol.ResponseObject;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Objects;
 
@@ -37,6 +41,11 @@ public class CenterGetProfile {
                     } else {
                         sending = new ResponseObject(false);
                         sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
+
+                        LinkedList<model.Database.Entity> users = Database.find_entities(Database.Collections.Users, User.Field.FITNESS_CENTER_ID, center.getField(Fitness_Center.Field.ID));
+
+                        sending.put(Protocol.Field.NB_SUBSCRIBERS.key, users.size());
+
                         sending.put(Protocol.Field.NAME.key, center.getField(Fitness_Center.Field.NAME));
                         sending.put(Protocol.Field.DESCRIPTION.key, center.getField(Fitness_Center.Field.DESCRIPTION));
                         sending.put(Protocol.Field.ADDRESS.key, center.getField(Fitness_Center.Field.ADDRESS));
