@@ -58,11 +58,15 @@ public class CenterUpdateProfile {
                             center.setField(Fitness_Center.Field.ADDRESS, received.get(Protocol.Field.ADDRESS.key));
                             if (received.get(Protocol.Field.ADDRESS_SECOND.key) != null) {
                                 center.setField(Fitness_Center.Field.ADDRESS_SECOND, received.get(Protocol.Field.ADDRESS_SECOND.key));
+                            } else {
+                                center.setField(Fitness_Center.Field.ADDRESS_SECOND, "");
                             }
                             center.setField(Fitness_Center.Field.ZIP_CODE, received.get(Protocol.Field.ZIP_CODE.key));
                             center.setField(Fitness_Center.Field.CITY, received.get(Protocol.Field.CITY.key));
                             if (received.get(Protocol.Field.PHONE.key) != null) {
                                 center.setField(Fitness_Center.Field.PHONE, received.get(Protocol.Field.PHONE.key));
+                            } else {
+                                center.setField(Fitness_Center.Field.PHONE, "");
                             }
                             Database.update_entity(Database.Collections.Fitness_Centers, center);
                         }
