@@ -1,11 +1,14 @@
 package model.entities;
 
 import model.Database;
+import model.misc.Runnable.new_Event;
+
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class SportSession extends Database.Entity {
     public enum Field implements Database.Entity_Field {
@@ -13,7 +16,9 @@ public class SportSession extends Database.Entity {
         MODULE_ID("module_id", ObjectId.class),
         USER_ID("user_id", ObjectId.class),
         EXPIRATION("expiration", Long.class),
-        PRODUCTION("production", ArrayList.class),
+        PRODUCTION("production", ArrayList.class), 
+        CREATION_DATE("creation_date", Long.class),
+        DURATION("duration", Long.class),
         ;
         @Override
         public String get_key() {
@@ -36,6 +41,7 @@ public class SportSession extends Database.Entity {
         setField(Field.USER_ID, null);
         setField(Field.EXPIRATION, 0L);
         setField(Field.PRODUCTION, new ArrayList());
+        setField(Field.CREATION_DATE, new Date().getTime());
     }
 
     public SportSession(Document doc) {

@@ -12,6 +12,7 @@ import io.vertx.ext.web.Router;
 import model.Database;
 import model.entities.Event;
 import model.entities.Fitness_Center;
+import model.entities.SportSession;
 import model.entities.TUPLE_Event_User;
 import model.entities.User;
 import org.bson.Document;
@@ -25,9 +26,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class GetEvents {
-    public GetEvents(Router router) {
-        router.route(HttpMethod.POST, Protocol.Path.GET_EVENTS.path).handler(routingContext -> {
+public class GetSportSessions {
+    public GetSportSessions(Router router) {
+        router.route(HttpMethod.POST, Protocol.Path.GET_SPORTSESSIONS.path).handler(routingContext -> {
 
             ResponseObject sending = null;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
@@ -70,38 +71,24 @@ public class GetEvents {
                     LogManager.write(Protocol.Status.AUTH_ERROR_TOKEN.message);
                     break label;
                 }
-                ObjectId fitnessCenterId = (ObjectId) user.getField(User.Field.FITNESS_CENTER_ID);
-                if (fitnessCenterId == null) {
-                    sending = new ResponseObject(true);
-                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.NO_AFFILIATION.code);
-                    LogManager.write(Protocol.Status.NO_AFFILIATION.message);
-                    break label;
-                }
-                List<Event> eventList =
-                        (List<Event>) Database
+				List<SportSession> sportSessions =
+                        (List<SportSession>) Database
                                 .collections
-                                .get(Database.Collections.Events)
-                                .find(eq(Event.Field.FITNESS_CENTER_ID.get_key(), fitnessCenterId))
-                                .sort(new BasicDBObject(Event.Field.CREATION_DATE.get_key(), 1))
+                                .get(Database.Collections.SportSessions_HISTORY)
+                                .find(eq(SportSession.Field.USER_ID.get_key(), user.getField(User.Field.ID)))
+                                .sort(new BasicDBObject(SportSession.Field.CREATION_DATE.get_key(), 1))
                                 .skip(rStart)
                                 .limit(rEnd)
                                 .into(new ArrayList())
                                 .stream()
                                 .map(doc -> {
-                                    Event event = new Event((Document) doc);
-                                    boolean isreg = Optional.ofNullable(received.get(Protocol.Field.ISREG.key)).map(tt -> (boolean) tt).orElse(false);
-                                    Document eventParticipation = null;
-                                    if (isreg)
-                                        try {
-                                            eventParticipation = Database.find_entity(Database.Collections.TUPLE_Event_Users, new BasicDBObject("$and", Arrays.asList(new BasicDBObject(TUPLE_Event_User.Field.EVENT_ID.get_key(), event.getField(Event.Field.ID)), new BasicDBObject(TUPLE_Event_User.Field.USER_ID.get_key(), user.getField(User.Field.ID)))));
-                                        } catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
-                                        }
-                                    return Arrays.asList(event.getField(Event.Field.TITLE), event.getField(Event.Field.ID).toString(), eventParticipation!=null);
+                                	SportSession sportSession = new SportSession((Document) doc);
+                                    return Arrays.asList(sportSession.getField(SportSession.Field.ID).toString());
                                 })
                         .collect(Collectors.toList());
                 sending = new ResponseObject(false);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
-                sending.put(Protocol.Field.EVENTS.key, eventList);
+                sending.put(Protocol.Field.SESSIONID.key, sportSessions);
             } catch (Exception e) {
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.INTERNAL_SERVER_ERROR.code);

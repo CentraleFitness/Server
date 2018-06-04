@@ -54,6 +54,7 @@ public class Database {
         Feedback_States("feedback_states", model.entities.Feedback_State.class, Feedback_State.Field.ID.get_key()),
         TUPLE_Event_Users("TUPLE_event_users", model.entities.TUPLE_Event_User.class, TUPLE_Event_User.Field.ID.get_key()),
         SportSessions("sportsession", model.entities.SportSession.class, SportSession.Field.ID.get_key()),
+        SportSessions_HISTORY("sportsession_HISTORY", model.entities.SportSession.class, SportSession.Field.ID.get_key()),
         CustomPrograms("custom_programs", model.entities.CustomProgram.class, CustomProgram.Field.ID.get_key()),
         Activities("activities", model.entities.Activity.class, Activity.Field.ID.get_key()),
         Posts("posts", model.entities.Post.class, Post.Field.ID.get_key()),
@@ -149,6 +150,10 @@ public class Database {
 
     public static void update_entity(Collections collection, Document entity) {
         collections.get(collection).updateOne(eq(collection.entity_id, entity.get(collection.entity_id)), new Document("$set", entity));
+    }
+
+    public static void insert_entity(Collections collection, Document entity) {
+        collections.get(collection).insertOne(new Document(entity));
     }
 
     public static Document find_entity(Collections collection, Entity_Field field, Object value) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {

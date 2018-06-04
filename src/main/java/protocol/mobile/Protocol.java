@@ -25,6 +25,9 @@ public class Protocol {
         GET_POSTS("/get/posts"),
         GET_POSTCONTENT("/get/postcontent"),
         EVENT_REGISTRATION("/event/registration"),
+        GET_SPORTSESSIONS("/get/sportsessions"),
+        GET_SPORTSESSION("/get/sportsession"),
+        GET_SPORTSESSIONSTATS("/get/sportsessionstats"),
         ;
         public String path;
         Path(String path) {
@@ -64,7 +67,12 @@ public class Protocol {
         POSTICON("post icon"),
         POSTDATE("post date"),
         POSTCONTENT("post content"),
-        ISREG("isreg");
+        ISREG("isreg"),
+        TYPE("type"),
+        DATE("date"),
+        DURATION("duration"),
+        MAX("max"),
+        ;
         public String key;
         Field(String key) {
             this.key = key;

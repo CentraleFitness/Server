@@ -1,11 +1,14 @@
 package model.actions;
 
 import model.Database;
+import model.Database.Collections;
 import model.entities.ElectricProduction;
 import model.entities.Module;
 import model.entities.SportSession;
+import model.misc.Runnable.new_Event;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Date;
 
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
@@ -13,6 +16,7 @@ import static com.mongodb.client.model.Filters.eq;
 public class EndSportSession {
     public static void end(SportSession sportSession) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         if (sportSession != null) {
+        	sportSession.setField(SportSession.Field.DURATION, new Date().getTime() - (Long) sportSession.getField(SportSession.Field.CREATION_DATE));
             ElectricProduction electricProduction = (ElectricProduction) Database.find_entity(
                     Database.Collections.ElectricProductions,
                     and(
@@ -32,6 +36,7 @@ public class EndSportSession {
             }
             electricProduction.addProduction(sportSession.getField(SportSession.Field.PRODUCTION));
             Database.update_entity(Database.Collections.ElectricProductions, electricProduction);
+            Database.insert_entity(Collections.SportSessions_HISTORY, sportSession);
             Database.delete_entity(Database.Collections.SportSessions, SportSession.Field.ID, sportSession.getField(SportSession.Field.ID));
         }
 }
