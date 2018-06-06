@@ -26,7 +26,7 @@ import protocol.mobile.Protocol;
 
 public class GetPostContent {
     public GetPostContent(Router router) {
-        router.route(HttpMethod.POST, Protocol.Path.AFFILIATE.path).handler(routingContext -> {
+        router.route(HttpMethod.POST, Protocol.Path.GET_POSTCONTENT.path).handler(routingContext -> {
 
             ResponseObject sending = null;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
