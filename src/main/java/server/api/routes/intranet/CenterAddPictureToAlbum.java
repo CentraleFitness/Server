@@ -10,6 +10,8 @@ import model.Database;
 import model.entities.Fitness_Center;
 import model.entities.Fitness_Center_Manager;
 import model.entities.Picture;
+import model.entities.Post;
+import org.bson.types.ObjectId;
 import protocol.intranet.Protocol;
 import protocol.ResponseObject;
 
@@ -45,8 +47,39 @@ public class CenterAddPictureToAlbum {
                     } else {
                         sending = new ResponseObject(false);
                         sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
+
                         Picture pic = (Picture) Database.new_entity(Database.Collections.Pictures);
                         pic.setField(Picture.Field.PICTURE, pic64);
+
+                        Post post = (Post) Database.new_entity(Database.Collections.Posts);
+
+                        post.setField(Post.Field.POSTERID, new ObjectId(center.getField(Fitness_Center.Field.ID).toString()));
+                        post.setField(Post.Field.POSTERNAME, center.getField(Fitness_Center.Field.NAME));
+                        post.setField(Post.Field.IS_CENTER, true);
+                        post.setField(Post.Field.TYPE, "PHOTO");
+                        post.setField(Post.Field.DATE, System.currentTimeMillis());
+
+                        if (received.get(Protocol.Field.DESCRIPTION.key) == null) {
+                            post.setField(Post.Field.CONTENT, "");
+                        } else {
+                            post.setField(Post.Field.CONTENT, received.get(Protocol.Field.DESCRIPTION.key));
+                        }
+
+                        if (received.get(Protocol.Field.TITLE.key) == null) {
+                            post.setField(Post.Field.TITLE, "");
+                        } else {
+                            post.setField(Post.Field.TITLE, received.get(Protocol.Field.TITLE.key));
+                        }
+
+                        post.setField(Post.Field.PICTURE, received.get(Protocol.Field.PICTURE.key));
+                        post.setField(Post.Field.PICTURE_ID, new ObjectId(pic.getField(Picture.Field.ID).toString()));
+
+                        Database.update_entity(Database.Collections.Posts, post);
+                        Database.update_entity(Database.Collections.Pictures, pic);
+
+                        sending.put(Protocol.Field.PICTURE_ID.key, pic.getField(Picture.Field.ID).toString());
+
+                        /*
 
                         @SuppressWarnings("unchecked")
                         ArrayList<Fitness_Center.Picture_Describe> album = (ArrayList<Fitness_Center.Picture_Describe>) center.getField(Fitness_Center.Field.ALBUM);
@@ -62,6 +95,8 @@ public class CenterAddPictureToAlbum {
                         Database.update_entity(Database.Collections.Pictures, pic);
                         Database.update_entity(Database.Collections.Fitness_Centers, center);
                         sending.put(Protocol.Field.PICTURE_ID.key, pic.getField(Picture.Field.ID).toString());
+
+                        */
                     }
                 }
             }catch (Exception e){

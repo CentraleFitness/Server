@@ -200,6 +200,13 @@ public class Protocol {
          * @param: TOKEN.
          * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
          */
+        POST_EVENT("/center/post/event"),
+
+        /**
+         * @path: ADD_FEEDBACK:
+         * @param: TOKEN.
+         * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
+         */
         SET_CUSTOM_PROGRAMS_AVAILABILITY("/center/set/customprogramavailability"),
 
         /**

@@ -75,6 +75,7 @@ public class IntranetVerticle extends AbstractVerticle {
         new GetEvents(this.router);
         new UpdateEvent(this.router);
         new DeleteEvent(this.router);
+        new PostEvent(this.router);
 
         new GetFitnessCenterId(this.router);
 

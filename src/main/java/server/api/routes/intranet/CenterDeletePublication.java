@@ -9,7 +9,9 @@ import io.vertx.ext.web.Router;
 import model.Database;
 import model.entities.Fitness_Center;
 import model.entities.Fitness_Center_Manager;
+import model.entities.Post;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import protocol.intranet.Protocol;
 import protocol.ResponseObject;
 
@@ -45,6 +47,10 @@ public class CenterDeletePublication {
 
                         sending = new ResponseObject(false);
                         sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
+
+                        Database.delete_entity(Database.Collections.Posts, Post.Field.ID, new ObjectId(received.get(Protocol.Field.PUBLICATION_ID.key).toString()));
+
+                        /*
                         @SuppressWarnings("unchecked")
                         ArrayList<Fitness_Center.Publication> publications = (ArrayList<Fitness_Center.Publication>) center.getField(Fitness_Center.Field.PUBLICATIONS);
                         Document cur;
@@ -56,6 +62,8 @@ public class CenterDeletePublication {
                             }
                         }
                         Database.update_entity(Database.Collections.Fitness_Centers, center);
+
+                        */
                     }
                 }
             }catch (Exception e){
