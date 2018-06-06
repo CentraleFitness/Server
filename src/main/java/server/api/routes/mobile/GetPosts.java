@@ -3,6 +3,7 @@ package server.api.routes.mobile;
 import static com.mongodb.client.model.Filters.eq;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -80,8 +81,8 @@ public class GetPosts {
                     break label;
                 }
                 ObjectId targetId = new ObjectId(rTargetId);
-                List<List> postList =
-                        (List<List>) Database
+                List<Map<String, String>> postList =
+                        (List<Map<String, String>>) Database
                                 .collections
                                 .get(Database.Collections.Posts)
                                 .find(eq(Post.Field.POSTERID.get_key(), targetId))
@@ -92,7 +93,10 @@ public class GetPosts {
                                 .stream()
                                 .map(doc -> {
                                     Post post = new Post((Document) doc);
-                                    return post.getField(Post.Field.ID);
+                                    Map<String, String> fields = new HashMap<>();
+                                    fields.put(Protocol.Field.POSTID.key, ((ObjectId)post.getField(Post.Field.ID)).toString());
+                                    fields.put(Protocol.Field.POSTTYPE.key, (String)post.getField(Post.Field.TYPE));
+                                    return fields;
                                 })
                                 .collect(Collectors.toList());
                 sending = new ResponseObject(false);
