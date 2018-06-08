@@ -69,8 +69,6 @@ public class RegisterManagerAndCenter {
                         center.setField(Fitness_Center.Field.NAME, received.get(Protocol.Field.NAME.key));
                         center.setField(Fitness_Center.Field.DESCRIPTION, received.get(Protocol.Field.DESCRIPTION.key));
                         center.setField(Fitness_Center.Field.ADDRESS, received.get(Protocol.Field.ADDRESS.key));
-                        center.setField(Fitness_Center.Field.ALBUM, new ArrayList<Fitness_Center.Picture_Describe>());
-                        center.setField(Fitness_Center.Field.PUBLICATIONS, new ArrayList<Fitness_Center.Publication>());
                         if (received.get(Protocol.Field.ADDRESS_SECOND.key) != null) {
                             center.setField(Fitness_Center.Field.ADDRESS_SECOND, received.get(Protocol.Field.ADDRESS_SECOND.key));
                         }

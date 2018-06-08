@@ -19,8 +19,6 @@ public class Fitness_Center extends Database.Entity {
         CITY("city", String.class),
         PHONE("phone_number", String.class),
         PICTURE_ID("picture_id", ObjectId.class),
-        ALBUM("album", ArrayList.class),
-        PUBLICATIONS("publications", ArrayList.class),
         API_KEY("apiKey", String.class),
         ;
         @Override
