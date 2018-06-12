@@ -73,5 +73,8 @@ public class MobileVerticle extends AbstractVerticle {
         
         new GetPosts(router);
         new GetPostContent(router);
+
+        new GetSportSessions(router);
+        new GetSportSession(router);
     }
 }
