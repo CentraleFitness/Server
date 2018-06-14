@@ -23,7 +23,7 @@ public class LogManager {
 
                 File theDir = new File("Log");
                 if (!theDir.exists()) theDir.mkdir();
-                mLog = new PrintWriter("Log/" + new Date().getTime() + ".log", "UTF-8");
+                mLog = new PrintWriter("Log/" + new SimpleDateFormat("yyyy.MM.dd-HH.mm.ss").format(new Date().getTime()) + ".log", "UTF-8");
             } catch (Exception e) {
                 System.err.println("LogManager: Could not open file");
             }
