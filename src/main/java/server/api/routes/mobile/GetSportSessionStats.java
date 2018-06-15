@@ -64,7 +64,7 @@ public class GetSportSessionStats {
                     break label;
                 }
                 ObjectId sessionId = new ObjectId(rSessionId);
-                SportSession session = (SportSession) Database.find_entity(Database.Collections.SportSessions, SportSession.Field.ID, rSessionId);
+                SportSession session = (SportSession) Database.find_entity(Database.Collections.SportSessions_HISTORY, SportSession.Field.ID, rSessionId);
                 if (session == null) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.SPORT_SESSION_NO_SESSION.code);
