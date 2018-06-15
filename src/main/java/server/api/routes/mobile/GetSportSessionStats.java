@@ -64,7 +64,7 @@ public class GetSportSessionStats {
                     break label;
                 }
                 ObjectId sessionId = new ObjectId(rSessionId);
-                SportSession session = (SportSession) Database.find_entity(Database.Collections.SportSessions_HISTORY, SportSession.Field.ID, rSessionId);
+                SportSession session = (SportSession) Database.find_entity(Database.Collections.SportSessions_HISTORY, SportSession.Field.ID, sessionId);
                 if (session == null) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.SPORT_SESSION_NO_SESSION.code);
@@ -72,12 +72,7 @@ public class GetSportSessionStats {
                     break label;
                 }
                 sending = new ResponseObject(false);
-                sending.put(Protocol.Field.MAX.key, ((ArrayList<Double>)session.getField(SportSession.Field.PRODUCTION)).stream().max(new Comparator<Double>() {
-					@Override
-					public int compare(Double o1, Double o2) {
-						return o1 > o2 ? 1 : -1;
-					}
-                }));
+                sending.put(Protocol.Field.MAX.key, ((ArrayList<Double>)session.getField(SportSession.Field.PRODUCTION)).stream().max((o1, o2) -> o1 > o2 ? 1 : -1));
                 sending.put(Protocol.Field.PRODUCTION.key, session.getField(SportSession.Field.PRODUCTION));
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
             } catch (Exception e) {
