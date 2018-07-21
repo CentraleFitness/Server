@@ -1,23 +1,9 @@
-/**
- * Tuto : http://imperceptiblethoughts.com/shadow/#getting_started
- */
-
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath group: 'com.github.jengelman.gradle.plugins', name: 'shadow', version: '1.2.4'
-    }
-}
 
 plugins {
     id 'java'
     id 'application'
-    id 'com.github.johnrengelman.shadow' version '1.2.4'
 }
 
-group 'hadrien.daures'
 version '1.0-SNAPSHOT'
 sourceCompatibility = 1.8
 mainClassName = 'Launcher'
@@ -27,32 +13,23 @@ repositories {
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.11'
-
-    compile group: 'commons-io', name: 'commons-io', version: '2.1'
+    compile 'commons-io:commons-io:2.1'
     compile 'io.vertx:vertx-core:3.4.0'
     compile 'io.vertx:vertx-web:3.4.0'
-    compile group: 'com.google.code.gson', name: 'gson', version: '1.7.2'
+    compile 'com.google.code.gson:gson:1.7.2'
     compile "com.auth0:java-jwt:3.1.0"
-    compile group: 'org.mongodb', name: 'mongo-java-driver', version: '3.4.1'
-// https://mvnrepository.com/artifact/com.google.guava/guava
-    compile group: 'com.google.guava', name: 'guava', version: '24.1-jre'
-
-    // https://mvnrepository.com/artifact/commons-io/commons-io
-    compile group: 'commons-io', name: 'commons-io', version: '2.6'
-
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '3.4.1'
+    compile 'org.mongodb:mongo-java-driver:3.4.1'
+    compile 'com.google.guava:guava:24.1-jre'
+    compile 'commons-io:commons-io:2.6'
 }
 
 jar {
-    baseName = 'Central_Fitness_Server'
-    version = project.version
     manifest {
-        attributes 'Implementation-Title': 'Membrane Daemon',
-                'Implementation-Version': project.version,
-                'Main-Class': "Launcher"
+        attributes "Main-Class": mainClassName
     }
+ 
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
 }
