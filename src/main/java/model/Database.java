@@ -1,29 +1,39 @@
 package model;
 
-import Tools.LogManager;
-import com.mongodb.MongoClient;
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Filters;
-import model.entities.*;
+import static com.mongodb.client.model.Filters.eq;
+import static model.Database.Entity.Field.ID;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Type;
-import java.math.BigInteger;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
+import com.mongodb.MongoClient;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 
-import static com.mongodb.client.model.Filters.eq;
-import static com.mongodb.client.model.Updates.set;
-import static model.Database.Entity.Field.ID;
+import Tools.LogManager;
+import model.entities.Activity;
+import model.entities.Conversation;
+import model.entities.CustomProgram;
+import model.entities.ElectricProduction;
+import model.entities.Event;
+import model.entities.Feedback;
+import model.entities.Feedback_State;
+import model.entities.Fitness_Center;
+import model.entities.Fitness_Center_Manager;
+import model.entities.Module;
+import model.entities.Picture;
+import model.entities.Post;
+import model.entities.SportSession;
+import model.entities.TUPLE_Event_User;
+import model.entities.User;
 
 /**
  * Created by hadrien on 14/03/2017.
