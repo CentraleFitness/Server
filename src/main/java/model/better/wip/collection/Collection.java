@@ -4,7 +4,7 @@ import java.util.function.Supplier;
 
 import model.better.wip.entity.Entity;
 
-public abstract class Collection<C extends Collection<C, E>, E extends Entity<E>> {
+public abstract class Collection<E extends Entity<E>> {
 
 	private final Supplier<E> entityFactory;
 	private final String collectionName;
