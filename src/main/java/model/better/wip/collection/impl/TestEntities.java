@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 import model.better.wip.collection.Collection;
 import model.better.wip.entity.impl.TestEntity;
 
-public class TestEntities extends Collection<TestEntity> {
+public class TestEntities extends Collection<TestEntities, TestEntity> {
 
 	
 	protected TestEntities(Supplier<TestEntity> entityFactory, String collectionName) {
