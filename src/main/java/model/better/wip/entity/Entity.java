@@ -1,4 +1,6 @@
 package model.better.wip.entity;
 
-public interface Entity<E extends Entity<E>> {
+import org.bson.Document;
+
+public abstract class Entity<E extends Entity<E>> extends Document {
 }

@@ -20,4 +20,8 @@ public abstract class Collection<C extends Collection<C, E>, E extends Entity<E>
 
 	public void deleteEntity(E entity) {
 	}
+
+	public String getName() {
+		return collectionName;
+	}
 }
