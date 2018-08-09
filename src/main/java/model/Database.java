@@ -1,7 +1,6 @@
 package model;
 
 import static com.mongodb.client.model.Filters.eq;
-import static model.Database.Entity.Field.ID;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -86,7 +85,7 @@ public class Database {
 
     public static abstract class Entity extends Document {
         public enum Field implements Entity_Field {
-            ID("_id", ObjectId.class),;
+            ID("_id", ObjectId.class);
 
             @Override
             public String get_key() {
@@ -116,7 +115,7 @@ public class Database {
         }
 
         public Entity() {
-            setField(ID, new ObjectId());
+            setField(Field.ID, new ObjectId());
         }
 
         public Entity(Document doc) {
