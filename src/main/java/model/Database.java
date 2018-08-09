@@ -233,6 +233,6 @@ public class Database {
     }
 
     public static void delete_entities(Collections collection, Bson filters) {
-        collections.get(collection).deleteMany(filters);
-    }
+		collections.get(collection).deleteMany(filters);
+	}
 }
