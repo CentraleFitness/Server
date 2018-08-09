@@ -1,11 +1,12 @@
 package model.entities;
 
+import java.util.List;
+
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
 import model.Database;
 import model.Database.Entity;
-import model.entities.Event.Field;
 
 public class Post extends Entity {
     public enum Field implements Database.Entity_Field {
@@ -27,6 +28,8 @@ public class Post extends Entity {
         START_DATE("start_date", Long.class),
         END_DATE("end_date", Long.class),
 
+        LIKES("likes", List.class),
+        
         ;
         @Override
         public String get_key() {
