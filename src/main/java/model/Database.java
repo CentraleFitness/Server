@@ -109,6 +109,10 @@ public class Database {
         public Object getField(Entity_Field field) {
             return get(field.get_key());
         }
+        
+        public ObjectId getId() {
+        	return (ObjectId) get("_id");
+        }
 
         public void setField(Entity_Field field, Object value) {
             put(field.get_key(), field.get_class().cast(value));

@@ -1,7 +1,8 @@
-package server.api.routes.mobile.post.comment;
+package server.api.routes.mobile.post;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.bson.types.ObjectId;
 
@@ -20,9 +21,9 @@ import model.entities.User;
 import protocol.ResponseObject;
 import protocol.mobile.Protocol;
 
-public class PostCommentCreate {
-	public PostCommentCreate(Router router) {
-		router.route(HttpMethod.POST, Protocol.Path.POST_COMMENT_CREATE.path).handler(routingContext -> {
+public class PostGetLikes {
+	public PostGetLikes(Router router) {
+		router.route(HttpMethod.POST, Protocol.Path.POST_GET_LIKES.path).handler(routingContext -> {
 
 			ResponseObject sending = null;
 			HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
@@ -31,7 +32,6 @@ public class PostCommentCreate {
 				Map<String, Object> received = routingContext.getBodyAsJson().getMap();
 				String rToken = (String) received.get(Protocol.Field.TOKEN.key);
 				String rPostId = (String) received.get(Protocol.Field.POSTID.key);
-				String rPostContent = (String) received.get(Protocol.Field.COMMENTCONTENT.key);
 
 				if (rToken == null) {
 					sending = new ResponseObject(true);
@@ -43,12 +43,6 @@ public class PostCommentCreate {
 					sending = new ResponseObject(true);
 					sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_KO.code);
 					LogManager.write("Missing key " + Protocol.Field.POSTID.key);
-					return;
-				}
-				if (rPostContent == null) {
-					sending = new ResponseObject(true);
-					sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_KO.code);
-					LogManager.write("Missing key " + Protocol.Field.POSTCONTENT.key);
 					return;
 				}
 				JWT token = Token.decodeToken(rToken);
@@ -74,24 +68,17 @@ public class PostCommentCreate {
 					LogManager.write(Protocol.Status.POST_NOT_FOUND.message);
 					return;
 				}
-				Post comment = (Post) Database.new_entity(Collections.Posts);
-				comment.setField(Post.Field.CONTENT, rPostContent);
-				comment.setField(Post.Field.POSTERID, user.getId());
-				comment.setField(Post.Field.POSTERNAME,
-						user.getField(User.Field.FIRSTNAME) + " " + user.getField(User.Field.LASTNAME));
-				List<ObjectId> comments = (List<ObjectId>) post.getField(Post.Field.COMMENTS);
-				comments.add(comment.getId());
-				Database.update_entity(Collections.Posts, comment);
-				Database.update_entity(Collections.Posts, post);
+				List<ObjectId> likes = (List<ObjectId>) post.getField(Post.Field.LIKES);
 				sending = new ResponseObject(false);
 				sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
-				sending.put(Protocol.Field.COMMENTID.key, comment.getId());
+				sending.put(Protocol.Field.LIKES.key, likes.size());
 			} catch (Exception e) {
 				sending = new ResponseObject(true);
 				sending.put(Protocol.Field.STATUS.key, Protocol.Status.INTERNAL_SERVER_ERROR.code);
 				LogManager.write(e);
+			} finally {
+				response.end(new GsonBuilder().create().toJson(sending));
 			}
-			response.end(new GsonBuilder().create().toJson(sending));
 		});
 	}
 }

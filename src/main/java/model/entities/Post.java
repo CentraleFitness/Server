@@ -29,6 +29,7 @@ public class Post extends Entity {
         END_DATE("end_date", Long.class),
 
         LIKES("likes", List.class),
+        COMMENTS("comments", List.class),
         
         ;
         @Override
