@@ -42,7 +42,8 @@ public class Protocol {
 		EVENTUSERS("users"), AFFILIATIONTOKEN("affiliation token"), SPORTCENTERID("sport center id"),
 		TARGETID("target id"), POSTS("posts"), POSTID("post id"), POSTTYPE("post type"), POSTICON("post icon"),
 		POSTDATE("post date"), POSTCONTENT("post content"), ISREG("isreg"), TYPE("type"), DATE("date"),
-		DURATION("duration"), MAX("max"), LIKES("likes"), COMMENTID("comment id"), COMMENTCONTENT("comment content"),;
+		DURATION("duration"), MAX("max"), LIKES("likes"), COMMENTID("comment id"), COMMENTCONTENT("comment content"),
+		COMMENTS("comments"),;
 		public String key;
 
 		Field(String key) {
