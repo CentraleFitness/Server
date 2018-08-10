@@ -90,8 +90,9 @@ public class PostCommentCreate {
 				sending = new ResponseObject(true);
 				sending.put(Protocol.Field.STATUS.key, Protocol.Status.INTERNAL_SERVER_ERROR.code);
 				LogManager.write(e);
+			} finally {
+				response.end(new GsonBuilder().create().toJson(sending));
 			}
-			response.end(new GsonBuilder().create().toJson(sending));
 		});
 	}
 }
