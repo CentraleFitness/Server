@@ -1,29 +1,38 @@
 package model;
 
-import Tools.LogManager;
-import com.mongodb.MongoClient;
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Filters;
-import model.entities.*;
+import static com.mongodb.client.model.Filters.eq;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Type;
-import java.math.BigInteger;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
+import com.mongodb.MongoClient;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 
-import static com.mongodb.client.model.Filters.eq;
-import static com.mongodb.client.model.Updates.set;
-import static model.Database.Entity.Field.ID;
+import Tools.LogManager;
+import model.entities.Activity;
+import model.entities.Conversation;
+import model.entities.CustomProgram;
+import model.entities.ElectricProduction;
+import model.entities.Event;
+import model.entities.Feedback;
+import model.entities.Feedback_State;
+import model.entities.Fitness_Center;
+import model.entities.Fitness_Center_Manager;
+import model.entities.Module;
+import model.entities.Picture;
+import model.entities.Post;
+import model.entities.SportSession;
+import model.entities.TUPLE_Event_User;
+import model.entities.User;
 
 /**
  * Created by hadrien on 14/03/2017.
@@ -76,7 +85,7 @@ public class Database {
 
     public static abstract class Entity extends Document {
         public enum Field implements Entity_Field {
-            ID("_id", ObjectId.class),;
+            ID("_id", ObjectId.class);
 
             @Override
             public String get_key() {
@@ -100,13 +109,17 @@ public class Database {
         public Object getField(Entity_Field field) {
             return get(field.get_key());
         }
+        
+        public ObjectId getId() {
+        	return (ObjectId) get("_id");
+        }
 
         public void setField(Entity_Field field, Object value) {
             put(field.get_key(), field.get_class().cast(value));
         }
 
         public Entity() {
-            setField(ID, new ObjectId());
+            setField(Field.ID, new ObjectId());
         }
 
         public Entity(Document doc) {
@@ -223,6 +236,6 @@ public class Database {
     }
 
     public static void delete_entities(Collections collection, Bson filters) {
-        collections.get(collection).deleteMany(filters);
-    }
+		collections.get(collection).deleteMany(filters);
+	}
 }

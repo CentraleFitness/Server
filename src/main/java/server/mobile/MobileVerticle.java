@@ -27,6 +27,7 @@ import server.api.routes.mobile.post.GetPostContent;
 import server.api.routes.mobile.post.GetPosts;
 import server.api.routes.mobile.post.PostCreate;
 import server.api.routes.mobile.post.PostDelete;
+import server.api.routes.mobile.post.PostGetLikes;
 import server.api.routes.mobile.post.PostLike;
 import server.api.routes.mobile.post.comment.PostCommentCreate;
 import server.api.routes.mobile.post.comment.PostCommentDelete;
@@ -113,6 +114,7 @@ public class MobileVerticle extends AbstractVerticle {
         new PostCreate(router);
         new PostDelete(router);
         new PostLike(router);
+        new PostGetLikes(router);
         new PostCommentCreate(router);
         new PostCommentDelete(router);
         new PostCommentGetRange(router);
