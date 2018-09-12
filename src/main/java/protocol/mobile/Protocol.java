@@ -44,7 +44,7 @@ public class Protocol {
 		POSTDATE("post date"), POSTCONTENT("post content"), ISREG("isreg"), TYPE("type"), DATE("date"),
 		DURATION("duration"), MAX("max"), LIKES("likes"), COMMENTID("comment id"), COMMENTCONTENT("comment content"),
 		COMMENTS("comments"), NAME("name"), LOGO("logo"), NBSTEPS("nbsteps"), STEPS("steps"),
-		CUTOMPROGRAMID("custom program id"),;
+		CUSTOMPROGRAMID("custom program id"),;
 		public String key;
 
 		Field(String key) {

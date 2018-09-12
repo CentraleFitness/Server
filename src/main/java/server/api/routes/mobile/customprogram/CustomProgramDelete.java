@@ -29,7 +29,7 @@ public class CustomProgramDelete {
 			try {
 				Map<String, Object> received = routingContext.getBodyAsJson().getMap();
 				String rToken = (String) received.get(Protocol.Field.TOKEN.key);
-				String rCustomProgramId = (String) received.get(Protocol.Field.TOKEN.key);
+				String rCustomProgramId = (String) received.get(Protocol.Field.CUSTOMPROGRAMID.key);
 
 				if (rToken == null) {
 					sending = new ResponseObject(true);
@@ -40,7 +40,7 @@ public class CustomProgramDelete {
 				if (rCustomProgramId == null) {
 					sending = new ResponseObject(true);
 					sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_KO.code);
-					LogManager.write("Missing key " + Protocol.Field.CUTOMPROGRAMID.key);
+					LogManager.write("Missing key " + Protocol.Field.CUSTOMPROGRAMID.key);
 					return;
 				}
 				JWT token = Token.decodeToken(rToken);
