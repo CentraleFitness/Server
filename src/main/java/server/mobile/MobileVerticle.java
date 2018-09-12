@@ -5,12 +5,7 @@ import io.vertx.core.http.HttpServer;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.CorsHandler;
-import server.api.routes.mobile.challenge.ChallengeComplete;
-import server.api.routes.mobile.challenge.ChallengeCreate;
-import server.api.routes.mobile.challenge.ChallengeGetRange;
-import server.api.routes.mobile.challenge.ChallengeInvite;
-import server.api.routes.mobile.challenge.ChallengeInviteAnswer;
-import server.api.routes.mobile.challenge.ChallengeQuit;
+import server.api.routes.mobile.challenge.*;
 import server.api.routes.mobile.customprogram.CustomProgramCreate;
 import server.api.routes.mobile.customprogram.CustomProgramDelete;
 import server.api.routes.mobile.customprogram.CustomProgramGetPreview;
@@ -132,5 +127,6 @@ public class MobileVerticle extends AbstractVerticle {
         new CustomProgramFavAdd(router);
         new CustomProgramFavRemove(router);
         new CustomProgramFavGetRange(router);
+        new ChallengeInit(router);
     }
 }

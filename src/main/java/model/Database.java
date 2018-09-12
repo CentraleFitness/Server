@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
+import model.entities.*;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
@@ -18,21 +19,6 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
 import Tools.LogManager;
-import model.entities.Activity;
-import model.entities.Conversation;
-import model.entities.CustomProgram;
-import model.entities.ElectricProduction;
-import model.entities.Event;
-import model.entities.Feedback;
-import model.entities.Feedback_State;
-import model.entities.Fitness_Center;
-import model.entities.Fitness_Center_Manager;
-import model.entities.Module;
-import model.entities.Picture;
-import model.entities.Post;
-import model.entities.SportSession;
-import model.entities.TUPLE_Event_User;
-import model.entities.User;
 
 /**
  * Created by hadrien on 14/03/2017.
@@ -67,6 +53,7 @@ public class Database {
         CustomPrograms("custom_programs", model.entities.CustomProgram.class, CustomProgram.Field.ID.get_key()),
         Activities("activities", model.entities.Activity.class, Activity.Field.ID.get_key()),
         Posts("posts", model.entities.Post.class, Post.Field.ID.get_key()),
+        Challenges("challenges", model.entities.Challenge.class, Challenge.Field.ID.get_key()),
         ;
 
         public String key;
@@ -221,6 +208,11 @@ public class Database {
             LogManager.write(e);
             throw e;
         }
+    }
+
+    public static long countEntities(Collections collection){
+
+        return collections.get(collection).count();
     }
 
     public static void delete_entity(Collections collection, Entity_Field field, Object value) {

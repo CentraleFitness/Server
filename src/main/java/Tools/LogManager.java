@@ -42,6 +42,7 @@ public class LogManager {
 
     public static void write(Exception e) {
         if (mEnabled == false) return;
+        System.out.println("WHEN: " + new Date().toString() + " :: WHERE: " + getCallerCallerClassName() + " :: WHAT: " + "Exception (line " + e.getStackTrace()[0].getLineNumber() + "): " + e.toString());
         mLog.println("WHEN: " + new Date().toString() + " :: WHERE: " + getCallerCallerClassName() + " :: WHAT: " + "Exception (line " + e.getStackTrace()[0].getLineNumber() + "): " + e.toString());
         mLog.flush();
     }

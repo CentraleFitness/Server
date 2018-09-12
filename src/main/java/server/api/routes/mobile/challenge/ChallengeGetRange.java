@@ -1,9 +1,15 @@
 package server.api.routes.mobile.challenge;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCursor;
+import model.entities.*;
+import org.bson.Document;
 import org.bson.types.ObjectId;
 
 import com.auth0.jwt.JWT;
@@ -16,11 +22,6 @@ import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import model.Database;
 import model.Database.Collections;
-import model.entities.Fitness_Center;
-import model.entities.Fitness_Center_Manager;
-import model.entities.Picture;
-import model.entities.Post;
-import model.entities.User;
 import protocol.ResponseObject;
 import protocol.mobile.Protocol;
 
@@ -55,8 +56,18 @@ public class ChallengeGetRange {
                     LogManager.write(Protocol.Status.AUTH_ERROR_TOKEN.message);
                     break label;
                 }
+                FindIterable<Document> docs = Database.collections.get(Collections.Challenges).find();
+                MongoCursor it = docs.iterator();
+
+                List<String> jsons = new ArrayList<>();
+                while (it.hasNext()){
+                    Document doc = (Document) it.next();
+
+                    jsons.add(doc.toJson());
+                }
                 sending = new ResponseObject(false);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
+                sending.put("challenges", jsons);
             } catch (Exception e) {
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.INTERNAL_SERVER_ERROR.code);
