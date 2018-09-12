@@ -10,6 +10,7 @@ public class CustomProgram extends Database.Entity {
     public enum Field implements Database.Entity_Field {
         ID("_id", ObjectId.class),
         FITNESS_CENTER_ID("fitness_center_id", ObjectId.class),
+        CREATOR_ID("fitness_center_id", ObjectId.class),
         NAME("name", String.class),
         PICTURE_ID("picture_id", ObjectId.class),
         PICTURE("picture", String.class),

@@ -43,7 +43,8 @@ public class Protocol {
 		TARGETID("target id"), POSTS("posts"), POSTID("post id"), POSTTYPE("post type"), POSTICON("post icon"),
 		POSTDATE("post date"), POSTCONTENT("post content"), ISREG("isreg"), TYPE("type"), DATE("date"),
 		DURATION("duration"), MAX("max"), LIKES("likes"), COMMENTID("comment id"), COMMENTCONTENT("comment content"),
-		COMMENTS("comments"),;
+		COMMENTS("comments"), NAME("name"), LOGO("logo"), NBSTEPS("nbsteps"), STEPS("steps"),
+		CUTOMPROGRAMID("custom program id"),;
 		public String key;
 
 		Field(String key) {
