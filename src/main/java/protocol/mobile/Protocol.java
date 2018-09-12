@@ -62,7 +62,8 @@ public class Protocol {
 		INTERNAL_SERVER_ERROR("666", "Random error"), SPORT_SESSION_NO_SESSION("410", "No sport session"),
 		SPORT_SESSION_BAD_SESSIONID("411", "Bad session id"), NO_AFFILIATION("412", "Not affiliated with sport center"),
 		POST_NOT_FOUND("413", "Post not found"), CENTER_NOT_FOUND("414", "Fitness center not found"),
-		EVENT_NOT_FOUND("413", "Event not found"),;
+		EVENT_NOT_FOUND("413", "Event not found"), CUSTOM_PROGRAM_NOT_FOUND("415", "Custom program not found"),
+		CUSTOM_PROGRAM_NOT_OWNER("416", "Not custom program owner"),;
 		public String code;
 		public String message;
 

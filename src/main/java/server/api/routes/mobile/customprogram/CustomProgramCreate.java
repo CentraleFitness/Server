@@ -89,7 +89,7 @@ public class CustomProgramCreate {
 					LogManager.write(Protocol.Status.AUTH_ERROR_TOKEN.message);
 					return;
 				}
-				ObjectId fitnessCenterId = (ObjectId) user.getField(User.Field.FITNESS_CENTER_ID);
+				ObjectId fitnessCenterId = new ObjectId((String) user.getField(User.Field.FITNESS_CENTER_ID));
 				Fitness_Center fitness_Center;
 				if (fitnessCenterId == null || (fitness_Center = (Fitness_Center) Database
 						.find_entity(Collections.Fitness_Centers, Fitness_Center.Field.ID, fitnessCenterId)) == null) {
