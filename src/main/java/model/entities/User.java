@@ -1,13 +1,13 @@
 package model.entities;
 
-import model.Database;
+import java.util.HashMap;
+import java.util.HashSet;
+
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static model.Database.*;
+import model.Database.Entity;
+import model.Database.Entity_Field;
 
 public class User extends Entity {
     public enum Field implements Entity_Field {
@@ -23,6 +23,7 @@ public class User extends Entity {
         PICTURE_ID("picture_id", ObjectId.class),
         FRIENDS("friends", HashMap.class),
         BLOCKED_USERS("blocked_users", HashMap.class),
+        FAVORITES_CUSTOM_PROGRAMS("favorites_custom_programs", HashSet.class),
         ;
         @Override
         public String get_key() {
