@@ -11,6 +11,8 @@ import server.image.ImageVerticle;
 import server.intranet.IntranetVerticle;
 import server.mobile.MobileVerticle;
 import server.module.ModuleVerticle;
+import server.webserver.WebVerticle;
+
 import java.io.FileReader;
 import java.util.HashMap;
 
@@ -39,6 +41,7 @@ public class CentralServer {
             mVerticles.put(ModuleVerticle.class.getName(), new ModuleVerticle(Integer.parseInt(mSettings.get("Module Server Http Port"))));
             mVerticles.put(IntranetVerticle.class.getName(), new IntranetVerticle(Integer.parseInt(mSettings.get("Intranet Server Http Port"))));
             mVerticles.put(ImageVerticle.class.getName(), new ImageVerticle(Integer.parseInt(mSettings.get("Image Server Http Port"))));
+            mVerticles.put(WebVerticle.class.getName(), new WebVerticle(Integer.parseInt(mSettings.get("Web Server Http Port"))));
             mVerticles.forEach((key, value)-> mVertx.deployVerticle(value));
         } catch (Exception e) {
             e.printStackTrace();

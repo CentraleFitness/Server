@@ -1,29 +1,24 @@
 package model;
 
-import Tools.LogManager;
-import com.mongodb.MongoClient;
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Filters;
+import static com.mongodb.client.model.Filters.eq;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+
 import model.entities.*;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Type;
-import java.math.BigInteger;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
+import com.mongodb.MongoClient;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 
-import static com.mongodb.client.model.Filters.eq;
-import static com.mongodb.client.model.Updates.set;
-import static model.Database.Entity.Field.ID;
+import Tools.LogManager;
 
 /**
  * Created by hadrien on 14/03/2017.
@@ -58,6 +53,7 @@ public class Database {
         CustomPrograms("custom_programs", model.entities.CustomProgram.class, CustomProgram.Field.ID.get_key()),
         Activities("activities", model.entities.Activity.class, Activity.Field.ID.get_key()),
         Posts("posts", model.entities.Post.class, Post.Field.ID.get_key()),
+        Challenges("challenges", model.entities.Challenge.class, Challenge.Field.ID.get_key()),
         ;
 
         public String key;
@@ -76,7 +72,7 @@ public class Database {
 
     public static abstract class Entity extends Document {
         public enum Field implements Entity_Field {
-            ID("_id", ObjectId.class),;
+            ID("_id", ObjectId.class);
 
             @Override
             public String get_key() {
@@ -100,13 +96,17 @@ public class Database {
         public Object getField(Entity_Field field) {
             return get(field.get_key());
         }
+        
+        public ObjectId getId() {
+        	return (ObjectId) get("_id");
+        }
 
         public void setField(Entity_Field field, Object value) {
             put(field.get_key(), field.get_class().cast(value));
         }
 
         public Entity() {
-            setField(ID, new ObjectId());
+            setField(Field.ID, new ObjectId());
         }
 
         public Entity(Document doc) {
@@ -210,6 +210,11 @@ public class Database {
         }
     }
 
+    public static long countEntities(Collections collection){
+
+        return collections.get(collection).count();
+    }
+
     public static void delete_entity(Collections collection, Entity_Field field, Object value) {
         collections.get(collection).deleteOne(eq(field.get_key(), field.get_class().cast(value)));
     }
@@ -223,6 +228,6 @@ public class Database {
     }
 
     public static void delete_entities(Collections collection, Bson filters) {
-        collections.get(collection).deleteMany(filters);
-    }
+		collections.get(collection).deleteMany(filters);
+	}
 }
