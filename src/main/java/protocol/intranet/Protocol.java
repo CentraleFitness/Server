@@ -291,6 +291,7 @@ public class Protocol {
         EVENTS("events"),
         FEEDBACK_STATES("feedback_states"),
         NB_SUBSCRIBERS("nb_subscribers"),
+        LAST_POST("last_post"),
         DELETION_CAUSE("deletion_cause"),
         CUSTOM_PROGRAMS("custom_programs"),
         NB_ACTIVITIES("nb_activities"),
