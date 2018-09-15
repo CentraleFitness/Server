@@ -10,10 +10,7 @@ import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import model.Database;
-import model.entities.Event;
-import model.entities.Fitness_Center;
-import model.entities.Fitness_Center_Manager;
-import model.entities.TUPLE_Event_User;
+import model.entities.*;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
@@ -58,20 +55,29 @@ public class GetEvents {
                         if ((Database.collections.get(Database.Collections.Events).count(event_filter)) > 0) {
                             List<Bson> filters = new ArrayList<>();
                             HashMap<String, AtomicInteger> counter = new HashMap<>();
+                            HashMap<String, Long> last_post = new HashMap<>();
 
                             for (Document cur :events) {
                                 counter.put(cur.get(Event.Field.ID.get_key()).toString(), new AtomicInteger(0));
+                                last_post.put(cur.get(Event.Field.ID.get_key()).toString(), 0L);
                                 filters.add(Filters.eq(TUPLE_Event_User.Field.EVENT_ID.get_key(), cur.get(Event.Field.ID.get_key())));
                             }
                             @SuppressWarnings("unchecked")
                             FindIterable<Document> event_users = Database.collections.get(Database.Collections.TUPLE_Event_Users).find(Filters.or(filters));
+                            @SuppressWarnings("unchecked")
+                            FindIterable<Document> event_posts = Database.collections.get(Database.Collections.Posts).find(Filters.or(filters));
 
                             for (Document entity : event_users) {
                                 counter.get(entity.get(TUPLE_Event_User.Field.EVENT_ID.get_key()).toString()).incrementAndGet();
                             }
 
+                            for (Document entity : event_posts) {
+                                last_post.put(entity.get(Post.Field.EVENT_ID.get_key()).toString(), (Long)entity.get(Post.Field.DATE.get_key()));
+                            }
+
                             for (Document cur :events) {
                                 cur.put(Protocol.Field.NB_SUBSCRIBERS.key, counter.get(cur.get(Event.Field.ID.get_key()).toString()).get());
+                                cur.put(Protocol.Field.LAST_POST.key, last_post.get(cur.get(Event.Field.ID.get_key()).toString()));
                             }
                         }
                         sending.put(Protocol.Field.EVENTS.key, events);
