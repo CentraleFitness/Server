@@ -1,8 +1,12 @@
 package server.api.routes.mobile.customprogram;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
+import org.bson.types.ObjectId;
+
 import com.auth0.jwt.JWT;
+import com.google.common.base.Optional;
 import com.google.gson.GsonBuilder;
 
 import Tools.LogManager;
@@ -11,50 +15,87 @@ import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import model.Database;
+import model.Database.Collections;
+import model.entities.CustomProgram;
 import model.entities.User;
 import protocol.ResponseObject;
 import protocol.mobile.Protocol;
 
 public class CustomProgramGetPreview {
-    public CustomProgramGetPreview(Router router) {
-        router.route(HttpMethod.POST, Protocol.Path.CUSTOMPROGRAM_GET_PREVIEW.path).handler(routingContext -> {
+	public CustomProgramGetPreview(Router router) {
+		router.route(HttpMethod.POST, Protocol.Path.CUSTOMPROGRAM_GET_PREVIEW.path).handler(routingContext -> {
 
-            ResponseObject sending = null;
-            HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
+			ResponseObject sending = null;
+			HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
 
-            try {
-                Map<String, Object> received = routingContext.getBodyAsJson().getMap();
-                String rToken = (String) received.get(Protocol.Field.TOKEN.key);
+			try {
+				Map<String, Object> received = routingContext.getBodyAsJson().getMap();
+				String rToken = (String) received.get(Protocol.Field.TOKEN.key);
+				String rCustomProgramId = (String) received.get(Protocol.Field.CUSTOMPROGRAMID.key);
 
-                if (rToken == null) {
-                    sending = new ResponseObject(true);
-                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_KO.code);
-                    LogManager.write("Missing key " + Protocol.Field.TOKEN.key);
-                    return;
-                }
-                JWT token = Token.decodeToken(rToken);
-                if (token == null) {
-                    sending = new ResponseObject(true);
-                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
-                    LogManager.write(Protocol.Status.AUTH_ERROR_TOKEN.message);
-                    return;
-                }
-                User user = (User) Database.find_entity(Database.Collections.Users, User.Field.LOGIN, token.getIssuer());
-                if (user == null || !rToken.equals(user.getField(User.Field.TOKEN))) {
-                    sending = new ResponseObject(true);
-                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
-                    LogManager.write(Protocol.Status.AUTH_ERROR_TOKEN.message);
-                    return;
-                }
-                sending = new ResponseObject(false);
-                sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
-            } catch (Exception e) {
-                sending = new ResponseObject(true);
-                sending.put(Protocol.Field.STATUS.key, Protocol.Status.INTERNAL_SERVER_ERROR.code);
-                LogManager.write(e);
-            } finally {
-                response.end(new GsonBuilder().create().toJson(sending));
+				if (rToken == null) {
+					sending = new ResponseObject(true);
+					sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_KO.code);
+					LogManager.write("Missing key " + Protocol.Field.TOKEN.key);
+					return;
+				}
+				if (rCustomProgramId == null) {
+					sending = new ResponseObject(true);
+					sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_KO.code);
+					LogManager.write("Missing key " + Protocol.Field.CUSTOMPROGRAMID.key);
+					return;
+				}
+				JWT token = Token.decodeToken(rToken);
+				if (token == null) {
+					sending = new ResponseObject(true);
+					sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
+					LogManager.write(Protocol.Status.AUTH_ERROR_TOKEN.message);
+					return;
+				}
+				User user = (User) Database.find_entity(Database.Collections.Users, User.Field.LOGIN,
+						token.getIssuer());
+				if (user == null || !rToken.equals(user.getField(User.Field.TOKEN))) {
+					sending = new ResponseObject(true);
+					sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
+					LogManager.write(Protocol.Status.AUTH_ERROR_TOKEN.message);
+					return;
+				}
+				ObjectId customProgramId = new ObjectId(rCustomProgramId);
+				CustomProgram customProgram = (CustomProgram) Database.find_entity(Collections.CustomPrograms,
+						CustomProgram.Field.ID, customProgramId);
+				if (customProgram == null) {
+					sending = new ResponseObject(true);
+					sending.put(Protocol.Field.STATUS.key, Protocol.Status.CUSTOM_PROGRAM_NOT_FOUND.code);
+					LogManager.write(Protocol.Status.CUSTOM_PROGRAM_NOT_FOUND.message);
+					return;
+				}
+				sending = new ResponseObject(false);
+				sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
+				sending.put(Protocol.Field.LOGO.key, customProgram.getField(CustomProgram.Field.PICTURE));
+				sending.put(Protocol.Field.NOTE.key, customProgram.getField(CustomProgram.Field.NOTE));
+				sending.put(Protocol.Field.DURATION.key, customProgram.getField(CustomProgram.Field.PICTURE));
+				sending.put(Protocol.Field.CREATOR.key,
+						java.util.Optional.ofNullable(customProgram.getField(CustomProgram.Field.CREATOR_ID)).map(id -> {
+							String name = "unknown";
+							try {
+								User creator = (User) Database.find_entity(Collections.Users, User.Field.ID, id);
+								name = (String) user.getField(User.Field.LOGIN);
+							} catch (InvocationTargetException | NoSuchMethodException | InstantiationException
+									| IllegalAccessException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+								return name;
+							}
+							return name;
+						}).orElse("unknown"));
+				sending.put(Protocol.Field.NBSTEPS.key, customProgram.getField(CustomProgram.Field.NB_ACTIVITIES));
+			} catch (Exception e) {
+				sending = new ResponseObject(true);
+				sending.put(Protocol.Field.STATUS.key, Protocol.Status.INTERNAL_SERVER_ERROR.code);
+				LogManager.write(e);
+			} finally {
+				response.end(new GsonBuilder().create().toJson(sending));
 			}
-        });
-    }
+		});
+	}
 }
