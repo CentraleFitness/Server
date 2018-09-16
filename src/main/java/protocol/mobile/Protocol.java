@@ -68,7 +68,7 @@ public class Protocol {
 		POSTDATE("post date"), POSTCONTENT("post content"), ISREG("isreg"), TYPE("type"), DATE("date"),
 		DURATION("duration"), MAX("max"), LIKES("likes"), COMMENTID("comment id"), COMMENTCONTENT("comment content"),
 		COMMENTS("comments"), NAME("name"), LOGO("logo"), NBSTEPS("nbsteps"), STEPS("steps"),
-		CUSTOMPROGRAMID("custom program id"), FILTERS("filters"), CUSTOMPROGRAMS("custom programs"),;
+		CUSTOMPROGRAMID("custom program id"), FILTERS("filters"), CUSTOMPROGRAMS("custom programs"), FAVORITE("favorite"),;
 		public String key;
 
 		Field(String key) {
