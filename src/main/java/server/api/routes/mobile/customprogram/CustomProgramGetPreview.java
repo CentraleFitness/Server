@@ -1,10 +1,6 @@
 package server.api.routes.mobile.customprogram;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
-import java.util.Optional;
-
-import org.bson.types.ObjectId;
 
 import com.auth0.jwt.JWT;
 import com.google.gson.GsonBuilder;
@@ -15,11 +11,6 @@ import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import model.Database;
-import model.Database.Collections;
-import model.entities.Fitness_Center;
-import model.entities.Fitness_Center_Manager;
-import model.entities.Picture;
-import model.entities.Post;
 import model.entities.User;
 import protocol.ResponseObject;
 import protocol.mobile.Protocol;
