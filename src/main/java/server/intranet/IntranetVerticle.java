@@ -68,6 +68,7 @@ public class IntranetVerticle extends AbstractVerticle {
         new CenterDeletePublication(this.router);
         new CenterGetPublications(this.router);
 
+        new GetFeedbackStates(this.router);
         new AddFeedback(this.router);
         new GetFeedbacks(this.router);
 
@@ -77,7 +78,13 @@ public class IntranetVerticle extends AbstractVerticle {
         new DeleteEvent(this.router);
         new PostEvent(this.router);
 
-        new GetFitnessCenterId(this.router);
+        new GetHomeSummary(this.router);
+
+        new GetDisplayConfiguration(this.router);
+        new UpdateDisplayConfiguration(this.router);
+
+        new GetModuleStates(this.router);
+        new GetModules(this.router);
 
         new GetActivities(this.router);
         new AddCustomProgram(this.router);

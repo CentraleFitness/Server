@@ -9,18 +9,18 @@ import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import model.Database;
-import model.entities.Feedback_State;
 import model.entities.Fitness_Center_Manager;
+import model.entities.ModuleState;
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import protocol.intranet.Protocol;
 import protocol.ResponseObject;
+import protocol.intranet.Protocol;
 
 import java.util.*;
 
-public class GetFeedbackStates {
-    public GetFeedbackStates(Router router) {
-        router.route(HttpMethod.POST, Protocol.Path.GET_FEEDBACK_STATES.path).handler(routingContext -> {
+public class GetModuleStates {
+    public GetModuleStates(Router router) {
+        router.route(HttpMethod.POST, Protocol.Path.GET_MODULE_STATES.path).handler(routingContext -> {
             Map<String, Object> received = routingContext.getBodyAsJson().getMap();
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
@@ -36,18 +36,17 @@ public class GetFeedbackStates {
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
 
                     @SuppressWarnings("unchecked")
-                    FindIterable<Feedback_State> findIterable = (FindIterable<Feedback_State>) Database.collections.get(Database.Collections.Feedback_States).find();
-                    List<Map<String,Object>> feedback_states = new ArrayList<>();
+                    FindIterable<ModuleState> findIterable = (FindIterable<ModuleState>) Database.collections.get(Database.Collections.ModuleStates).find();
+                    List<Map<String,Object>> module_states = new ArrayList<>();
                     HashMap<String,Object> cur;
                     for (Document doc : findIterable) {
                         cur = new HashMap<>();
                         cur.put("_id", doc.getObjectId("_id").toString());
-                        cur.put("code", doc.getInteger("code"));
                         cur.put("text_fr", doc.getString("text_fr"));
                         cur.put("text_en", doc.getString("text_en"));
-                        feedback_states.add(cur);
+                        module_states.add(cur);
                     }
-                    sending.put(Protocol.Field.FEEDBACK_STATES.key, feedback_states);
+                    sending.put(Protocol.Field.MODULE_STATES.key, module_states);
                 }
             }catch (Exception e){
                 sending = new ResponseObject(true);

@@ -16,6 +16,7 @@ public class Module extends Database.Entity {
         FITNESS_CENTER_ID("fitness_center_id", ObjectId.class),
         MACHINE_TYPE("machine_type", String.class),
         NEED_NEW_SESSION_ID("need_new_session_id", Boolean.class),
+        MODULE_STATE_ID("module_state_id", ObjectId.class),
         ;
         @Override
         public String get_key() {

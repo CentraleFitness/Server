@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
+import model.better.wip.collection.Collection;
 import model.entities.*;
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -47,11 +48,13 @@ public class Database {
         Fitness_Center_Managers("fitness_center_managers", model.entities.Fitness_Center_Manager.class, Fitness_Center_Manager.Field.ID.get_key()),
         Feedbacks("feedbacks", model.entities.Feedback.class, Feedback.Field.ID.get_key()),
         Feedback_States("feedback_states", model.entities.Feedback_State.class, Feedback_State.Field.ID.get_key()),
+        ModuleStates("module_states", model.entities.ModuleState.class, ModuleState.Field.ID.get_key()),
         TUPLE_Event_Users("TUPLE_event_users", model.entities.TUPLE_Event_User.class, TUPLE_Event_User.Field.ID.get_key()),
         SportSessions("sportsession", model.entities.SportSession.class, SportSession.Field.ID.get_key()),
         SportSessions_HISTORY("sportsession_HISTORY", model.entities.SportSession.class, SportSession.Field.ID.get_key()),
         CustomPrograms("custom_programs", model.entities.CustomProgram.class, CustomProgram.Field.ID.get_key()),
         Activities("activities", model.entities.Activity.class, Activity.Field.ID.get_key()),
+        DisplayConfigurations("display_configuration", model.entities.DisplayConfiguration.class, DisplayConfiguration.Field.ID.get_key()),
         Posts("posts", model.entities.Post.class, Post.Field.ID.get_key()),
         Challenges("challenges", model.entities.Challenge.class, Challenge.Field.ID.get_key()),
         ;
@@ -230,4 +233,84 @@ public class Database {
     public static void delete_entities(Collections collection, Bson filters) {
 		collections.get(collection).deleteMany(filters);
 	}
+
+	static {
+        if (collections.get(Collections.Activities).count() == 0) {
+            try {
+
+                Activity a = (Activity) new_entity(Collections.Activities);
+                a.setField(Activity.Field.NAME, "Abdominaux");
+                a.setField(Activity.Field.ICON, "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAQAAABKfvVzAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QAAKqNIzIAAAAJcEhZcwAADdcAAA3XAUIom3gAAAAHdElNRQfiBAsADAwQ2jLPAAAA/klEQVQ4y93ROy+DYRTA8V8xGKRpbBqxMDAIg9sqDEjsEolNLIjBrIPETCy+AyGxSWySfokm4hYxiEmrJfoYPHmj7fIaOcu5POd/Ls/hv0jbb5InFD3bSw9cCoJgLO0w+Wjl0wEsqwiK2tOlZ5DTp6LflUraLjNqghvjaYGDuHjNRjrgKAJBcCzb8DbkzLnJVqCUICUjMd5pV00QlM03A1knCfJmFbOxyKuK4MNKIwBb3hPoIepTvUY9Ceq2mwGm3P3Y59ZijA+4FgQ7mQisOYxXeDFtDp/2FZSTKXpcGPb47ayrJ1XvdVuyabDlL3MKFjLR6dIRrapq2vP9VfkCYnxm0VqTj+8AAAAldEVYdGRhdGU6Y3JlYXRlADIwMTgtMDQtMTFUMDA6MTI6MTIrMDI6MDA32/g+AAAAJXRFWHRkYXRlOm1vZGlmeQAyMDE4LTA0LTExVDAwOjEyOjEyKzAyOjAwRoZAggAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAAASUVORK5CYII=");
+                Database.update_entity(Collections.Activities, a);
+
+                a = (Activity) new_entity(Collections.Activities);
+                a.setField(Activity.Field.NAME, "Pompes");
+                a.setField(Activity.Field.ICON, "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAQAAABKfvVzAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QAAKqNIzIAAAAJcEhZcwAADdcAAA3XAUIom3gAAAAHdElNRQfiBAsACx/bJeXWAAAA30lEQVQ4y+3RPy+DYRQF8F/9y8tiIaF2i8VQCRKGMlgqkg4Wu4FRRIKVxM7K5iuohcUs6eQDVEzdDBKaa2n7RvPi/QA903NOzj333ufSx/8YzO1ccmrGy1BO+6wnBczlzT8RQnj9q0NiXsmCklG7be0+21pw4NlnOzWEZdtqzk1l2SfVhC911/YsuhJWfx9kRUN4NN1VLoRyhwz0fPKRB0Vn1rx11Ra6u3YeI8qqtkxo2nH3I6aF4bQgsaGqYhzvbh1q9Az5gUhpXQhNNzYlmVsVHRtL6b5L6/JevI9c+AZb6DJXPidACwAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAxOC0wNC0xMVQwMDoxMTozMSswMjowMK8hXt0AAAAldEVYdGRhdGU6bW9kaWZ5ADIwMTgtMDQtMTFUMDA6MTE6MzErMDI6MDDefOZhAAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAAABJRU5ErkJggg==");
+                Database.update_entity(Collections.Activities, a);
+
+                a = (Activity) new_entity(Collections.Activities);
+                a.setField(Activity.Field.NAME, "Elliptique");
+                a.setField(Activity.Field.ICON, "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAQAAABKfvVzAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QAAKqNIzIAAAAJcEhZcwAADdcAAA3XAUIom3gAAAAHdElNRQfiBAsACi0K6YUXAAABwklEQVQ4y5XTy0sUYBTG4WeyDLyGKGGKm1ZFSkiQQUKthCChTWBYQeaiENoEUfgHtBIX0YTQIG1chLVylVCaiJsuaiVFaWEwXmAaRkG8fi0SG8lh7Cy/7/e+HM57Dv9ZOVn+C11ywPfd2hX7Igiu71ZwShAEI3+f9mSE81X6KQnGs3tflrLuiTMeuS832yA6NlsJqrJ7l3ixhQd5DrunOTNe7VsaHrwRBHOZ8DqLW2i/UUGwJGjMJOjawmfVOqdPq2KTmnbGq6xsa2fYSfBUx054kVzPvXRRj+VNyQy4a1hROhrRZsKGVWtugDJ9guAdKrwSbJjQJvJH0GtOqyMeSkg5jTIJQfDZbQk9gvNazeiFFklVyPHDTbcsKNAtCJ7pFrx30JRmHJLQwoB2RNyRUijiqyYbggUVrpo05Je4x6DdAEkNOCtYFRe35IGPFl1Bp24R16xadxwNknvFlWNMvyGj6DTthALziKsWxFSqN41ycaKG0pa8UVCXlvyyo2nTHBSl1KyYfOxzwZTYtnRiPqkB+brMKoUaY1IGzQui8rYJ8kStGTcgZUyNzSj2q1crYcSHHXbgmDol3nptOft1/FO/AbEFtSh4LaooAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDE4LTA0LTExVDAwOjEwOjQ1KzAyOjAwvmkY6QAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxOC0wNC0xMVQwMDoxMDo0NSswMjowMM80oFUAAAAZdEVYdFNvZnR3YXJlAHd3dy5pbmtzY2FwZS5vcmeb7jwaAAAAAElFTkSuQmCC");
+                Database.update_entity(Collections.Activities, a);
+
+            } catch (Exception e) {
+                LogManager.write(e);
+            }
+        }
+
+        if (collections.get(Collections.ModuleStates).count() == 0) {
+            try {
+                ModuleState m = (ModuleState) new_entity(Collections.ModuleStates);
+                m.setField(ModuleState.Field.TEXT_FR, "En cours d’envoi");
+                m.setField(ModuleState.Field.TEXT_EN, "Shipping");
+                Database.update_entity(Collections.ModuleStates, m);
+
+                m = (ModuleState) new_entity(Collections.ModuleStates);
+                m.setField(ModuleState.Field.TEXT_FR, "Livré");
+                m.setField(ModuleState.Field.TEXT_EN, "Delivered");
+                Database.update_entity(Collections.ModuleStates, m);
+
+                m = (ModuleState) new_entity(Collections.ModuleStates);
+                m.setField(ModuleState.Field.TEXT_FR, "Fonctionnel");
+                m.setField(ModuleState.Field.TEXT_EN, "Fonctionnal");
+                Database.update_entity(Collections.ModuleStates, m);
+
+                m = (ModuleState) new_entity(Collections.ModuleStates);
+                m.setField(ModuleState.Field.TEXT_FR, "En cours d'utilisation");
+                m.setField(ModuleState.Field.TEXT_EN, "In use");
+                Database.update_entity(Collections.ModuleStates, m);
+
+                m = (ModuleState) new_entity(Collections.ModuleStates);
+                m.setField(ModuleState.Field.TEXT_FR, "Non fonctionnel");
+                m.setField(ModuleState.Field.TEXT_EN, "Non functionnal");
+                Database.update_entity(Collections.ModuleStates, m);
+            } catch (Exception e) {
+                LogManager.write(e);
+            }
+        }
+
+        if (collections.get(Collections.Feedback_States).count() == 0) {
+            try {
+                Feedback_State f = (Feedback_State) new_entity(Collections.Feedback_States);
+                f.setField(Feedback_State.Field.CODE, 1);
+                f.setField(Feedback_State.Field.TEXT_FR, "En attente");
+                f.setField(Feedback_State.Field.TEXT_EN, "Pending");
+                Database.update_entity(Collections.Feedback_States, f);
+
+                f = (Feedback_State) new_entity(Collections.Feedback_States);
+                f.setField(Feedback_State.Field.CODE, 2);
+                f.setField(Feedback_State.Field.TEXT_FR, "En cours");
+                f.setField(Feedback_State.Field.TEXT_EN, "In progress");
+                Database.update_entity(Collections.Feedback_States, f);
+
+                f = (Feedback_State) new_entity(Collections.Feedback_States);
+                f.setField(Feedback_State.Field.CODE, 3);
+                f.setField(Feedback_State.Field.TEXT_FR, "Résolue");
+                f.setField(Feedback_State.Field.TEXT_EN, "Solved");
+                Database.update_entity(Collections.Feedback_States, f);
+            } catch (Exception e) {
+                LogManager.write(e);
+            }
+        }
+    }
 }

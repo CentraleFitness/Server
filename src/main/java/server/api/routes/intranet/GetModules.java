@@ -1,6 +1,7 @@
 package server.api.routes.intranet;
 
 import Tools.LogManager;
+import Tools.ObjectIdSerializer;
 import Tools.Token;
 import com.google.gson.GsonBuilder;
 import io.vertx.core.http.HttpMethod;
@@ -9,15 +10,18 @@ import io.vertx.ext.web.Router;
 import model.Database;
 import model.entities.Fitness_Center;
 import model.entities.Fitness_Center_Manager;
+import model.entities.Module;
+import org.bson.types.ObjectId;
 import protocol.ResponseObject;
 import protocol.intranet.Protocol;
 
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Objects;
 
-public class GetFitnessCenterId {
-    public GetFitnessCenterId(Router router) {
-        router.route(HttpMethod.POST, Protocol.Path.GET_FITNESS_CENTER_ID.path).handler(routingContext -> {
+public class GetModules {
+    public GetModules(Router router) {
+        router.route(HttpMethod.POST, Protocol.Path.GET_MODULES.path).handler(routingContext -> {
             Map<String, Object> received = routingContext.getBodyAsJson().getMap();
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
@@ -37,7 +41,10 @@ public class GetFitnessCenterId {
                     } else {
                         sending = new ResponseObject(false);
                         sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
-                        sending.put(Protocol.Field.FITNESS_CENTER_ID.key, center.getField(Fitness_Center.Field.ID).toString());
+
+                        LinkedList<Database.Entity> modules = Database.find_entities(Database.Collections.Modules, Module.Field.FITNESS_CENTER_ID, manager.getField(Fitness_Center_Manager.Field.FITNESS_CENTER_ID));
+
+                        sending.put(Protocol.Field.MODULES.key, modules);
                     }
                 }
             }catch (Exception e){
@@ -45,7 +52,7 @@ public class GetFitnessCenterId {
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_ERROR.code);
                 LogManager.write("Exception: " + e.toString());
             }
-            response.end(new GsonBuilder().create().toJson(sending));
+            response.end(new GsonBuilder().registerTypeAdapter(ObjectId.class, new ObjectIdSerializer()).create().toJson(sending));
         });
 
     }

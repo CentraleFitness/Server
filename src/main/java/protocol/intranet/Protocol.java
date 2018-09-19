@@ -249,7 +249,36 @@ public class Protocol {
          * @param: TOKEN.
          * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
          */
-        GET_FITNESS_CENTER_ID("/center/get/id"),
+        GET_HOME_SUMMARY("/center/get/homesummary"),
+
+        /**
+         * @path: ADD_FEEDBACK:
+         * @param: TOKEN.
+         * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
+         */
+        GET_DISPLAY_CONFIGURATION("/center/get/displayconfiguration"),
+
+        /**
+         * @path: ADD_FEEDBACK:
+         * @param: TOKEN.
+         * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
+         */
+        UPDATE_DISPLAY_CONFIGURATION("/center/update/displayconfiguration"),
+
+        /**
+         * @path: ADD_FEEDBACK:
+         * @param: TOKEN.
+         * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
+         */
+        GET_MODULES("/center/get/modules"),
+
+        /**
+         * @path: ADD_FEEDBACK:
+         * @param: TOKEN.
+         * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
+         */
+        GET_MODULE_STATES("/center/get/modulestates"),
+
 
         ;
         public String path;
@@ -302,6 +331,19 @@ public class Protocol {
         ENABLED("enabled"),
         DISABLED("disabled"),
         FITNESS_CENTER_ID("fitness_center_id"),
+        SHOW_EVENTS("show_events"),
+        SHOW_NEWS("show_news"),
+        SHOW_GLOBAL_PERFORMANCES("show_global_performances"),
+        PERFORMANCES_TYPE("performances_type"),
+        SHOW_RANKING_DISCIPLINE("show_ranking_discipline"),
+        SHOW_GLOBAL_RANKING("show_global_ranking"),
+        SHOW_NATIONAL_PRODUCTION_RANKING("show_national_production_rank"),
+        SELECTED_EVENTS("selected_events"),
+        SELECTED("selected"),
+        NEWS_TYPE("news_type"),
+        RANKING_DISCIPLINE_TYPE("ranking_discipline_type"),
+        MODULES("modules"),
+        MODULE_STATES("module_states"),
         ;
         public String key;
         Field(String key) {
