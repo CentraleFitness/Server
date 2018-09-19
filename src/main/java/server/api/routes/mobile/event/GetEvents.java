@@ -1,29 +1,33 @@
 package server.api.routes.mobile.event;
 
-import Tools.LogManager;
-import Tools.Token;
+import static com.mongodb.client.model.Filters.eq;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.bson.Document;
+import org.bson.types.ObjectId;
+
 import com.auth0.jwt.JWT;
 import com.google.gson.GsonBuilder;
 import com.mongodb.BasicDBObject;
-import com.mongodb.client.FindIterable;
+
+import Tools.LogManager;
+import Tools.Token;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import model.Database;
 import model.entities.Event;
-import model.entities.Fitness_Center;
 import model.entities.TUPLE_Event_User;
 import model.entities.User;
-import org.bson.Document;
-import org.bson.types.ObjectId;
 import protocol.ResponseObject;
 import protocol.mobile.Protocol;
-import static com.mongodb.client.model.Filters.eq;
-
-import java.lang.reflect.InvocationTargetException;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class GetEvents {
     public GetEvents(Router router) {
@@ -83,6 +87,7 @@ public class GetEvents {
                                 .get(Database.Collections.Events)
                                 .find(eq(Event.Field.FITNESS_CENTER_ID.get_key(), fitnessCenterId))
                                 .sort(new BasicDBObject(Event.Field.CREATION_DATE.get_key(), 1))
+                                .filter(eq(Event.Field.IS_DELETED.get_key(), "false"))
                                 .skip(rStart)
                                 .limit(rEnd)
                                 .into(new ArrayList())

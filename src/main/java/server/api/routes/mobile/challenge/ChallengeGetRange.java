@@ -1,11 +1,10 @@
 package server.api.routes.mobile.challenge;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCursor;
 import model.entities.*;
@@ -24,6 +23,8 @@ import model.Database;
 import model.Database.Collections;
 import protocol.ResponseObject;
 import protocol.mobile.Protocol;
+
+import static com.mongodb.client.model.Filters.eq;
 
 public class ChallengeGetRange {
     public ChallengeGetRange(Router router) {
@@ -59,15 +60,21 @@ public class ChallengeGetRange {
                 FindIterable<Document> docs = Database.collections.get(Collections.Challenges).find();
                 MongoCursor it = docs.iterator();
 
-                List<String> jsons = new ArrayList<>();
-                while (it.hasNext()){
-                    Document doc = (Document) it.next();
-
-                    jsons.add(doc.toJson());
-                }
+                List<Challenge> challenges =
+                        (List<Challenge>) Database
+                                .collections
+                                .get(Collections.Challenges)
+                                .find()
+                                .into(new ArrayList())
+                                .stream()
+                                .map(doc -> {
+                                    Challenge challenge = new Challenge((Document) doc);
+                                    return Arrays.asList(challenge);
+                                })
+                                .collect(Collectors.toList());
                 sending = new ResponseObject(false);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
-                sending.put("challenges", jsons);
+                sending.put("challenges", challenges);
             } catch (Exception e) {
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.INTERNAL_SERVER_ERROR.code);
