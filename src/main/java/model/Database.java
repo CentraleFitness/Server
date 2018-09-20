@@ -8,8 +8,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import model.better.wip.collection.Collection;
-import model.entities.*;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
@@ -20,6 +18,24 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
 import Tools.LogManager;
+import model.entities.Activity;
+import model.entities.Challenge;
+import model.entities.Conversation;
+import model.entities.CustomProgram;
+import model.entities.DisplayConfiguration;
+import model.entities.ElectricProduction;
+import model.entities.Event;
+import model.entities.Feedback;
+import model.entities.Feedback_State;
+import model.entities.Fitness_Center;
+import model.entities.Fitness_Center_Manager;
+import model.entities.Module;
+import model.entities.ModuleState;
+import model.entities.Picture;
+import model.entities.Post;
+import model.entities.SportSession;
+import model.entities.TUPLE_Event_User;
+import model.entities.User;
 
 /**
  * Created by hadrien on 14/03/2017.
