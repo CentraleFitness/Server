@@ -110,7 +110,7 @@ public class CustomProgramCreate {
 				Database.update_entity(Collections.CustomPrograms, customProgram);
 				sending = new ResponseObject(false);
 				sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
-				sending.put(Protocol.Field.CUSTOMPROGRAMID.key, customProgram.getField(CustomProgram.Field.ID));
+				sending.put(Protocol.Field.CUSTOMPROGRAMID.key, customProgram.getField(CustomProgram.Field.ID).toString());
 			} catch (Exception e) {
 				sending = new ResponseObject(true);
 				sending.put(Protocol.Field.STATUS.key, Protocol.Status.INTERNAL_SERVER_ERROR.code);
