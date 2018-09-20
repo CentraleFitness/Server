@@ -4,6 +4,7 @@ import Tools.LogManager;
 import Tools.ObjectIdSerializer;
 import Tools.Token;
 import com.google.gson.GsonBuilder;
+import com.mongodb.client.model.Filters;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
@@ -15,6 +16,7 @@ import org.bson.types.ObjectId;
 import protocol.ResponseObject;
 import protocol.intranet.Protocol;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
 
@@ -40,6 +42,22 @@ public class GetDisplayConfiguration {
                     } else {
                         sending = new ResponseObject(false);
                         sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
+
+                        if (Database.collections.get(Database.Collections.DisplayConfigurations).count(Filters.eq("fitness_center_id", "work")) == 0) {
+                            DisplayConfiguration configuration = (DisplayConfiguration) Database.new_entity(Database.Collections.DisplayConfigurations);
+                            configuration.setField(DisplayConfiguration.Field.FITNESS_CENTER_ID, center.getField(Fitness_Center.Field.ID));
+                            configuration.setField(DisplayConfiguration.Field.SHOW_EVENTS, false);
+                            configuration.setField(DisplayConfiguration.Field.SELECTED_EVENTS, new ArrayList());
+                            configuration.setField(DisplayConfiguration.Field.SHOW_NEWS, false);
+                            configuration.setField(DisplayConfiguration.Field.NEWS_TYPE, "");
+                            configuration.setField(DisplayConfiguration.Field.SHOW_GLOBAL_PERFORMANCES, false);
+                            configuration.setField(DisplayConfiguration.Field.PERFORMANCES_TYPE, "");
+                            configuration.setField(DisplayConfiguration.Field.SHOW_RANKING_DISCIPLINE, false);
+                            configuration.setField(DisplayConfiguration.Field.RANKING_DISCIPLINE_TYPE, "");
+                            configuration.setField(DisplayConfiguration.Field.SHOW_GLOBAL_RANKING, false);
+                            configuration.setField(DisplayConfiguration.Field.SHOW_NATIONAL_PRODUCTION_RANKING, false);
+                            Database.update_entity(Database.Collections.DisplayConfigurations, configuration);
+                        }
 
                         DisplayConfiguration configuration = (DisplayConfiguration) Database.find_entity(Database.Collections.DisplayConfigurations, DisplayConfiguration.Field.FITNESS_CENTER_ID, center.getField(Fitness_Center.Field.ID));
 

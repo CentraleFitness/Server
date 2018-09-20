@@ -65,6 +65,7 @@ public class CenterRegistration {
                         Database.update_entity(Database.Collections.Fitness_Center_Managers, manager);
 
                         DisplayConfiguration configuration = (DisplayConfiguration) Database.new_entity(Database.Collections.DisplayConfigurations);
+                        configuration.setField(DisplayConfiguration.Field.FITNESS_CENTER_ID, center.getField(Fitness_Center.Field.ID));
                         configuration.setField(DisplayConfiguration.Field.SHOW_EVENTS, false);
                         configuration.setField(DisplayConfiguration.Field.SELECTED_EVENTS, new ArrayList());
                         configuration.setField(DisplayConfiguration.Field.SHOW_NEWS, false);

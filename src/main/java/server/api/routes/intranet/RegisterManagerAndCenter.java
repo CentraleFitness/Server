@@ -8,6 +8,7 @@ import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import model.Database;
+import model.entities.DisplayConfiguration;
 import model.entities.Fitness_Center;
 import model.entities.Fitness_Center_Manager;
 import protocol.ResponseObject;
@@ -83,6 +84,20 @@ public class RegisterManagerAndCenter {
                         Database.update_entity(Database.Collections.Fitness_Centers, center);
                         manager.setField(Fitness_Center_Manager.Field.FITNESS_CENTER_ID, center.getField(Fitness_Center.Field.ID));
                         Database.update_entity(Database.Collections.Fitness_Center_Managers, manager);
+
+                        DisplayConfiguration configuration = (DisplayConfiguration) Database.new_entity(Database.Collections.DisplayConfigurations);
+                        configuration.setField(DisplayConfiguration.Field.FITNESS_CENTER_ID, center.getField(Fitness_Center.Field.ID));
+                        configuration.setField(DisplayConfiguration.Field.SHOW_EVENTS, false);
+                        configuration.setField(DisplayConfiguration.Field.SELECTED_EVENTS, new ArrayList());
+                        configuration.setField(DisplayConfiguration.Field.SHOW_NEWS, false);
+                        configuration.setField(DisplayConfiguration.Field.NEWS_TYPE, "");
+                        configuration.setField(DisplayConfiguration.Field.SHOW_GLOBAL_PERFORMANCES, false);
+                        configuration.setField(DisplayConfiguration.Field.PERFORMANCES_TYPE, "");
+                        configuration.setField(DisplayConfiguration.Field.SHOW_RANKING_DISCIPLINE, false);
+                        configuration.setField(DisplayConfiguration.Field.RANKING_DISCIPLINE_TYPE, "");
+                        configuration.setField(DisplayConfiguration.Field.SHOW_GLOBAL_RANKING, false);
+                        configuration.setField(DisplayConfiguration.Field.SHOW_NATIONAL_PRODUCTION_RANKING, false);
+                        Database.update_entity(Database.Collections.DisplayConfigurations, configuration);
 
                         sending = new ResponseObject(false);
                         sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_SUCCESS.code);
