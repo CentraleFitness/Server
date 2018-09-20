@@ -1,6 +1,7 @@
 package server.api.routes.intranet;
 
 import Tools.LogManager;
+import Tools.ObjectIdSerializer;
 import Tools.Token;
 import com.google.gson.GsonBuilder;
 import com.mongodb.client.FindIterable;
@@ -12,6 +13,7 @@ import model.Database;
 import model.entities.*;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 import protocol.ResponseObject;
 import protocol.intranet.Protocol;
 
@@ -91,7 +93,7 @@ public class GetHomeSummary {
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_ERROR.code);
                 LogManager.write("Exception: " + e.toString());
             }
-            response.end(new GsonBuilder().create().toJson(sending));
+            response.end(new GsonBuilder().registerTypeAdapter(ObjectId.class, new ObjectIdSerializer()).create().toJson(sending));
         });
 
     }
