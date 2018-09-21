@@ -87,7 +87,7 @@ public class GetEvents {
                                 .get(Database.Collections.Events)
                                 .find(eq(Event.Field.FITNESS_CENTER_ID.get_key(), fitnessCenterId))
                                 .sort(new BasicDBObject(Event.Field.CREATION_DATE.get_key(), 1))
-                                .filter(eq(Event.Field.IS_DELETED.get_key(), "false"))
+                                //.filter(eq(Event.Field.IS_DELETED.get_key(), false))
                                 .skip(rStart)
                                 .limit(rEnd)
                                 .into(new ArrayList())

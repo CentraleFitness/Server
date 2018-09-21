@@ -104,7 +104,7 @@ public class CustomProgramGetRange {
 							CustomProgram customProgram = new CustomProgram((Document) doc);
 							Map toRet = new TreeMap<>();
 							toRet.put(Protocol.Field.CUSTOMPROGRAMID.key,
-									customProgram.getField(CustomProgram.Field.ID));
+									customProgram.getField(CustomProgram.Field.ID).toString());
 							toRet.put(Protocol.Field.NAME.key, customProgram.getField(CustomProgram.Field.NAME));
 							toRet.put(Protocol.Field.FAVORITE.key,
 									Optional.ofNullable(user.getField(User.Field.FAVORITES_CUSTOM_PROGRAMS)).map(cp -> {
