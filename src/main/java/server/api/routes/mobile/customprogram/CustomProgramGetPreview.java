@@ -2,11 +2,11 @@ package server.api.routes.mobile.customprogram;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
+import java.util.Optional;
 
 import org.bson.types.ObjectId;
 
 import com.auth0.jwt.JWT;
-import com.google.common.base.Optional;
 import com.google.gson.GsonBuilder;
 
 import Tools.LogManager;
@@ -72,8 +72,8 @@ public class CustomProgramGetPreview {
 				sending = new ResponseObject(false);
 				sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
 				sending.put(Protocol.Field.LOGO.key, customProgram.getField(CustomProgram.Field.PICTURE));
-				sending.put(Protocol.Field.NOTE.key, customProgram.getField(CustomProgram.Field.NOTE));
-				sending.put(Protocol.Field.DURATION.key, customProgram.getField(CustomProgram.Field.PICTURE));
+				sending.put(Protocol.Field.NOTE.key, Optional.ofNullable(customProgram.getField(CustomProgram.Field.NOTE)).orElse("5"));
+				sending.put(Protocol.Field.DURATION.key, customProgram.getField(CustomProgram.Field.TOTAL_TIME));
 				sending.put(Protocol.Field.CREATOR.key,
 						java.util.Optional.ofNullable(customProgram.getField(CustomProgram.Field.CREATOR_ID)).map(id -> {
 							String name = "unknown";
