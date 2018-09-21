@@ -79,7 +79,7 @@ public class CustomProgramGetPreview {
 							String name = "unknown";
 							try {
 								User creator = (User) Database.find_entity(Collections.Users, User.Field.ID, id);
-								name = (String) user.getField(User.Field.LOGIN);
+								name = (String) creator.getField(User.Field.LOGIN);
 							} catch (InvocationTargetException | NoSuchMethodException | InstantiationException
 									| IllegalAccessException e) {
 								// TODO Auto-generated catch block
