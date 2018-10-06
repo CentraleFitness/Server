@@ -4,6 +4,7 @@ import Tools.LogManager;
 import Tools.PasswordAuthentication;
 import Tools.Token;
 import com.google.gson.GsonBuilder;
+import com.mongodb.client.model.Filters;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
@@ -11,6 +12,7 @@ import model.Database;
 import model.entities.DisplayConfiguration;
 import model.entities.Fitness_Center;
 import model.entities.Fitness_Center_Manager;
+import model.entities.Statistic;
 import protocol.ResponseObject;
 import protocol.intranet.Protocol;
 
@@ -58,6 +60,8 @@ public class RegisterManagerAndCenter {
                         sending.put(Protocol.Field.STATUS.key, Protocol.Status.CTR_ERROR_ERROR_CITY.code);
                     } else if (Database.find_entity(Database.Collections.Fitness_Centers, Fitness_Center.Field.NAME, received.get(Protocol.Field.NAME.key)) == null) {
 
+                        Long time = System.currentTimeMillis();
+
                         manager = (Fitness_Center_Manager) Database.new_entity(Database.Collections.Fitness_Center_Managers);
                         manager.setField(Fitness_Center_Manager.Field.FIRSTNAME, received.get(Protocol.Field.FIRSTNAME.key));
                         manager.setField(Fitness_Center_Manager.Field.LASTNAME, received.get(Protocol.Field.LASTNAME.key));
@@ -65,6 +69,7 @@ public class RegisterManagerAndCenter {
                         manager.setField(Fitness_Center_Manager.Field.EMAIL, received.get(Protocol.Field.EMAIL.key));
                         manager.setField(Fitness_Center_Manager.Field.PASSWORD_HASH, new PasswordAuthentication().hash(((String) received.get(Protocol.Field.PASSWORD.key)).toCharArray()));
                         manager.setField(Fitness_Center_Manager.Field.TOKEN, new Token((String) received.get(Protocol.Field.EMAIL.key), (String) received.get(Protocol.Field.PASSWORD.key)).generate());
+                        manager.setField(Fitness_Center_Manager.Field.CREATION_DATE, time);
 
                         center = (Fitness_Center) Database.new_entity(Database.Collections.Fitness_Centers);
                         center.setField(Fitness_Center.Field.NAME, received.get(Protocol.Field.NAME.key));
@@ -78,6 +83,7 @@ public class RegisterManagerAndCenter {
                         if (received.get(Protocol.Field.CENTER_PHONE.key) != null) {
                             center.setField(Fitness_Center.Field.PHONE, received.get(Protocol.Field.CENTER_PHONE.key));
                         }
+                        center.setField(Fitness_Center.Field.CREATION_DATE, time);
 
                         Database.update_entity(Database.Collections.Fitness_Center_Managers, manager);
 
@@ -85,19 +91,16 @@ public class RegisterManagerAndCenter {
                         manager.setField(Fitness_Center_Manager.Field.FITNESS_CENTER_ID, center.getField(Fitness_Center.Field.ID));
                         Database.update_entity(Database.Collections.Fitness_Center_Managers, manager);
 
-                        DisplayConfiguration configuration = (DisplayConfiguration) Database.new_entity(Database.Collections.DisplayConfigurations);
-                        configuration.setField(DisplayConfiguration.Field.FITNESS_CENTER_ID, center.getField(Fitness_Center.Field.ID));
-                        configuration.setField(DisplayConfiguration.Field.SHOW_EVENTS, false);
-                        configuration.setField(DisplayConfiguration.Field.SELECTED_EVENTS, new ArrayList());
-                        configuration.setField(DisplayConfiguration.Field.SHOW_NEWS, false);
-                        configuration.setField(DisplayConfiguration.Field.NEWS_TYPE, "");
-                        configuration.setField(DisplayConfiguration.Field.SHOW_GLOBAL_PERFORMANCES, false);
-                        configuration.setField(DisplayConfiguration.Field.PERFORMANCES_TYPE, "");
-                        configuration.setField(DisplayConfiguration.Field.SHOW_RANKING_DISCIPLINE, false);
-                        configuration.setField(DisplayConfiguration.Field.RANKING_DISCIPLINE_TYPE, "");
-                        configuration.setField(DisplayConfiguration.Field.SHOW_GLOBAL_RANKING, false);
-                        configuration.setField(DisplayConfiguration.Field.SHOW_NATIONAL_PRODUCTION_RANKING, false);
-                        Database.update_entity(Database.Collections.DisplayConfigurations, configuration);
+                        if (Database.collections.get(Database.Collections.Statistics).count(Filters.eq("fitness_center_id", center.getField(Fitness_Center.Field.ID))) == 0) {
+                            Statistic statistic = (Statistic) Database.new_entity(Database.Collections.Statistics);
+                            statistic.setField(Statistic.Field.FITNESS_CENTER_ID, center.getField(Fitness_Center.Field.ID));
+                            statistic.setField(Statistic.Field.PRODUCTION_DAY, 0);
+                            statistic.setField(Statistic.Field.PRODUCTION_MONTH, 0);
+                            statistic.setField(Statistic.Field.FREQUENTATION_DAY, 0);
+                            statistic.setField(Statistic.Field.FREQUENTATION_MONTH, 0);
+
+                            Database.update_entity(Database.Collections.Statistics, statistic);
+                        }
 
                         sending = new ResponseObject(false);
                         sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_SUCCESS.code);

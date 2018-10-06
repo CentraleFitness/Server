@@ -4,28 +4,23 @@ import Tools.LogManager;
 import Tools.ObjectIdSerializer;
 import Tools.Token;
 import com.google.gson.GsonBuilder;
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.model.Filters;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import model.Database;
-import model.entities.*;
-import org.bson.Document;
-import org.bson.conversions.Bson;
+import model.entities.Fitness_Center;
+import model.entities.Fitness_Center_Manager;
+import model.entities.Statistic;
 import org.bson.types.ObjectId;
 import protocol.ResponseObject;
 import protocol.intranet.Protocol;
 
-import java.util.*;
+import java.util.Map;
+import java.util.Objects;
 
-import static com.mongodb.client.model.Indexes.ascending;
-import static com.mongodb.client.model.Indexes.descending;
-import static com.mongodb.client.model.Sorts.orderBy;
-
-public class GetModules {
-    public GetModules(Router router) {
-        router.route(HttpMethod.POST, Protocol.Path.GET_MODULES.path).handler(routingContext -> {
+public class GetStatistics {
+    public GetStatistics(Router router) {
+        router.route(HttpMethod.POST, Protocol.Path.GET_STATISTICS.path).handler(routingContext -> {
             Map<String, Object> received = routingContext.getBodyAsJson().getMap();
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
@@ -46,26 +41,13 @@ public class GetModules {
                         sending = new ResponseObject(false);
                         sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
 
-                        Bson filter = Filters.and(
-                                Filters.eq(Event.Field.FITNESS_CENTER_ID.get_key(), center.getField(Fitness_Center.Field.ID))
-                        );
+                        Statistic statistic = (Statistic) Database.find_entity(Database.Collections.Statistics, Statistic.Field.FITNESS_CENTER_ID, center.getField(Fitness_Center.Field.ID));
 
-                        @SuppressWarnings("unchecked")
-                        ArrayList<Document> findIterable = (ArrayList<Document>) Database.collections.get(Database.Collections.Modules).find(filter).sort(orderBy(descending(Module.Field.MODULE_STATE_CODE.get_key()))).into(new ArrayList<Document>());
+                        sending.put(Protocol.Field.PRODUCTION_DAY.key, statistic.getField(Statistic.Field.PRODUCTION_DAY));
+                        sending.put(Protocol.Field.PRODUCTION_MONTH.key, statistic.getField(Statistic.Field.PRODUCTION_MONTH));
+                        sending.put(Protocol.Field.FREQUENTATION_DAY.key, statistic.getField(Statistic.Field.FREQUENTATION_DAY));
+                        sending.put(Protocol.Field.FREQUENTATION_MONTH.key, statistic.getField(Statistic.Field.FREQUENTATION_MONTH));
 
-                        List<Map<String,Object>> modules = new ArrayList<>();
-                        HashMap<String,Object> cur;
-                        for (Document doc : findIterable) {
-                            cur = new HashMap<>();
-                            cur.put("_id", doc.getObjectId("_id").toString());
-                            cur.put("UUID", doc.getString("UUID"));
-                            cur.put("machine_type", doc.getString("machine_type"));
-                            cur.put("module_state_id", doc.getObjectId("module_state_id").toString());
-                            cur.put("module_state_code", doc.getInteger("module_state_code"));
-                            modules.add(cur);
-                        }
-
-                        sending.put(Protocol.Field.MODULES.key, modules);
                     }
                 }
             }catch (Exception e){

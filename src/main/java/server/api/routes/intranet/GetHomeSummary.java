@@ -86,6 +86,9 @@ public class GetHomeSummary {
                             }
                         }
                         sending.put(Protocol.Field.EVENTS.key, events);
+                        sending.put(Protocol.Field.CENTER_NAME.key, center.getField(Fitness_Center.Field.NAME));
+                        sending.put(Protocol.Field.MANAGER_FIRST_NAME.key, manager.getField(Fitness_Center_Manager.Field.FIRSTNAME));
+                        sending.put(Protocol.Field.MANAGER_LAST_NAME.key, manager.getField(Fitness_Center_Manager.Field.LASTNAME));
                     }
                 }
             }catch (Exception e){

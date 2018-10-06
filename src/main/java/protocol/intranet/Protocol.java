@@ -279,6 +279,20 @@ public class Protocol {
          */
         GET_MODULE_STATES("/center/get/modulestates"),
 
+        /**
+         * @path: ADD_FEEDBACK:
+         * @param: TOKEN.
+         * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
+         */
+        GET_STATISTICS("/center/get/statistics"),
+
+        /**
+         * @path: ADD_FEEDBACK:
+         * @param: TOKEN.
+         * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
+         */
+        GET_FITNESS_CENTER_ID("/center/get/id"),
+
 
         ;
         public String path;
@@ -344,6 +358,13 @@ public class Protocol {
         RANKING_DISCIPLINE_TYPE("ranking_discipline_type"),
         MODULES("modules"),
         MODULE_STATES("module_states"),
+        PRODUCTION_DAY("production_day"),
+        PRODUCTION_MONTH("production_month"),
+        FREQUENTATION_DAY("frequentation_day"),
+        FREQUENTATION_MONTH("frequentation_month"),
+        CENTER_NAME("center_name"),
+        MANAGER_FIRST_NAME("manager_first_name"),
+        MANAGER_LAST_NAME("manager_last_name"),
         ;
         public String key;
         Field(String key) {

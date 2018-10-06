@@ -20,6 +20,7 @@ public class Fitness_Center extends Database.Entity {
         PHONE("phone_number", String.class),
         PICTURE_ID("picture_id", ObjectId.class),
         API_KEY("apiKey", String.class),
+        CREATION_DATE("creation_date", Integer.class),
         ;
         @Override
         public String get_key() {

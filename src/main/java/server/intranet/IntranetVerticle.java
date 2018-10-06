@@ -92,6 +92,10 @@ public class IntranetVerticle extends AbstractVerticle {
         new SetCustomProgramsAvailability(this.router);
         new GetCustomPrograms(this.router);
         new DeleteCustomProgram(this.router);
+
+        new GetStatistics(this.router);
+
+        new GetFitnessCenterId(this.router);
     }
 
 

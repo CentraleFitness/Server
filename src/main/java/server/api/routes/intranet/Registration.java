@@ -40,6 +40,9 @@ public class Registration {
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_ERROR_LASTNAME.code);
                     LogManager.write("Missing lastname key");
                 } else if (Database.find_entity(Database.Collections.Fitness_Center_Managers, Fitness_Center_Manager.Field.EMAIL, received.get(Protocol.Field.EMAIL.key)) == null) {
+
+                    Long time = System.currentTimeMillis();
+
                     manager = (Fitness_Center_Manager) Database.new_entity(Database.Collections.Fitness_Center_Managers);
                     manager.setField(Fitness_Center_Manager.Field.FIRSTNAME, received.get(Protocol.Field.FIRSTNAME.key));
                     manager.setField(Fitness_Center_Manager.Field.LASTNAME, received.get(Protocol.Field.LASTNAME.key));
@@ -47,6 +50,8 @@ public class Registration {
                     manager.setField(Fitness_Center_Manager.Field.EMAIL, received.get(Protocol.Field.EMAIL.key));
                     manager.setField(Fitness_Center_Manager.Field.PASSWORD_HASH, new PasswordAuthentication().hash(((String) received.get(Protocol.Field.PASSWORD.key)).toCharArray()));
                     manager.setField(Fitness_Center_Manager.Field.TOKEN, new Token((String) received.get(Protocol.Field.EMAIL.key), (String) received.get(Protocol.Field.PASSWORD.key)).generate());
+                    manager.setField(Fitness_Center_Manager.Field.CREATION_DATE, time);
+
                     Database.update_entity(Database.Collections.Fitness_Center_Managers, manager);
                     sending = new ResponseObject(false);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_SUCCESS.code);

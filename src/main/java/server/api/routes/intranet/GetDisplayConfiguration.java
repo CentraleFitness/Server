@@ -43,7 +43,7 @@ public class GetDisplayConfiguration {
                         sending = new ResponseObject(false);
                         sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
 
-                        if (Database.collections.get(Database.Collections.DisplayConfigurations).count(Filters.eq("fitness_center_id", center.getField(Fitness_Center_Manager.Field.ID))) == 0) {
+                        if (Database.collections.get(Database.Collections.DisplayConfigurations).count(Filters.eq("fitness_center_id", center.getField(Fitness_Center.Field.ID))) == 0) {
                             DisplayConfiguration configuration = (DisplayConfiguration) Database.new_entity(Database.Collections.DisplayConfigurations);
                             configuration.setField(DisplayConfiguration.Field.FITNESS_CENTER_ID, center.getField(Fitness_Center.Field.ID));
                             configuration.setField(DisplayConfiguration.Field.SHOW_EVENTS, false);

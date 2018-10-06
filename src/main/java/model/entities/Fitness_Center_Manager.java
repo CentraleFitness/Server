@@ -15,6 +15,7 @@ public class Fitness_Center_Manager extends Database.Entity {
         PICTURE_ID("picture_id", ObjectId.class),
         EMAIL("email_address", String.class),
         PHONE("phone_number", String.class),
+        CREATION_DATE("creation_date", Integer.class),
         ;
         @Override
         public String get_key() {

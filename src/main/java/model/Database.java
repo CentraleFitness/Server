@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
+import model.entities.*;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
@@ -18,24 +19,6 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
 import Tools.LogManager;
-import model.entities.Activity;
-import model.entities.Challenge;
-import model.entities.Conversation;
-import model.entities.CustomProgram;
-import model.entities.DisplayConfiguration;
-import model.entities.ElectricProduction;
-import model.entities.Event;
-import model.entities.Feedback;
-import model.entities.Feedback_State;
-import model.entities.Fitness_Center;
-import model.entities.Fitness_Center_Manager;
-import model.entities.Module;
-import model.entities.ModuleState;
-import model.entities.Picture;
-import model.entities.Post;
-import model.entities.SportSession;
-import model.entities.TUPLE_Event_User;
-import model.entities.User;
 
 /**
  * Created by hadrien on 14/03/2017.
@@ -73,6 +56,7 @@ public class Database {
         DisplayConfigurations("display_configuration", model.entities.DisplayConfiguration.class, DisplayConfiguration.Field.ID.get_key()),
         Posts("posts", model.entities.Post.class, Post.Field.ID.get_key()),
         Challenges("challenges", model.entities.Challenge.class, Challenge.Field.ID.get_key()),
+        Statistics("statistics", model.entities.Statistic.class, Statistic.Field.ID.get_key()),
         ;
 
         public String key;
@@ -282,26 +266,31 @@ public class Database {
         if (collections.get(Collections.ModuleStates).count() == 0) {
             try {
                 ModuleState m = (ModuleState) new_entity(Collections.ModuleStates);
+                m.setField(ModuleState.Field.CODE, 0);
                 m.setField(ModuleState.Field.TEXT_FR, "En cours d’envoi");
                 m.setField(ModuleState.Field.TEXT_EN, "Shipping");
                 Database.update_entity(Collections.ModuleStates, m);
 
                 m = (ModuleState) new_entity(Collections.ModuleStates);
+                m.setField(ModuleState.Field.CODE, 1);
                 m.setField(ModuleState.Field.TEXT_FR, "Livré");
                 m.setField(ModuleState.Field.TEXT_EN, "Delivered");
                 Database.update_entity(Collections.ModuleStates, m);
 
                 m = (ModuleState) new_entity(Collections.ModuleStates);
+                m.setField(ModuleState.Field.CODE, 2);
                 m.setField(ModuleState.Field.TEXT_FR, "Fonctionnel");
                 m.setField(ModuleState.Field.TEXT_EN, "Fonctionnal");
                 Database.update_entity(Collections.ModuleStates, m);
 
                 m = (ModuleState) new_entity(Collections.ModuleStates);
+                m.setField(ModuleState.Field.CODE, 3);
                 m.setField(ModuleState.Field.TEXT_FR, "En cours d'utilisation");
                 m.setField(ModuleState.Field.TEXT_EN, "In use");
                 Database.update_entity(Collections.ModuleStates, m);
 
                 m = (ModuleState) new_entity(Collections.ModuleStates);
+                m.setField(ModuleState.Field.CODE, 4);
                 m.setField(ModuleState.Field.TEXT_FR, "Non fonctionnel");
                 m.setField(ModuleState.Field.TEXT_EN, "Non functionnal");
                 Database.update_entity(Collections.ModuleStates, m);

@@ -17,6 +17,7 @@ public class Module extends Database.Entity {
         MACHINE_TYPE("machine_type", String.class),
         NEED_NEW_SESSION_ID("need_new_session_id", Boolean.class),
         MODULE_STATE_ID("module_state_id", ObjectId.class),
+        MODULE_STATE_CODE("module_state_code", Integer.class),
         ;
         @Override
         public String get_key() {

@@ -42,6 +42,7 @@ public class GetModuleStates {
                     for (Document doc : findIterable) {
                         cur = new HashMap<>();
                         cur.put("_id", doc.getObjectId("_id").toString());
+                        cur.put("code", doc.getInteger("code"));
                         cur.put("text_fr", doc.getString("text_fr"));
                         cur.put("text_en", doc.getString("text_en"));
                         module_states.add(cur);
