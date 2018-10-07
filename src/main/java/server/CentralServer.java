@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Vertx;
+import server.admin.AdminVerticle;
 import server.image.ImageVerticle;
 import server.intranet.IntranetVerticle;
 import server.mobile.MobileVerticle;
@@ -42,6 +43,7 @@ public class CentralServer {
             mVerticles.put(IntranetVerticle.class.getName(), new IntranetVerticle(Integer.parseInt(mSettings.get("Intranet Server Http Port"))));
             mVerticles.put(ImageVerticle.class.getName(), new ImageVerticle(Integer.parseInt(mSettings.get("Image Server Http Port"))));
             mVerticles.put(WebVerticle.class.getName(), new WebVerticle(Integer.parseInt(mSettings.get("Web Server Http Port"))));
+            mVerticles.put(AdminVerticle.class.getName(), new AdminVerticle(Integer.parseInt(mSettings.get("Admin Server Http Port"))));
             mVerticles.forEach((key, value)-> mVertx.deployVerticle(value));
         } catch (Exception e) {
             e.printStackTrace();

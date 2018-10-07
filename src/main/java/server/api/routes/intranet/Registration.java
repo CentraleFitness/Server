@@ -51,6 +51,8 @@ public class Registration {
                     manager.setField(Fitness_Center_Manager.Field.PASSWORD_HASH, new PasswordAuthentication().hash(((String) received.get(Protocol.Field.PASSWORD.key)).toCharArray()));
                     manager.setField(Fitness_Center_Manager.Field.TOKEN, new Token((String) received.get(Protocol.Field.EMAIL.key), (String) received.get(Protocol.Field.PASSWORD.key)).generate());
                     manager.setField(Fitness_Center_Manager.Field.CREATION_DATE, time);
+                    manager.setField(Fitness_Center_Manager.Field.IS_ACTIVE, false);
+                    manager.setField(Fitness_Center_Manager.Field.IS_VALIDATED, false);
 
                     Database.update_entity(Database.Collections.Fitness_Center_Managers, manager);
                     sending = new ResponseObject(false);

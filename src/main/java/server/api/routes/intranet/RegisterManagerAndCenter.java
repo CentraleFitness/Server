@@ -70,6 +70,8 @@ public class RegisterManagerAndCenter {
                         manager.setField(Fitness_Center_Manager.Field.PASSWORD_HASH, new PasswordAuthentication().hash(((String) received.get(Protocol.Field.PASSWORD.key)).toCharArray()));
                         manager.setField(Fitness_Center_Manager.Field.TOKEN, new Token((String) received.get(Protocol.Field.EMAIL.key), (String) received.get(Protocol.Field.PASSWORD.key)).generate());
                         manager.setField(Fitness_Center_Manager.Field.CREATION_DATE, time);
+                        manager.setField(Fitness_Center_Manager.Field.IS_ACTIVE, false);
+                        manager.setField(Fitness_Center_Manager.Field.IS_VALIDATED, false);
 
                         center = (Fitness_Center) Database.new_entity(Database.Collections.Fitness_Centers);
                         center.setField(Fitness_Center.Field.NAME, received.get(Protocol.Field.NAME.key));

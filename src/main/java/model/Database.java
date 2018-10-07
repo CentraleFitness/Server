@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
+import Tools.PasswordAuthentication;
+import Tools.Token;
 import model.entities.*;
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -19,6 +21,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
 import Tools.LogManager;
+import protocol.admin.Protocol;
 
 /**
  * Created by hadrien on 14/03/2017.
@@ -37,6 +40,7 @@ public class Database {
     private static Database INSTANCE = new Database();
 
     public enum Collections {
+        Administrators("administrators", model.entities.Administrator.class, Administrator.Field.ID.get_key()),
         Users("users", model.entities.User.class, User.Field.ID.get_key()),
         Modules("modules", model.entities.Module.class, Module.Field.ID.get_key()),
         ElectricProductions("electricproductions", model.entities.ElectricProduction.class, ElectricProduction.Field.ID.get_key()),
@@ -318,6 +322,28 @@ public class Database {
                 f.setField(Feedback_State.Field.TEXT_FR, "Résolue");
                 f.setField(Feedback_State.Field.TEXT_EN, "Solved");
                 Database.update_entity(Collections.Feedback_States, f);
+            } catch (Exception e) {
+                LogManager.write(e);
+            }
+        }
+
+        if (collections.get(Collections.Administrators).count() == 0) {
+            try {
+                Administrator a = (Administrator) new_entity(Collections.Administrators);
+
+                Long time = System.currentTimeMillis();
+                String email = "julien.longayrou@gmail.com";
+                String password = "Falloutboy@13";
+
+                a.setField(Administrator.Field.FIRSTNAME, "Julien");
+                a.setField(Administrator.Field.LASTNAME, "Longayrou");
+                a.setField(Administrator.Field.EMAIL, email);
+                a.setField(Administrator.Field.PASSWORD_HASH, new PasswordAuthentication().hash((password).toCharArray()));
+                a.setField(Administrator.Field.TOKEN, new Token(email, password).generate());
+                a.setField(Administrator.Field.CREATION_DATE, time);
+                a.setField(Administrator.Field.UPDATE_DATE, time);
+                Database.update_entity(Collections.Administrators, a);
+
             } catch (Exception e) {
                 LogManager.write(e);
             }
