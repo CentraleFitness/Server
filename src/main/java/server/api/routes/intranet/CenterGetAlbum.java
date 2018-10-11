@@ -8,7 +8,6 @@ import com.mongodb.client.model.Filters;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
-import javafx.geometry.Pos;
 import model.Database;
 import model.entities.Fitness_Center;
 import model.entities.Fitness_Center_Manager;
@@ -20,7 +19,6 @@ import protocol.intranet.Protocol;
 import protocol.ResponseObject;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Objects;
 
