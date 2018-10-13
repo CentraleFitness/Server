@@ -31,6 +31,11 @@ public class ManagerUpdatePassword {
                 } else if (!new PasswordAuthentication().authenticate(((String) received.get(Protocol.Field.PASSWORD.key)).toCharArray(), (String) manager.getField(Fitness_Center_Manager.Field.PASSWORD_HASH))) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_CREDENTIALS.code);
+                } else if (!((Boolean)manager.getField(Fitness_Center_Manager.Field.IS_ACTIVE))) {
+
+                    sending = new ResponseObject(true);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_ACCOUNT_INACTIVE.code);
+
                 } else {
                     manager.setField(Fitness_Center_Manager.Field.PASSWORD_HASH, new PasswordAuthentication().hash(((String) received.get(Protocol.Field.NEW_PASSWORD.key)).toCharArray()));
                     manager.setField(Fitness_Center_Manager.Field.TOKEN, new Token((String) manager.getField(Fitness_Center_Manager.Field.EMAIL), (String) received.get(Protocol.Field.NEW_PASSWORD.key)).generate());

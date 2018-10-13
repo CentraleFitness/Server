@@ -29,6 +29,11 @@ public class ManagerGetPicture {
                 if (!Objects.equals(manager.getField(Fitness_Center_Manager.Field.TOKEN), received.get(Protocol.Field.TOKEN.key))) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
+                } else if (!((Boolean)manager.getField(Fitness_Center_Manager.Field.IS_ACTIVE))) {
+
+                    sending = new ResponseObject(true);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_ACCOUNT_INACTIVE.code);
+
                 } else {
                     picture = (Picture) Database.find_entity(Database.Collections.Pictures, Picture.Field.ID, manager.getField(Fitness_Center_Manager.Field.PICTURE_ID));
 

@@ -20,9 +20,6 @@ import protocol.ResponseObject;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.mongodb.client.model.Indexes.ascending;
-import static com.mongodb.client.model.Sorts.orderBy;
-
 public class GetEvents {
     public GetEvents(Router router) {
         router.route(HttpMethod.POST, Protocol.Path.GET_EVENTS.path).handler(routingContext -> {
@@ -37,6 +34,11 @@ public class GetEvents {
                 if (!Objects.equals(manager.getField(Fitness_Center_Manager.Field.TOKEN), received.get(Protocol.Field.TOKEN.key))) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
+                } else if (!((Boolean)manager.getField(Fitness_Center_Manager.Field.IS_ACTIVE))) {
+
+                    sending = new ResponseObject(true);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_ACCOUNT_INACTIVE.code);
+
                 } else {
 
                     center = (Fitness_Center) Database.find_entity(Database.Collections.Fitness_Centers, Fitness_Center.Field.ID, manager.getField(Fitness_Center_Manager.Field.FITNESS_CENTER_ID));

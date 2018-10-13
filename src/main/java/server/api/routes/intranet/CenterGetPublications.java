@@ -19,12 +19,10 @@ import protocol.intranet.Protocol;
 import protocol.ResponseObject;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Objects;
 
 import static com.mongodb.client.model.Indexes.ascending;
-import static com.mongodb.client.model.Sorts.descending;
 import static com.mongodb.client.model.Sorts.orderBy;
 
 public class CenterGetPublications {
@@ -41,6 +39,11 @@ public class CenterGetPublications {
                 if (!Objects.equals(manager.getField(Fitness_Center_Manager.Field.TOKEN), received.get(Protocol.Field.TOKEN.key))) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
+                } else if (!((Boolean)manager.getField(Fitness_Center_Manager.Field.IS_ACTIVE))) {
+
+                    sending = new ResponseObject(true);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_ACCOUNT_INACTIVE.code);
+
                 } else {
                     center = (Fitness_Center) Database.find_entity(Database.Collections.Fitness_Centers, Fitness_Center.Field.ID, manager.getField(Fitness_Center_Manager.Field.FITNESS_CENTER_ID));
 

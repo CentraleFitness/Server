@@ -3,7 +3,6 @@ package server.api.routes.intranet;
 import Tools.LogManager;
 import Tools.Token;
 import com.google.gson.GsonBuilder;
-import com.mongodb.client.model.Filters;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
@@ -11,8 +10,6 @@ import model.Database;
 import model.entities.CustomProgram;
 import model.entities.Fitness_Center;
 import model.entities.Fitness_Center_Manager;
-import org.bson.Document;
-import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import protocol.ResponseObject;
 import protocol.intranet.Protocol;
@@ -36,6 +33,11 @@ public class SetCustomProgramsAvailability {
                 if (!Objects.equals(manager.getField(Fitness_Center_Manager.Field.TOKEN), received.get(Protocol.Field.TOKEN.key))) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
+                } else if (!((Boolean)manager.getField(Fitness_Center_Manager.Field.IS_ACTIVE))) {
+
+                    sending = new ResponseObject(true);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_ACCOUNT_INACTIVE.code);
+
                 } else if (received.get(Protocol.Field.CUSTOM_PROGRAMS.key) == null) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_MISSING_PARAM.code);

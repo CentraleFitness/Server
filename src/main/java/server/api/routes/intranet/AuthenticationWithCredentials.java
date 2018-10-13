@@ -24,7 +24,17 @@ public class AuthenticationWithCredentials {
 
             try {
                 if ((manager = (Fitness_Center_Manager) Database.find_entity(Database.Collections.Fitness_Center_Managers, Fitness_Center_Manager.Field.EMAIL, received.get(Protocol.Field.EMAIL.key))) != null) {
-                    if (new PasswordAuthentication().authenticate(((String) received.get(Protocol.Field.PASSWORD.key)).toCharArray(), (String) manager.getField(Fitness_Center_Manager.Field.PASSWORD_HASH))) {
+                    if (!((Boolean)manager.getField(Fitness_Center_Manager.Field.IS_VALIDATED))) {
+
+                        sending = new ResponseObject(true);
+                        sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_ACCOUNT_NOT_YET_VALIDATED.code);
+
+                    } else if (!((Boolean)manager.getField(Fitness_Center_Manager.Field.IS_ACTIVE))) {
+
+                        sending = new ResponseObject(true);
+                        sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_ACCOUNT_INACTIVE.code);
+
+                    } else if (new PasswordAuthentication().authenticate(((String) received.get(Protocol.Field.PASSWORD.key)).toCharArray(), (String) manager.getField(Fitness_Center_Manager.Field.PASSWORD_HASH))) {
                         sending = new ResponseObject(false);
                         sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_SUCCESS.code);
                         manager.setField(Fitness_Center_Manager.Field.TOKEN, new Token((String) received.get(Protocol.Field.EMAIL.key), (String) received.get(Protocol.Field.PASSWORD.key)).generate());

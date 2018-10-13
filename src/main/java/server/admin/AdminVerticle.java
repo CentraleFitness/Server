@@ -36,6 +36,8 @@ public class AdminVerticle extends AbstractVerticle {
         this.router.route().handler(CorsHandler.create("*")
                 .allowedMethod(io.vertx.core.http.HttpMethod.GET)
                 .allowedMethod(io.vertx.core.http.HttpMethod.POST)
+                .allowedMethod(io.vertx.core.http.HttpMethod.DELETE)
+                .allowedMethod(io.vertx.core.http.HttpMethod.PUT)
                 .allowedMethod(io.vertx.core.http.HttpMethod.OPTIONS)
                 .allowedHeader("Access-Control-Request-Method")
                 .allowedHeader("Access-Control-Allow-Credentials")
@@ -54,6 +56,7 @@ public class AdminVerticle extends AbstractVerticle {
 
         new GetManagers(this.router);
         new ValidateManager(this.router);
+        new SetManagerAccountActivity(this.router);
 
         new GetManagerFeedbacks(this.router);
         new UpdateManagerFeeback(this.router);

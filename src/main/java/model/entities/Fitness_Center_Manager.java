@@ -15,7 +15,7 @@ public class Fitness_Center_Manager extends Database.Entity {
         PICTURE_ID("picture_id", ObjectId.class),
         EMAIL("email_address", String.class),
         PHONE("phone_number", String.class),
-        CREATION_DATE("creation_date", Integer.class),
+        CREATION_DATE("creation_date", Long.class),
         IS_ACTIVE("is_active", Boolean.class),
         IS_VALIDATED("is_validated", Boolean.class),
         ;

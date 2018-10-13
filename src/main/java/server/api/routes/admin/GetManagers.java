@@ -4,20 +4,25 @@ import Tools.LogManager;
 import Tools.ObjectIdSerializer;
 import Tools.Token;
 import com.google.gson.GsonBuilder;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Filters;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import model.Database;
 import model.entities.Administrator;
+import model.entities.Fitness_Center;
 import model.entities.Fitness_Center_Manager;
+import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import protocol.ResponseObject;
 import protocol.admin.Protocol;
 
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+
+import static com.mongodb.client.model.Sorts.ascending;
+import static com.mongodb.client.model.Sorts.orderBy;
 
 public class GetManagers {
     public GetManagers(Router router) {
@@ -49,6 +54,36 @@ public class GetManagers {
                         );
 
                     }
+
+                    @SuppressWarnings("unchecked")
+                    FindIterable<Fitness_Center> findIterableCenter = (FindIterable<Fitness_Center>) Database.collections.get(Database.Collections.Fitness_Centers).find(filter);
+                    Map<String,Object> centers = new HashMap<>();
+                    for (Document doc : findIterableCenter) {
+                        centers.put(doc.getObjectId("_id").toString(), doc);
+                    }
+
+                    @SuppressWarnings("unchecked")
+                    FindIterable<Fitness_Center_Manager> findIterable = (FindIterable<Fitness_Center_Manager>) Database.collections.get(Database.Collections.Fitness_Center_Managers).find(filter).sort(orderBy(ascending(Fitness_Center_Manager.Field.LASTNAME.get_key())));
+                    List<Map<String,Object>> managers = new ArrayList<>();
+                    HashMap<String,Object> cur;
+                    for (Document doc : findIterable) {
+                        cur = new HashMap<>();
+                        cur.put("_id", doc.getObjectId("_id").toString());
+                        cur.put("first_name", doc.getString("first_name"));
+                        cur.put("last_name", doc.getString("last_name"));
+                        cur.put("email_address", doc.getString("email_address"));
+                        cur.put("phone_number", doc.getString("phone_number"));
+                        cur.put("is_active", doc.getString("is_active"));
+                        cur.put("is_validated", doc.getString("is_validated"));
+                        cur.put("creation_date", doc.getLong("creation_date"));
+                        cur.put("update_date", doc.getLong("update_date"));
+
+                        //TODO ECLATER ???
+                        cur.put("fitness_center", centers.get(doc.getObjectId("fitness_center_id").toString()));
+
+                        managers.add(cur);
+                    }
+                    sending.put(Protocol.Field.MANAGERS.key, managers);
                 }
 
             } catch (Exception e) {

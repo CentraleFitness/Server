@@ -12,6 +12,7 @@ public class Fitness_Center extends Database.Entity {
     public enum Field implements Database.Entity_Field {
         ID("_id", ObjectId.class),
         NAME("name", String.class),
+        SIRET("siret", String.class),
         DESCRIPTION("description", String.class),
         ADDRESS("address", String.class),
         ADDRESS_SECOND("address_second", String.class),
@@ -20,7 +21,7 @@ public class Fitness_Center extends Database.Entity {
         PHONE("phone_number", String.class),
         PICTURE_ID("picture_id", ObjectId.class),
         API_KEY("apiKey", String.class),
-        CREATION_DATE("creation_date", Integer.class),
+        CREATION_DATE("creation_date", Long.class),
         ;
         @Override
         public String get_key() {

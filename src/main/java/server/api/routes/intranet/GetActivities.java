@@ -4,14 +4,11 @@ import Tools.LogManager;
 import Tools.ObjectIdSerializer;
 import Tools.Token;
 import com.google.gson.GsonBuilder;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
 import com.mongodb.client.FindIterable;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import model.Database;
-import model.entities.Activity;
 import model.entities.Fitness_Center_Manager;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -33,6 +30,11 @@ public class GetActivities {
                 if (!Objects.equals(manager.getField(Fitness_Center_Manager.Field.TOKEN), received.get(Protocol.Field.TOKEN.key))) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
+                } else if (!((Boolean)manager.getField(Fitness_Center_Manager.Field.IS_ACTIVE))) {
+
+                    sending = new ResponseObject(true);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_ACCOUNT_INACTIVE.code);
+
                 } else {
                     sending = new ResponseObject(false);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);

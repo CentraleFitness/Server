@@ -365,6 +365,7 @@ public class Protocol {
         CENTER_NAME("center_name"),
         MANAGER_FIRST_NAME("manager_first_name"),
         MANAGER_LAST_NAME("manager_last_name"),
+        SIRET("siret"),
         ;
         public String key;
         Field(String key) {
@@ -382,6 +383,8 @@ public class Protocol {
         REG_ERROR_LASTNAME("305", "registration failed, bad lastname"),
         AUTH_SUCCESS("201", "authentication successful"),
         AUTH_ERROR_TOKEN("202", "authentication failed, bad token"),
+        AUTH_ERROR_ACCOUNT_INACTIVE("203", "authentication failed, your account has been set to inactive"),
+        AUTH_ERROR_ACCOUNT_NOT_YET_VALIDATED("204", "authentication failed, your account has not been validated yet"),
         AUTH_ERROR_CREDENTIALS("501", "authentication failed, bad credentials"),
         MGR_ERROR_ERROR_FIRSTNAME("701", "manager's first name is missing"),
         MGR_ERROR_ERROR_LASTNAME("702", "manager's last name is missing"),
@@ -389,6 +392,7 @@ public class Protocol {
         MGR_ERROR_NO_CENTER("704", "manager do not have associated center"),
         CTR_REG_SUCCESS("801", "ok"),
         CTR_ERROR_ERROR_NAME("802", "center's name is missing"),
+        CTR_ERROR_ERROR_SIRET("808", "center's SIRET number is missing"),
         CTR_ERROR_ERROR_DESCRIPTION("803", "center's description is missing"),
         CTR_ERROR_ERROR_ADDRESS("804", "center's address is missing"),
         CTR_ERROR_ERROR_ZIP_CODE("805", "center's zip code is missing"),

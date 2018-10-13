@@ -5,6 +5,7 @@ import Tools.PasswordAuthentication;
 import Tools.Token;
 import com.google.gson.GsonBuilder;
 import com.mongodb.client.model.Filters;
+import com.sun.xml.internal.ws.util.StringUtils;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
@@ -46,6 +47,9 @@ public class RegisterManagerAndCenter {
                     if (received.get(Protocol.Field.NAME.key) == null) {
                         sending = new ResponseObject(true);
                         sending.put(Protocol.Field.STATUS.key, Protocol.Status.CTR_ERROR_ERROR_NAME.code);
+                    } if (received.get(Protocol.Field.SIRET.key) == null) {
+                        sending = new ResponseObject(true);
+                        sending.put(Protocol.Field.STATUS.key, Protocol.Status.CTR_ERROR_ERROR_SIRET.code);
                     } else if (received.get(Protocol.Field.DESCRIPTION.key) == null) {
                         sending = new ResponseObject(true);
                         sending.put(Protocol.Field.STATUS.key, Protocol.Status.CTR_ERROR_ERROR_DESCRIPTION.code);
@@ -63,8 +67,8 @@ public class RegisterManagerAndCenter {
                         Long time = System.currentTimeMillis();
 
                         manager = (Fitness_Center_Manager) Database.new_entity(Database.Collections.Fitness_Center_Managers);
-                        manager.setField(Fitness_Center_Manager.Field.FIRSTNAME, received.get(Protocol.Field.FIRSTNAME.key));
-                        manager.setField(Fitness_Center_Manager.Field.LASTNAME, received.get(Protocol.Field.LASTNAME.key));
+                        manager.setField(Fitness_Center_Manager.Field.FIRSTNAME, StringUtils.capitalize((String)received.get(Protocol.Field.FIRSTNAME.key)));
+                        manager.setField(Fitness_Center_Manager.Field.LASTNAME, ((String)received.get(Protocol.Field.LASTNAME.key)).toUpperCase());
                         manager.setField(Fitness_Center_Manager.Field.PHONE, received.get(Protocol.Field.PHONE.key));
                         manager.setField(Fitness_Center_Manager.Field.EMAIL, received.get(Protocol.Field.EMAIL.key));
                         manager.setField(Fitness_Center_Manager.Field.PASSWORD_HASH, new PasswordAuthentication().hash(((String) received.get(Protocol.Field.PASSWORD.key)).toCharArray()));
@@ -75,6 +79,7 @@ public class RegisterManagerAndCenter {
 
                         center = (Fitness_Center) Database.new_entity(Database.Collections.Fitness_Centers);
                         center.setField(Fitness_Center.Field.NAME, received.get(Protocol.Field.NAME.key));
+                        center.setField(Fitness_Center.Field.SIRET, received.get(Protocol.Field.SIRET.key));
                         center.setField(Fitness_Center.Field.DESCRIPTION, received.get(Protocol.Field.DESCRIPTION.key));
                         center.setField(Fitness_Center.Field.ADDRESS, received.get(Protocol.Field.ADDRESS.key));
                         if (received.get(Protocol.Field.ADDRESS_SECOND.key) != null) {

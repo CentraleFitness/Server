@@ -10,11 +10,9 @@ import model.Database;
 import model.entities.Fitness_Center;
 import model.entities.Fitness_Center_Manager;
 import model.entities.User;
-import org.bson.Document;
 import protocol.intranet.Protocol;
 import protocol.ResponseObject;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Objects;
@@ -32,6 +30,11 @@ public class CenterGetProfile {
                 if (!Objects.equals(manager.getField(Fitness_Center_Manager.Field.TOKEN), received.get(Protocol.Field.TOKEN.key))) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
+                } else if (!((Boolean)manager.getField(Fitness_Center_Manager.Field.IS_ACTIVE))) {
+
+                    sending = new ResponseObject(true);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_ACCOUNT_INACTIVE.code);
+
                 } else {
                     Fitness_Center center = (Fitness_Center) Database.find_entity(Database.Collections.Fitness_Centers, Fitness_Center.Field.ID, manager.getField(Fitness_Center_Manager.Field.FITNESS_CENTER_ID));
 
@@ -47,6 +50,7 @@ public class CenterGetProfile {
                         sending.put(Protocol.Field.NB_SUBSCRIBERS.key, users.size());
 
                         sending.put(Protocol.Field.NAME.key, center.getField(Fitness_Center.Field.NAME));
+                        sending.put(Protocol.Field.SIRET.key, center.getField(Fitness_Center.Field.SIRET));
                         sending.put(Protocol.Field.DESCRIPTION.key, center.getField(Fitness_Center.Field.DESCRIPTION));
                         sending.put(Protocol.Field.ADDRESS.key, center.getField(Fitness_Center.Field.ADDRESS));
                         sending.put(Protocol.Field.ADDRESS_SECOND.key, center.getField(Fitness_Center.Field.ADDRESS_SECOND));

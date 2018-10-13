@@ -14,6 +14,8 @@ public class Protocol {
 
         MANAGER("/manager"),
 
+        MANAGER_ACTIVITY("/manager_activity"),
+
         MANAGER_FEEDBACK("/managerfeedback"),
 
         MODULE("/module"),
@@ -39,10 +41,12 @@ public class Protocol {
         MACHINE_TYPE("machine_type"),
         UUID("uuid"),
         ACCOUNTS("accounts"),
+        MANAGERS("managers"),
         MODULES("modules"),
         FEEDBACKS("feedbacks"),
         FITNESS_CENTER_MANAGER_ID("fitness_manager_id"),
         IS_VALIDATED("is_validated"),
+        IS_ACTIVE("is_active"),
         FEEDBACK_ID("feedback_id"),
         ;
         public String key;

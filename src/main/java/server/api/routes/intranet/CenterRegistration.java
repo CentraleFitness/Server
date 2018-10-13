@@ -8,14 +8,12 @@ import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import model.Database;
-import model.entities.DisplayConfiguration;
 import model.entities.Fitness_Center;
 import model.entities.Fitness_Center_Manager;
 import model.entities.Statistic;
 import protocol.intranet.Protocol;
 import protocol.ResponseObject;
 
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
 

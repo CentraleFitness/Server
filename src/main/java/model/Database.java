@@ -326,27 +326,5 @@ public class Database {
                 LogManager.write(e);
             }
         }
-
-        if (collections.get(Collections.Administrators).count() == 0) {
-            try {
-                Administrator a = (Administrator) new_entity(Collections.Administrators);
-
-                Long time = System.currentTimeMillis();
-                String email = "julien.longayrou@gmail.com";
-                String password = "Falloutboy@13";
-
-                a.setField(Administrator.Field.FIRSTNAME, "Julien");
-                a.setField(Administrator.Field.LASTNAME, "Longayrou");
-                a.setField(Administrator.Field.EMAIL, email);
-                a.setField(Administrator.Field.PASSWORD_HASH, new PasswordAuthentication().hash((password).toCharArray()));
-                a.setField(Administrator.Field.TOKEN, new Token(email, password).generate());
-                a.setField(Administrator.Field.CREATION_DATE, time);
-                a.setField(Administrator.Field.UPDATE_DATE, time);
-                Database.update_entity(Collections.Administrators, a);
-
-            } catch (Exception e) {
-                LogManager.write(e);
-            }
-        }
     }
 }
