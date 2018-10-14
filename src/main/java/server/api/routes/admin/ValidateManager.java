@@ -41,6 +41,11 @@ public class ValidateManager {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_MISSING_PARAM.code);
 
+                } else if (received.get(Protocol.Field.IS_VALIDATED.key) == null) {
+
+                    sending = new ResponseObject(true);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_MISSING_PARAM.code);
+
                 } else {
                     sending = new ResponseObject(false);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
@@ -51,11 +56,20 @@ public class ValidateManager {
 
                         Long time = System.currentTimeMillis();
 
-                        manager.setField(Fitness_Center_Manager.Field.IS_ACTIVE, true);
-                        manager.setField(Fitness_Center_Manager.Field.IS_VALIDATED, true);
-                        manager.setField(Fitness_Center_Manager.Field.LAST_UPDATE_ACTIVITY, time);
+                        if ((Boolean)received.get(Protocol.Field.IS_VALIDATED.key)) {
+                            manager.setField(Fitness_Center_Manager.Field.IS_ACTIVE, true);
+                            manager.setField(Fitness_Center_Manager.Field.IS_VALIDATED, true);
+                            manager.setField(Fitness_Center_Manager.Field.IS_REFUSED, false);
+
+                            manager.setField(Fitness_Center_Manager.Field.LAST_UPDATE_ACTIVITY, time);
+                            manager.setField(Fitness_Center_Manager.Field.LAST_UPDATE_ADMIN_ID, admin.getField(Administrator.Field.ID));
+                        } else {
+                            manager.setField(Fitness_Center_Manager.Field.IS_ACTIVE, false);
+                            manager.setField(Fitness_Center_Manager.Field.IS_VALIDATED, false);
+                            manager.setField(Fitness_Center_Manager.Field.IS_REFUSED, true);
+                        }
+
                         manager.setField(Fitness_Center_Manager.Field.VALIDATION_DATE, time);
-                        manager.setField(Fitness_Center_Manager.Field.LAST_UPDATE_ADMIN_ID, admin.getField(Administrator.Field.ID));
                         manager.setField(Fitness_Center_Manager.Field.VALIDATOR_ADMIN_ID, admin.getField(Administrator.Field.ID));
 
                         Database.update_entity(Database.Collections.Fitness_Center_Managers, manager);

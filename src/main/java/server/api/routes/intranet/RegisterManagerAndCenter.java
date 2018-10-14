@@ -76,11 +76,12 @@ public class RegisterManagerAndCenter {
                         manager.setField(Fitness_Center_Manager.Field.CREATION_DATE, time);
 
                         manager.setField(Fitness_Center_Manager.Field.IS_ACTIVE, false);
-                        manager.setField(Fitness_Center_Manager.Field.LAST_UPDATE_ACTIVITY, 0);
+                        manager.setField(Fitness_Center_Manager.Field.LAST_UPDATE_ACTIVITY, 0L);
                         manager.setField(Fitness_Center_Manager.Field.LAST_UPDATE_ADMIN_ID, null);
 
+                        manager.setField(Fitness_Center_Manager.Field.IS_REFUSED, false);
                         manager.setField(Fitness_Center_Manager.Field.IS_VALIDATED, false);
-                        manager.setField(Fitness_Center_Manager.Field.VALIDATION_DATE, 0);
+                        manager.setField(Fitness_Center_Manager.Field.VALIDATION_DATE, 0L);
                         manager.setField(Fitness_Center_Manager.Field.VALIDATOR_ADMIN_ID, null);
 
                         center = (Fitness_Center) Database.new_entity(Database.Collections.Fitness_Centers);
@@ -137,6 +138,7 @@ public class RegisterManagerAndCenter {
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_ERROR.code);
                 LogManager.write("Exception: " + e.toString());
+                System.out.println("Exception: " + e.toString());
             }
             response.end(new GsonBuilder().create().toJson(sending));
         });

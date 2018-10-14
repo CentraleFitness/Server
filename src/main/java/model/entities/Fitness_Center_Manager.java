@@ -20,6 +20,7 @@ public class Fitness_Center_Manager extends Database.Entity {
         LAST_UPDATE_ACTIVITY("last_update_activity", Long.class),
         LAST_UPDATE_ADMIN_ID("last_update_admin_id", ObjectId.class),
         IS_VALIDATED("is_validated", Boolean.class),
+        IS_REFUSED("is_refused", Boolean.class),
         VALIDATION_DATE("validation_date", Long.class),
         VALIDATOR_ADMIN_ID("validator_admin_id", ObjectId.class),
         ;

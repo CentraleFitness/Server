@@ -73,6 +73,7 @@ public class GetManagers {
                         cur.put("last_update_activity", doc.getLong("last_update_activity"));
                         cur.put("last_update_admin_id", doc.getObjectId("last_update_admin_id"));
                         cur.put("is_validated", doc.getBoolean("is_validated"));
+                        cur.put("is_refused", doc.getBoolean("is_refused"));
                         cur.put("validation_date", doc.getLong("validation_date"));
                         cur.put("validator_admin_id", doc.getObjectId("validator_admin_id"));
                         cur.put("creation_date", doc.getLong("creation_date"));
