@@ -52,7 +52,10 @@ public class AdminVerticle extends AbstractVerticle {
         new CreateAccount(this.router);
         new GetAccounts(this.router);
         new UpdateAccount(this.router);
+        new UpdatePassword(this.router);
         new DeleteAccount(this.router);
+
+        new GetFitnessCenters(this.router);
 
         new GetManagers(this.router);
         new ValidateManager(this.router);

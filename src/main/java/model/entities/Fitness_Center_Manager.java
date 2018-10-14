@@ -17,7 +17,11 @@ public class Fitness_Center_Manager extends Database.Entity {
         PHONE("phone_number", String.class),
         CREATION_DATE("creation_date", Long.class),
         IS_ACTIVE("is_active", Boolean.class),
+        LAST_UPDATE_ACTIVITY("last_update_activity", Long.class),
+        LAST_UPDATE_ADMIN_ID("last_update_admin_id", ObjectId.class),
         IS_VALIDATED("is_validated", Boolean.class),
+        VALIDATION_DATE("validation_date", Long.class),
+        VALIDATOR_ADMIN_ID("validator_admin_id", ObjectId.class),
         ;
         @Override
         public String get_key() {

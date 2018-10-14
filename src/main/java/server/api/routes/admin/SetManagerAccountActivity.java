@@ -1,6 +1,7 @@
 package server.api.routes.admin;
 
 import Tools.LogManager;
+import Tools.ObjectIdSerializer;
 import Tools.Token;
 import com.google.gson.GsonBuilder;
 import io.vertx.core.http.HttpMethod;
@@ -9,6 +10,7 @@ import io.vertx.ext.web.Router;
 import model.Database;
 import model.entities.Administrator;
 import model.entities.Fitness_Center_Manager;
+import org.bson.types.ObjectId;
 import protocol.ResponseObject;
 import protocol.admin.Protocol;
 
@@ -45,11 +47,18 @@ public class SetManagerAccountActivity {
                     sending = new ResponseObject(false);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
 
-                    Fitness_Center_Manager manager = (Fitness_Center_Manager) Database.find_entity(Database.Collections.Fitness_Center_Managers, Fitness_Center_Manager.Field.ID, received.get(Protocol.Field.FITNESS_CENTER_MANAGER_ID.key));
+                    Fitness_Center_Manager manager = (Fitness_Center_Manager) Database.find_entity(Database.Collections.Fitness_Center_Managers, Fitness_Center_Manager.Field.ID, new ObjectId((String)received.get(Protocol.Field.FITNESS_CENTER_MANAGER_ID.key)));
+
+                    Long time = System.currentTimeMillis();
 
                     manager.setField(Fitness_Center_Manager.Field.IS_ACTIVE, received.get(Protocol.Field.IS_ACTIVE.key));
+                    manager.setField(Fitness_Center_Manager.Field.LAST_UPDATE_ACTIVITY, time);
+                    manager.setField(Fitness_Center_Manager.Field.LAST_UPDATE_ADMIN_ID, admin.getField(Administrator.Field.ID));
 
                     Database.update_entity(Database.Collections.Fitness_Center_Managers, manager);
+
+                    sending.put(Protocol.Field.ADMINISTRATOR_ID.key, admin.getField(Administrator.Field.ID));
+                    sending.put(Protocol.Field.ADMINISTRATOR_NAME.key, admin.getField(Administrator.Field.FIRSTNAME) + " " + admin.getField(Administrator.Field.LASTNAME));
                 }
 
             } catch (Exception e) {
@@ -57,7 +66,7 @@ public class SetManagerAccountActivity {
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_ERROR.code);
                 LogManager.write("Exception: " + e.toString());
             }
-            response.end(new GsonBuilder().create().toJson(sending));
+            response.end(new GsonBuilder().registerTypeAdapter(ObjectId.class, new ObjectIdSerializer()).create().toJson(sending));
         });
     }
 }

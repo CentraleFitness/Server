@@ -1,6 +1,7 @@
 package server.api.routes.admin;
 
 import Tools.LogManager;
+import Tools.ObjectIdSerializer;
 import Tools.Token;
 import com.google.gson.GsonBuilder;
 import io.vertx.core.http.HttpMethod;
@@ -10,6 +11,7 @@ import model.Database;
 import model.entities.Administrator;
 import model.entities.Fitness_Center;
 import model.entities.Fitness_Center_Manager;
+import org.bson.types.ObjectId;
 import protocol.ResponseObject;
 import protocol.admin.Protocol;
 
@@ -39,25 +41,28 @@ public class ValidateManager {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_MISSING_PARAM.code);
 
-                } else if (received.get(Protocol.Field.IS_VALIDATED.key) == null) {
-
-                    sending = new ResponseObject(true);
-                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_MISSING_PARAM.code);
-
                 } else {
                     sending = new ResponseObject(false);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
 
-                    Fitness_Center_Manager manager = (Fitness_Center_Manager) Database.find_entity(Database.Collections.Fitness_Center_Managers, Fitness_Center_Manager.Field.ID, received.get(Protocol.Field.FITNESS_CENTER_MANAGER_ID.key));
+                    Fitness_Center_Manager manager = (Fitness_Center_Manager) Database.find_entity(Database.Collections.Fitness_Center_Managers, Fitness_Center_Manager.Field.ID, new ObjectId((String)received.get(Protocol.Field.FITNESS_CENTER_MANAGER_ID.key)));
 
-                    if ((Boolean) received.get(Protocol.Field.IS_VALIDATED.key)) {
+                    if (!((Boolean) manager.getField(Fitness_Center_Manager.Field.IS_VALIDATED))) {
+
+                        Long time = System.currentTimeMillis();
+
                         manager.setField(Fitness_Center_Manager.Field.IS_ACTIVE, true);
                         manager.setField(Fitness_Center_Manager.Field.IS_VALIDATED, true);
-                    } else {
-                        manager.setField(Fitness_Center_Manager.Field.IS_ACTIVE, false);
-                        manager.setField(Fitness_Center_Manager.Field.IS_VALIDATED, false);
+                        manager.setField(Fitness_Center_Manager.Field.LAST_UPDATE_ACTIVITY, time);
+                        manager.setField(Fitness_Center_Manager.Field.VALIDATION_DATE, time);
+                        manager.setField(Fitness_Center_Manager.Field.LAST_UPDATE_ADMIN_ID, admin.getField(Administrator.Field.ID));
+                        manager.setField(Fitness_Center_Manager.Field.VALIDATOR_ADMIN_ID, admin.getField(Administrator.Field.ID));
+
+                        Database.update_entity(Database.Collections.Fitness_Center_Managers, manager);
+
+                        sending.put(Protocol.Field.ADMINISTRATOR_ID.key, admin.getField(Administrator.Field.ID));
+                        sending.put(Protocol.Field.ADMINISTRATOR_NAME.key, admin.getField(Administrator.Field.FIRSTNAME) + " " + admin.getField(Administrator.Field.LASTNAME));
                     }
-                    Database.update_entity(Database.Collections.Fitness_Center_Managers, manager);
                 }
 
             } catch (Exception e) {
@@ -65,7 +70,7 @@ public class ValidateManager {
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_ERROR.code);
                 LogManager.write("Exception: " + e.toString());
             }
-            response.end(new GsonBuilder().create().toJson(sending));
+            response.end(new GsonBuilder().registerTypeAdapter(ObjectId.class, new ObjectIdSerializer()).create().toJson(sending));
         });
     }
 }

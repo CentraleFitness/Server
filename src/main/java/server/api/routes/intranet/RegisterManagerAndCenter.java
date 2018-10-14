@@ -74,8 +74,14 @@ public class RegisterManagerAndCenter {
                         manager.setField(Fitness_Center_Manager.Field.PASSWORD_HASH, new PasswordAuthentication().hash(((String) received.get(Protocol.Field.PASSWORD.key)).toCharArray()));
                         manager.setField(Fitness_Center_Manager.Field.TOKEN, new Token((String) received.get(Protocol.Field.EMAIL.key), (String) received.get(Protocol.Field.PASSWORD.key)).generate());
                         manager.setField(Fitness_Center_Manager.Field.CREATION_DATE, time);
+
                         manager.setField(Fitness_Center_Manager.Field.IS_ACTIVE, false);
+                        manager.setField(Fitness_Center_Manager.Field.LAST_UPDATE_ACTIVITY, 0);
+                        manager.setField(Fitness_Center_Manager.Field.LAST_UPDATE_ADMIN_ID, null);
+
                         manager.setField(Fitness_Center_Manager.Field.IS_VALIDATED, false);
+                        manager.setField(Fitness_Center_Manager.Field.VALIDATION_DATE, 0);
+                        manager.setField(Fitness_Center_Manager.Field.VALIDATOR_ADMIN_ID, null);
 
                         center = (Fitness_Center) Database.new_entity(Database.Collections.Fitness_Centers);
                         center.setField(Fitness_Center.Field.NAME, received.get(Protocol.Field.NAME.key));
@@ -86,7 +92,7 @@ public class RegisterManagerAndCenter {
                             center.setField(Fitness_Center.Field.ADDRESS_SECOND, received.get(Protocol.Field.ADDRESS_SECOND.key));
                         }
                         center.setField(Fitness_Center.Field.ZIP_CODE, received.get(Protocol.Field.ZIP_CODE.key));
-                        center.setField(Fitness_Center.Field.CITY, received.get(Protocol.Field.CITY.key));
+                        center.setField(Fitness_Center.Field.CITY, ((String)received.get(Protocol.Field.CITY.key)).toUpperCase());
                         if (received.get(Protocol.Field.CENTER_PHONE.key) != null) {
                             center.setField(Fitness_Center.Field.PHONE, received.get(Protocol.Field.CENTER_PHONE.key));
                         }

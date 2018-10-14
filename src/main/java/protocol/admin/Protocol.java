@@ -16,7 +16,9 @@ public class Protocol {
 
         MANAGER_ACTIVITY("/manager_activity"),
 
-        MANAGER_FEEDBACK("/managerfeedback"),
+        MANAGER_FEEDBACK("/manager_feedback"),
+
+        FITNESS_CENTER("/fitness_center"),
 
         MODULE("/module"),
 
@@ -44,10 +46,12 @@ public class Protocol {
         MANAGERS("managers"),
         MODULES("modules"),
         FEEDBACKS("feedbacks"),
-        FITNESS_CENTER_MANAGER_ID("fitness_manager_id"),
+        FITNESS_CENTER_MANAGER_ID("fitness_center_manager_id"),
         IS_VALIDATED("is_validated"),
         IS_ACTIVE("is_active"),
         FEEDBACK_ID("feedback_id"),
+        FITNESS_CENTERS("fitness_centers"),
+        ADMINISTRATOR_NAME("administrator_name"),
         ;
         public String key;
         Field(String key) {

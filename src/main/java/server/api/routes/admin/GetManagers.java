@@ -28,14 +28,13 @@ public class GetManagers {
     public GetManagers(Router router) {
         router.route(HttpMethod.GET, Protocol.Path.MANAGER.path).handler(routingContext -> {
 
-            Map<String, Object> received = routingContext.getBodyAsJson().getMap();
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
             Administrator admin;
 
             try {
-                admin = (Administrator) Database.find_entity(Database.Collections.Administrators, Administrator.Field.EMAIL, Token.decodeToken((String) received.get(Protocol.Field.TOKEN.key)).getIssuer());
-                if (!Objects.equals(admin.getField(Administrator.Field.TOKEN), received.get(Protocol.Field.TOKEN.key))) {
+                admin = (Administrator) Database.find_entity(Database.Collections.Administrators, Administrator.Field.EMAIL, Token.decodeToken(routingContext.request().getParam(Protocol.Field.TOKEN.key)).getIssuer());
+                if (!Objects.equals(admin.getField(Administrator.Field.TOKEN), routingContext.request().getParam(Protocol.Field.TOKEN.key))) {
 
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
@@ -45,25 +44,22 @@ public class GetManagers {
                     sending = new ResponseObject(false);
                     sending.put(Protocol.Field.STATUS.key, protocol.intranet.Protocol.Status.GENERIC_OK.code);
 
-                    Bson filter = Filters.and();
-
-                    if (received.get(Protocol.Field.FITNESS_CENTER_ID.key) != null) {
-
-                        filter = Filters.and(
-                                Filters.eq(Fitness_Center_Manager.Field.FITNESS_CENTER_ID.get_key(), received.get(Protocol.Field.FITNESS_CENTER_ID.key))
-                        );
-
-                    }
-
                     @SuppressWarnings("unchecked")
-                    FindIterable<Fitness_Center> findIterableCenter = (FindIterable<Fitness_Center>) Database.collections.get(Database.Collections.Fitness_Centers).find(filter);
+                    FindIterable<Fitness_Center> findIterableCenter = (FindIterable<Fitness_Center>) Database.collections.get(Database.Collections.Fitness_Centers).find();
                     Map<String,Object> centers = new HashMap<>();
                     for (Document doc : findIterableCenter) {
                         centers.put(doc.getObjectId("_id").toString(), doc);
                     }
 
                     @SuppressWarnings("unchecked")
-                    FindIterable<Fitness_Center_Manager> findIterable = (FindIterable<Fitness_Center_Manager>) Database.collections.get(Database.Collections.Fitness_Center_Managers).find(filter).sort(orderBy(ascending(Fitness_Center_Manager.Field.LASTNAME.get_key())));
+                    FindIterable<Administrator> findIterableAdmin = (FindIterable<Administrator>) Database.collections.get(Database.Collections.Administrators).find();
+                    Map<String,Object> admins = new HashMap<>();
+                    for (Document doc : findIterableAdmin) {
+                        admins.put(doc.getObjectId("_id").toString(), doc.getString("first_name") + " " + doc.getString("last_name"));
+                    }
+
+                    @SuppressWarnings("unchecked")
+                    FindIterable<Fitness_Center_Manager> findIterable = (FindIterable<Fitness_Center_Manager>) Database.collections.get(Database.Collections.Fitness_Center_Managers).find().sort(orderBy(ascending(Fitness_Center_Manager.Field.IS_VALIDATED.get_key())));
                     List<Map<String,Object>> managers = new ArrayList<>();
                     HashMap<String,Object> cur;
                     for (Document doc : findIterable) {
@@ -73,10 +69,22 @@ public class GetManagers {
                         cur.put("last_name", doc.getString("last_name"));
                         cur.put("email_address", doc.getString("email_address"));
                         cur.put("phone_number", doc.getString("phone_number"));
-                        cur.put("is_active", doc.getString("is_active"));
-                        cur.put("is_validated", doc.getString("is_validated"));
+                        cur.put("is_active", doc.getBoolean("is_active"));
+                        cur.put("last_update_activity", doc.getLong("last_update_activity"));
+                        cur.put("last_update_admin_id", doc.getObjectId("last_update_admin_id"));
+                        cur.put("is_validated", doc.getBoolean("is_validated"));
+                        cur.put("validation_date", doc.getLong("validation_date"));
+                        cur.put("validator_admin_id", doc.getObjectId("validator_admin_id"));
                         cur.put("creation_date", doc.getLong("creation_date"));
-                        cur.put("update_date", doc.getLong("update_date"));
+
+                        if (doc.getObjectId("validator_admin_id") != null &&
+                                admins.containsKey(doc.getObjectId("validator_admin_id").toString())) {
+                            cur.put("validator_admin_name", admins.get(doc.getObjectId("validator_admin_id").toString()));
+                        }
+                        if (doc.getObjectId("last_update_admin_id") != null &&
+                                admins.containsKey(doc.getObjectId("last_update_admin_id").toString())) {
+                            cur.put("last_update_admin_name", admins.get(doc.getObjectId("last_update_admin_id").toString()));
+                        }
 
                         //TODO ECLATER ???
                         cur.put("fitness_center", centers.get(doc.getObjectId("fitness_center_id").toString()));
