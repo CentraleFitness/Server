@@ -31,6 +31,7 @@ public class Protocol {
 
     public enum Field {
         EMAIL("email"),
+        PHONE("phone_number"),
         FIRSTNAME("first_name"),
         LASTNAME("last_name"),
         PASSWORD("password"),
@@ -70,6 +71,7 @@ public class Protocol {
         REG_ERROR_PASSWORD("303", "registration failed, bad password"),
         REG_ERROR_FIRSTNAME("304", "registration failed, bad firstname"),
         REG_ERROR_LASTNAME("305", "registration failed, bad lastname"),
+        REG_ERROR_PHONE("306", "registration failed, bad phone"),
         MISC_ERROR("401", "database problem"),
         GENERIC_MISSING_PARAM("402", "Missing parameters"),
         MISC_RANDOM("666", "Random error");

@@ -9,6 +9,7 @@ import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import model.Database;
 import model.entities.Administrator;
+import org.bson.types.ObjectId;
 import protocol.ResponseObject;
 import protocol.admin.Protocol;
 
@@ -35,46 +36,42 @@ public class UpdateAccount {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_MISSING_PARAM.code);
 
+                } else if (received.get(Protocol.Field.PHONE.key) == null) {
+                    sending = new ResponseObject(true);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_ERROR_PHONE.code);
+
                 } else if (received.get(Protocol.Field.EMAIL.key) == null) {
-                    LogManager.write("Missing email field");
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_ERROR_EMAIL.code);
-
-                } else if (received.get(Protocol.Field.PASSWORD.key) == null) {
-                    sending = new ResponseObject(true);
-                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_ERROR_PASSWORD.code);
-                    LogManager.write("Missing password field");
 
                 } else if (received.get(Protocol.Field.FIRSTNAME.key) == null) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_ERROR_FIRSTNAME.code);
-                    LogManager.write("Missing first name field");
 
                 } else if (received.get(Protocol.Field.LASTNAME.key) == null) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_ERROR_LASTNAME.code);
-                    LogManager.write("Missing last name field");
 
                 } else {
 
                     Long time = System.currentTimeMillis();
 
-                    admin = (Administrator) Database.find_entity(Database.Collections.Administrators, Administrator.Field.ID, received.get(Protocol.Field.ADMINISTRATOR_ID.key));
+                    admin = (Administrator) Database.find_entity(Database.Collections.Administrators, Administrator.Field.ID, new ObjectId((String)received.get(Protocol.Field.ADMINISTRATOR_ID.key)));
                     admin.setField(Administrator.Field.FIRSTNAME, received.get(Protocol.Field.FIRSTNAME.key));
                     admin.setField(Administrator.Field.LASTNAME, received.get(Protocol.Field.LASTNAME.key));
-                    admin.setField(Administrator.Field.EMAIL, received.get(Protocol.Field.EMAIL.key));
-                    admin.setField(Administrator.Field.PASSWORD_HASH, new PasswordAuthentication().hash(((String) received.get(Protocol.Field.PASSWORD.key)).toCharArray()));
-                    admin.setField(Administrator.Field.TOKEN, new Token((String) received.get(Protocol.Field.EMAIL.key), (String) received.get(Protocol.Field.PASSWORD.key)).generate());
+                    //admin.setField(Administrator.Field.EMAIL, received.get(Protocol.Field.EMAIL.key));
+                    admin.setField(Administrator.Field.PHONE, received.get(Protocol.Field.PHONE.key));
                     admin.setField(Administrator.Field.UPDATE_DATE, time);
 
                     Database.update_entity(Database.Collections.Administrators, admin);
                     sending = new ResponseObject(false);
-                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_SUCCESS.code);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
                 }
             } catch (Exception e) {
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_ERROR.code);
                 LogManager.write("Exception: " + e.toString());
+                System.out.println("Exception: " + e.toString());
             }
             response.end(new GsonBuilder().create().toJson(sending));
         });

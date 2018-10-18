@@ -385,6 +385,7 @@ public class Protocol {
         AUTH_ERROR_TOKEN("202", "authentication failed, bad token"),
         AUTH_ERROR_ACCOUNT_INACTIVE("203", "authentication failed, your account has been set to inactive"),
         AUTH_ERROR_ACCOUNT_NOT_YET_VALIDATED("204", "authentication failed, your account has not been validated yet"),
+        AUTH_ERROR_ACCOUNT_REFUSED("205", "authentication failed, your account has been refused"),
         AUTH_ERROR_CREDENTIALS("501", "authentication failed, bad credentials"),
         MGR_ERROR_ERROR_FIRSTNAME("701", "manager's first name is missing"),
         MGR_ERROR_ERROR_LASTNAME("702", "manager's last name is missing"),

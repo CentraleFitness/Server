@@ -12,6 +12,7 @@ public class Administrator extends Database.Entity {
         FIRSTNAME("first_name", String.class),
         LASTNAME("last_name", String.class),
         EMAIL("email_address", String.class),
+        PHONE("phone_number", String.class),
         CREATION_DATE("creation_date", Long.class),
         UPDATE_DATE("update_date", Long.class),
         ;

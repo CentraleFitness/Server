@@ -40,25 +40,25 @@ public class CreateAccount {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
 
+                } else if (received.get(Protocol.Field.PHONE.key) == null) {
+                    sending = new ResponseObject(true);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_ERROR_PHONE.code);
+
                 } else if (received.get(Protocol.Field.EMAIL.key) == null) {
-                    LogManager.write("Missing email field");
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_ERROR_EMAIL.code);
 
                 } else if (received.get(Protocol.Field.PASSWORD.key) == null) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_ERROR_PASSWORD.code);
-                    LogManager.write("Missing password field");
 
                 } else if (received.get(Protocol.Field.FIRSTNAME.key) == null) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_ERROR_FIRSTNAME.code);
-                    LogManager.write("Missing first name field");
 
                 } else if (received.get(Protocol.Field.LASTNAME.key) == null) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_ERROR_LASTNAME.code);
-                    LogManager.write("Missing last name field");
 
                 } else if (Database.find_entity(Database.Collections.Administrators, Administrator.Field.EMAIL, received.get(Protocol.Field.EMAIL.key)) == null) {
 
@@ -68,6 +68,7 @@ public class CreateAccount {
                     admin.setField(Administrator.Field.FIRSTNAME, StringUtils.capitalize((String)received.get(Protocol.Field.FIRSTNAME.key)));
                     admin.setField(Administrator.Field.LASTNAME, ((String)received.get(Protocol.Field.LASTNAME.key)).toUpperCase());
                     admin.setField(Administrator.Field.EMAIL, received.get(Protocol.Field.EMAIL.key));
+                    admin.setField(Administrator.Field.PHONE, received.get(Protocol.Field.PHONE.key));
                     admin.setField(Administrator.Field.PASSWORD_HASH, new PasswordAuthentication().hash(((String) received.get(Protocol.Field.PASSWORD.key)).toCharArray()));
                     admin.setField(Administrator.Field.TOKEN, new Token((String) received.get(Protocol.Field.EMAIL.key), (String) received.get(Protocol.Field.PASSWORD.key)).generate());
                     admin.setField(Administrator.Field.CREATION_DATE, time);
@@ -75,7 +76,8 @@ public class CreateAccount {
 
                     Database.update_entity(Database.Collections.Administrators, admin);
                     sending = new ResponseObject(false);
-                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_SUCCESS.code);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
+                    sending.put(Protocol.Field.ADMINISTRATOR_ID.key, admin.getField(Administrator.Field.ID));
                 } else {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_ERROR_EMAIL_TAKEN.code);

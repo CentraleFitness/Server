@@ -5,7 +5,6 @@ import Tools.ObjectIdSerializer;
 import Tools.Token;
 import com.google.gson.GsonBuilder;
 import com.mongodb.client.FindIterable;
-import com.mongodb.client.model.Filters;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
@@ -14,14 +13,13 @@ import model.entities.Administrator;
 import model.entities.Fitness_Center;
 import model.entities.Fitness_Center_Manager;
 import org.bson.Document;
-import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import protocol.ResponseObject;
 import protocol.admin.Protocol;
 
 import java.util.*;
 
-import static com.mongodb.client.model.Sorts.ascending;
+import static com.mongodb.client.model.Sorts.descending;
 import static com.mongodb.client.model.Sorts.orderBy;
 
 public class GetManagers {
@@ -59,7 +57,7 @@ public class GetManagers {
                     }
 
                     @SuppressWarnings("unchecked")
-                    FindIterable<Fitness_Center_Manager> findIterable = (FindIterable<Fitness_Center_Manager>) Database.collections.get(Database.Collections.Fitness_Center_Managers).find().sort(orderBy(ascending(Fitness_Center_Manager.Field.IS_VALIDATED.get_key())));
+                    FindIterable<Fitness_Center_Manager> findIterable = (FindIterable<Fitness_Center_Manager>) Database.collections.get(Database.Collections.Fitness_Center_Managers).find().sort(orderBy(descending(Fitness_Center_Manager.Field.CREATION_DATE.get_key())));
                     List<Map<String,Object>> managers = new ArrayList<>();
                     HashMap<String,Object> cur;
                     for (Document doc : findIterable) {

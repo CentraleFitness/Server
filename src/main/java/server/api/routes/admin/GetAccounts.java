@@ -49,9 +49,11 @@ public class GetAccounts {
                     for (Document doc : findIterable) {
                         cur = new HashMap<>();
                         cur.put("_id", doc.getObjectId("_id").toString());
+                        cur.put("is_me", doc.getObjectId("_id").toString().equals(admin.getField(Administrator.Field.ID).toString()));
                         cur.put("first_name", doc.getString("first_name"));
                         cur.put("last_name", doc.getString("last_name"));
                         cur.put("email_address", doc.getString("email_address"));
+                        cur.put("phone_number", doc.getString("phone_number"));
                         cur.put("creation_date", doc.getLong("creation_date"));
                         cur.put("update_date", doc.getLong("update_date"));
                         accounts.add(cur);

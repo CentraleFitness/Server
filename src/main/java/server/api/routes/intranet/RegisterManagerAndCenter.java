@@ -62,7 +62,7 @@ public class RegisterManagerAndCenter {
                     } else if (received.get(Protocol.Field.CITY.key) == null) {
                         sending = new ResponseObject(true);
                         sending.put(Protocol.Field.STATUS.key, Protocol.Status.CTR_ERROR_ERROR_CITY.code);
-                    } else if (Database.find_entity(Database.Collections.Fitness_Centers, Fitness_Center.Field.NAME, received.get(Protocol.Field.NAME.key)) == null) {
+                    } else if (Database.find_entity(Database.Collections.Fitness_Centers, Fitness_Center.Field.SIRET, received.get(Protocol.Field.SIRET.key)) == null) {
 
                         Long time = System.currentTimeMillis();
 
@@ -91,11 +91,15 @@ public class RegisterManagerAndCenter {
                         center.setField(Fitness_Center.Field.ADDRESS, received.get(Protocol.Field.ADDRESS.key));
                         if (received.get(Protocol.Field.ADDRESS_SECOND.key) != null) {
                             center.setField(Fitness_Center.Field.ADDRESS_SECOND, received.get(Protocol.Field.ADDRESS_SECOND.key));
+                        } else {
+                            center.setField(Fitness_Center.Field.ADDRESS_SECOND, "");
                         }
                         center.setField(Fitness_Center.Field.ZIP_CODE, received.get(Protocol.Field.ZIP_CODE.key));
                         center.setField(Fitness_Center.Field.CITY, ((String)received.get(Protocol.Field.CITY.key)).toUpperCase());
                         if (received.get(Protocol.Field.CENTER_PHONE.key) != null) {
                             center.setField(Fitness_Center.Field.PHONE, received.get(Protocol.Field.CENTER_PHONE.key));
+                        } else {
+                            center.setField(Fitness_Center.Field.PHONE, "");
                         }
                         center.setField(Fitness_Center.Field.CREATION_DATE, time);
 
@@ -138,7 +142,6 @@ public class RegisterManagerAndCenter {
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_ERROR.code);
                 LogManager.write("Exception: " + e.toString());
-                System.out.println("Exception: " + e.toString());
             }
             response.end(new GsonBuilder().create().toJson(sending));
         });

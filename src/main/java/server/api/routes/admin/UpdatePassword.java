@@ -34,7 +34,7 @@ public class UpdatePassword {
                 } else {
                     admin.setField(Administrator.Field.PASSWORD_HASH, new PasswordAuthentication().hash(((String) received.get(Protocol.Field.NEW_PASSWORD.key)).toCharArray()));
                     admin.setField(Administrator.Field.TOKEN, new Token((String) admin.getField(Administrator.Field.EMAIL), (String) received.get(Protocol.Field.NEW_PASSWORD.key)).generate());
-                    Database.update_entity(Database.Collections.Fitness_Center_Managers, admin);
+                    Database.update_entity(Database.Collections.Administrators, admin);
                     sending = new ResponseObject(false);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
                     sending.put(Protocol.Field.TOKEN.key, admin.getField(Administrator.Field.TOKEN));

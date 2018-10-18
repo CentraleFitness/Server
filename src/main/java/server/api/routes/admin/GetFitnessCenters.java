@@ -54,6 +54,8 @@ public class GetFitnessCenters {
                         cur.put("name", doc.getString("name"));
                         cur.put("city", doc.getString("city"));
                         cur.put("zip_code", doc.getString("zip_code"));
+                        cur.put("value", doc.getObjectId("_id").toString());
+                        cur.put("label", doc.getString("name") + ", " + doc.getString("city") + " ( " + doc.getString("zip_code") + " ) ");
                         centers.add(cur);
                     }
                     sending.put(Protocol.Field.FITNESS_CENTERS.key, centers);
