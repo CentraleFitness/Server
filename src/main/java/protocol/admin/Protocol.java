@@ -16,11 +16,15 @@ public class Protocol {
 
         MANAGER_ACTIVITY("/manager_activity"),
 
+        MANAGER_UNDO_REFUSE ("/manager_undo_refuse"),
+
         MANAGER_FEEDBACK("/manager_feedback"),
 
         FITNESS_CENTER("/fitness_center"),
 
         MODULE("/module"),
+
+        MODULE_STATE("/module_state"),
 
         ;
         public String path;
@@ -53,6 +57,12 @@ public class Protocol {
         FEEDBACK_ID("feedback_id"),
         FITNESS_CENTERS("fitness_centers"),
         ADMINISTRATOR_NAME("administrator_name"),
+        MODULE_STATES("module_states"),
+        CREATOR_ADMIN_ID("creator_admin_id"),
+        CREATOR_ADMIN_NAME("creator_admin_name"),
+        AUTO_GENERATE_UUID("auto_generate_uuid"),
+        MODULE_STATE_CODE("module_state_code"),
+        MODULE_STATE_ID("module_state_id"),
         ;
         public String key;
         Field(String key) {

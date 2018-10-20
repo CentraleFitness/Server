@@ -18,6 +18,9 @@ public class Module extends Database.Entity {
         NEED_NEW_SESSION_ID("need_new_session_id", Boolean.class),
         MODULE_STATE_ID("module_state_id", ObjectId.class),
         MODULE_STATE_CODE("module_state_code", Integer.class),
+        CREATION_DATE("creation_date", Long.class),
+        UPDATE_DATE("update_date", Long.class),
+        CREATOR_ADMIN_ID("creator_admin_id", ObjectId.class),
         ;
         @Override
         public String get_key() {

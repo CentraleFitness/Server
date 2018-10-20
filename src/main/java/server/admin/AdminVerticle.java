@@ -60,12 +60,15 @@ public class AdminVerticle extends AbstractVerticle {
         new GetManagers(this.router);
         new ValidateManager(this.router);
         new SetManagerAccountActivity(this.router);
+        new UndoRefuseManager(this.router);
 
         new GetManagerFeedbacks(this.router);
         new UpdateManagerFeeback(this.router);
 
         new GetModules(this.router);
         new CreateModule(this.router);
+        new UpdateModule(this.router);
+        new GetModuleStates(this.router);
 
 
     }

@@ -27,14 +27,13 @@ public class GetModules {
     public GetModules(Router router) {
         router.route(HttpMethod.GET, Protocol.Path.MODULE.path).handler(routingContext -> {
 
-            Map<String, Object> received = routingContext.getBodyAsJson().getMap();
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
             Administrator admin;
 
             try {
-                admin = (Administrator) Database.find_entity(Database.Collections.Administrators, Administrator.Field.EMAIL, Token.decodeToken((String) received.get(Protocol.Field.TOKEN.key)).getIssuer());
-                if (!Objects.equals(admin.getField(Administrator.Field.TOKEN), received.get(Protocol.Field.TOKEN.key))) {
+                admin = (Administrator) Database.find_entity(Database.Collections.Administrators, Administrator.Field.EMAIL, Token.decodeToken(routingContext.request().getParam(Protocol.Field.TOKEN.key)).getIssuer());
+                if (!Objects.equals(admin.getField(Administrator.Field.TOKEN), routingContext.request().getParam(Protocol.Field.TOKEN.key))) {
 
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
@@ -44,18 +43,15 @@ public class GetModules {
                     sending = new ResponseObject(false);
                     sending.put(Protocol.Field.STATUS.key, protocol.intranet.Protocol.Status.GENERIC_OK.code);
 
-                    Bson filter = Filters.and();
-
-                    if (received.get(Protocol.Field.FITNESS_CENTER_ID.key) != null) {
-
-                        filter = Filters.and(
-                                Filters.eq(Module.Field.FITNESS_CENTER_ID.get_key(), received.get(Protocol.Field.FITNESS_CENTER_ID.key))
-                        );
-
+                    @SuppressWarnings("unchecked")
+                    FindIterable<Administrator> findIterableAdmin = (FindIterable<Administrator>) Database.collections.get(Database.Collections.Administrators).find();
+                    Map<String,Object> admins = new HashMap<>();
+                    for (Document doc : findIterableAdmin) {
+                        admins.put(doc.getObjectId("_id").toString(), doc.getString("first_name") + " " + doc.getString("last_name"));
                     }
 
                     @SuppressWarnings("unchecked")
-                    FindIterable<Module> findIterable = (FindIterable<Module>) Database.collections.get(Database.Collections.Modules).find(filter).sort(orderBy(descending(Module.Field.MODULE_STATE_CODE.get_key())));
+                    FindIterable<Module> findIterable = (FindIterable<Module>) Database.collections.get(Database.Collections.Modules).find().sort(orderBy(descending(Module.Field.MODULE_STATE_CODE.get_key())));
                     List<Map<String,Object>> modules = new ArrayList<>();
                     HashMap<String,Object> cur;
                     for (Document doc : findIterable) {
@@ -63,10 +59,16 @@ public class GetModules {
                         cur.put("_id", doc.getObjectId("_id").toString());
                         cur.put("UUID", doc.getString("UUID"));
                         cur.put("fitness_center_id", doc.getObjectId("fitness_center_id").toString());
-                        cur.put("fitness_center_name", "");
                         cur.put("machine_type", doc.getString("machine_type"));
                         cur.put("module_state_id", doc.getObjectId("module_state_id").toString());
                         cur.put("module_state_code", doc.getInteger("module_state_code"));
+                        cur.put("creation_date", doc.getLong("creation_date"));
+                        cur.put("update_date", doc.getLong("update_date"));
+                        cur.put("creator_admin_id", doc.getObjectId("creator_admin_id"));
+                        if (doc.getObjectId("creator_admin_id") != null &&
+                                admins.containsKey(doc.getObjectId("creator_admin_id").toString())) {
+                            cur.put("creator_admin_name", admins.get(doc.getObjectId("creator_admin_id").toString()));
+                        }
                         modules.add(cur);
                     }
                     sending.put(Protocol.Field.MODULES.key, modules);
@@ -76,6 +78,7 @@ public class GetModules {
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_ERROR.code);
                 LogManager.write("Exception: " + e.toString());
+                System.out.println("Exception: " + e.toString());
             }
             response.end(new GsonBuilder().registerTypeAdapter(ObjectId.class, new ObjectIdSerializer()).create().toJson(sending));
         });
