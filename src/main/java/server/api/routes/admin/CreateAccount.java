@@ -4,12 +4,12 @@ import Tools.LogManager;
 import Tools.PasswordAuthentication;
 import Tools.Token;
 import com.google.gson.GsonBuilder;
-import com.sun.xml.internal.ws.util.StringUtils;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import model.Database;
 import model.entities.Administrator;
+import org.apache.commons.lang3.text.WordUtils;
 import protocol.ResponseObject;
 import protocol.admin.Protocol;
 
@@ -65,7 +65,7 @@ public class CreateAccount {
                     Long time = System.currentTimeMillis();
 
                     admin = (Administrator) Database.new_entity(Database.Collections.Administrators);
-                    admin.setField(Administrator.Field.FIRSTNAME, StringUtils.capitalize((String)received.get(Protocol.Field.FIRSTNAME.key)));
+                    admin.setField(Administrator.Field.FIRSTNAME, WordUtils.capitalize((String)received.get(Protocol.Field.FIRSTNAME.key)));
                     admin.setField(Administrator.Field.LASTNAME, ((String)received.get(Protocol.Field.LASTNAME.key)).toUpperCase());
                     admin.setField(Administrator.Field.EMAIL, received.get(Protocol.Field.EMAIL.key));
                     admin.setField(Administrator.Field.PHONE, received.get(Protocol.Field.PHONE.key));
