@@ -271,13 +271,13 @@ public class Database {
             try {
                 ModuleState m = (ModuleState) new_entity(Collections.ModuleStates);
                 m.setField(ModuleState.Field.CODE, 0);
-                m.setField(ModuleState.Field.TEXT_FR, "En cours d’envoi");
+                m.setField(ModuleState.Field.TEXT_FR, "En cours d\0027envoi");
                 m.setField(ModuleState.Field.TEXT_EN, "Shipping");
                 Database.update_entity(Collections.ModuleStates, m);
 
                 m = (ModuleState) new_entity(Collections.ModuleStates);
                 m.setField(ModuleState.Field.CODE, 1);
-                m.setField(ModuleState.Field.TEXT_FR, "Livré");
+                m.setField(ModuleState.Field.TEXT_FR, "Livr\00e9");
                 m.setField(ModuleState.Field.TEXT_EN, "Delivered");
                 Database.update_entity(Collections.ModuleStates, m);
 
@@ -289,7 +289,7 @@ public class Database {
 
                 m = (ModuleState) new_entity(Collections.ModuleStates);
                 m.setField(ModuleState.Field.CODE, 3);
-                m.setField(ModuleState.Field.TEXT_FR, "En cours d'utilisation");
+                m.setField(ModuleState.Field.TEXT_FR, "En cours d\0027utilisation");
                 m.setField(ModuleState.Field.TEXT_EN, "In use");
                 Database.update_entity(Collections.ModuleStates, m);
 
@@ -319,7 +319,7 @@ public class Database {
 
                 f = (Feedback_State) new_entity(Collections.Feedback_States);
                 f.setField(Feedback_State.Field.CODE, 3);
-                f.setField(Feedback_State.Field.TEXT_FR, "Résolue");
+                f.setField(Feedback_State.Field.TEXT_FR, "R\00e9solue");
                 f.setField(Feedback_State.Field.TEXT_EN, "Solved");
                 Database.update_entity(Collections.Feedback_States, f);
             } catch (Exception e) {
