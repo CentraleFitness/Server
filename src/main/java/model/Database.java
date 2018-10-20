@@ -277,7 +277,7 @@ public class Database {
 
                 m = (ModuleState) new_entity(Collections.ModuleStates);
                 m.setField(ModuleState.Field.CODE, 1);
-                m.setField(ModuleState.Field.TEXT_FR, "Livré");
+                m.setField(ModuleState.Field.TEXT_FR, "Livr\00e9");
                 m.setField(ModuleState.Field.TEXT_EN, "Delivered");
                 Database.update_entity(Collections.ModuleStates, m);
 
@@ -319,7 +319,7 @@ public class Database {
 
                 f = (Feedback_State) new_entity(Collections.Feedback_States);
                 f.setField(Feedback_State.Field.CODE, 3);
-                f.setField(Feedback_State.Field.TEXT_FR, "Résolue");
+                f.setField(Feedback_State.Field.TEXT_FR, "R\00e9solue");
                 f.setField(Feedback_State.Field.TEXT_EN, "Solved");
                 Database.update_entity(Collections.Feedback_States, f);
             } catch (Exception e) {

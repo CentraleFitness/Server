@@ -5,19 +5,16 @@ import Tools.PasswordAuthentication;
 import Tools.Token;
 import com.google.gson.GsonBuilder;
 import com.mongodb.client.model.Filters;
-import com.sun.xml.internal.ws.util.StringUtils;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import model.Database;
-import model.entities.DisplayConfiguration;
 import model.entities.Fitness_Center;
 import model.entities.Fitness_Center_Manager;
 import model.entities.Statistic;
 import protocol.ResponseObject;
 import protocol.intranet.Protocol;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 public class RegisterManagerAndCenter {
@@ -67,7 +64,7 @@ public class RegisterManagerAndCenter {
                         Long time = System.currentTimeMillis();
 
                         manager = (Fitness_Center_Manager) Database.new_entity(Database.Collections.Fitness_Center_Managers);
-                        manager.setField(Fitness_Center_Manager.Field.FIRSTNAME, StringUtils.capitalize((String)received.get(Protocol.Field.FIRSTNAME.key)));
+                        manager.setField(Fitness_Center_Manager.Field.FIRSTNAME,  ((String)received.get(Protocol.Field.FIRSTNAME.key)).substring(0, 1).toUpperCase() + ((String)received.get(Protocol.Field.FIRSTNAME.key)).substring(1));
                         manager.setField(Fitness_Center_Manager.Field.LASTNAME, ((String)received.get(Protocol.Field.LASTNAME.key)).toUpperCase());
                         manager.setField(Fitness_Center_Manager.Field.PHONE, received.get(Protocol.Field.PHONE.key));
                         manager.setField(Fitness_Center_Manager.Field.EMAIL, received.get(Protocol.Field.EMAIL.key));
