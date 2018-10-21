@@ -28,7 +28,7 @@ public class GetModules {
         router.route(HttpMethod.GET, Protocol.Path.MODULE.path).handler(routingContext -> {
 
             LogManager.write("WTF 11");
-            
+
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
             Administrator admin;
@@ -54,6 +54,7 @@ public class GetModules {
                     LogManager.write("WTF 3");
                     for (Document doc : findIterableAdmin) {
                         LogManager.write("WTF 4");
+                        LogManager.write(doc.getObjectId("_id").toString());
                         admins.put(doc.getObjectId("_id").toString(), doc.getString("first_name") + " " + doc.getString("last_name"));
                         LogManager.write("WTF 5");
                     }
