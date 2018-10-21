@@ -64,7 +64,7 @@ public class GetModules {
                         cur.put("module_state_code", doc.getInteger("module_state_code"));
                         cur.put("creation_date", doc.getLong("creation_date"));
                         cur.put("update_date", doc.getLong("update_date"));
-                        cur.put("creator_admin_id", doc.getObjectId("creator_admin_id"));
+                        cur.put("creator_admin_id", doc.getObjectId("creator_admin_id").toString());
                         if (doc.getObjectId("creator_admin_id") != null &&
                                 admins.containsKey(doc.getObjectId("creator_admin_id").toString())) {
                             cur.put("creator_admin_name", admins.get(doc.getObjectId("creator_admin_id").toString()));
