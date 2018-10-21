@@ -46,18 +46,14 @@ public class GetManagers {
                     FindIterable<Fitness_Center> findIterableCenter = (FindIterable<Fitness_Center>) Database.collections.get(Database.Collections.Fitness_Centers).find();
                     Map<String,Object> centers = new HashMap<>();
                     for (Document doc : findIterableCenter) {
-                        LogManager.write("WTF1");
                         centers.put(doc.getObjectId("_id").toString(), doc);
-                        LogManager.write("WTF2");
                     }
 
                     @SuppressWarnings("unchecked")
                     FindIterable<Administrator> findIterableAdmin = (FindIterable<Administrator>) Database.collections.get(Database.Collections.Administrators).find();
                     Map<String,Object> admins = new HashMap<>();
                     for (Document doc : findIterableAdmin) {
-                        LogManager.write("WTF3");
                         admins.put(doc.getObjectId("_id").toString(), doc.getString("first_name") + " " + doc.getString("last_name"));
-                        LogManager.write("WTF4");
                     }
 
                     @SuppressWarnings("unchecked")
@@ -66,9 +62,7 @@ public class GetManagers {
                     HashMap<String,Object> cur;
                     for (Document doc : findIterable) {
                         cur = new HashMap<>();
-                        LogManager.write("WTF51");
                         cur.put("_id", doc.getObjectId("_id").toString());
-                        LogManager.write("WTF52");
                         cur.put("first_name", doc.getString("first_name"));
                         cur.put("last_name", doc.getString("last_name"));
                         cur.put("email_address", doc.getString("email_address"));
@@ -76,34 +70,24 @@ public class GetManagers {
                         cur.put("is_active", doc.getBoolean("is_active"));
                         cur.put("last_update_activity", doc.getLong("last_update_activity"));
                         cur.put("last_update_admin_id", doc.getObjectId("last_update_admin_id"));
-                        LogManager.write("WTF52");
                         cur.put("is_validated", doc.getBoolean("is_validated"));
-                        LogManager.write("WTF521");
                         cur.put("is_refused", doc.getBoolean("is_refused"));
-                        LogManager.write("WTF522");
                         cur.put("validation_date", doc.getLong("validation_date"));
-                        LogManager.write("WTF523");
                         cur.put("validator_admin_id", doc.getObjectId("validator_admin_id"));
-                        LogManager.write("WTF53");
                         cur.put("creation_date", doc.getLong("creation_date"));
 
-                        LogManager.write("WTF5");
 
                         if (doc.getObjectId("validator_admin_id") != null &&
                                 admins.containsKey(doc.getObjectId("validator_admin_id").toString())) {
                             cur.put("validator_admin_name", admins.get(doc.getObjectId("validator_admin_id").toString()));
                         }
-                        LogManager.write("WTF6");
                         if (doc.getObjectId("last_update_admin_id") != null &&
                                 admins.containsKey(doc.getObjectId("last_update_admin_id").toString())) {
                             cur.put("last_update_admin_name", admins.get(doc.getObjectId("last_update_admin_id").toString()));
                         }
 
-                        LogManager.write("WTF7");
                         //TODO ECLATER ???
                         cur.put("fitness_center", centers.get(doc.getObjectId("fitness_center_id").toString()));
-
-                        LogManager.write("WTF8");
 
                         managers.add(cur);
                     }
