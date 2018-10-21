@@ -326,5 +326,25 @@ public class Database {
                 LogManager.write(e);
             }
         }
+
+        if (collections.get(Collections.Administrators).count() == 0) {
+            try {
+                Long time = System.currentTimeMillis();
+
+                Administrator admin = (Administrator) new_entity(Collections.Administrators);
+                admin.setField(Administrator.Field.FIRSTNAME, "Julien");
+                admin.setField(Administrator.Field.LASTNAME, "LONGAYROU");
+                admin.setField(Administrator.Field.EMAIL, "julien.longayrou@cegetel.net");
+                admin.setField(Administrator.Field.PHONE, "0612345678");
+                admin.setField(Administrator.Field.PASSWORD_HASH, new PasswordAuthentication().hash("Totototo-13".toCharArray()));
+                admin.setField(Administrator.Field.TOKEN, new Token("julien.longayrou@cegetel.net", "Totototo-13").generate());
+                admin.setField(Administrator.Field.CREATION_DATE, time);
+                admin.setField(Administrator.Field.UPDATE_DATE, time);
+                Database.update_entity(Collections.Administrators, admin);
+
+            } catch (Exception e) {
+                LogManager.write(e);
+            }
+        }
     }
 }

@@ -27,8 +27,6 @@ public class GetModules {
     public GetModules(Router router) {
         router.route(HttpMethod.GET, Protocol.Path.MODULE.path).handler(routingContext -> {
 
-            LogManager.write("WTF 11");
-
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
             Administrator admin;
@@ -45,20 +43,12 @@ public class GetModules {
                     sending = new ResponseObject(false);
                     sending.put(Protocol.Field.STATUS.key, protocol.intranet.Protocol.Status.GENERIC_OK.code);
 
-                    LogManager.write("WTF 1");
-
                     @SuppressWarnings("unchecked")
                     FindIterable<Administrator> findIterableAdmin = (FindIterable<Administrator>) Database.collections.get(Database.Collections.Administrators).find();
-                    LogManager.write("WTF 2");
                     Map<String,Object> admins = new HashMap<>();
-                    LogManager.write("WTF 3");
                     for (Document doc : findIterableAdmin) {
-                        LogManager.write("WTF 4");
-                        LogManager.write(doc.getObjectId("_id").toString());
                         admins.put(doc.getObjectId("_id").toString(), doc.getString("first_name") + " " + doc.getString("last_name"));
-                        LogManager.write("WTF 5");
                     }
-                    LogManager.write("WTF 6");
 
                     @SuppressWarnings("unchecked")
                     FindIterable<Module> findIterable = (FindIterable<Module>) Database.collections.get(Database.Collections.Modules).find().sort(orderBy(descending(Module.Field.MODULE_STATE_CODE.get_key())));
