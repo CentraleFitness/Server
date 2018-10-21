@@ -66,7 +66,9 @@ public class GetManagers {
                     HashMap<String,Object> cur;
                     for (Document doc : findIterable) {
                         cur = new HashMap<>();
+                        LogManager.write("WTF51");
                         cur.put("_id", doc.getObjectId("_id").toString());
+                        LogManager.write("WTF52");
                         cur.put("first_name", doc.getString("first_name"));
                         cur.put("last_name", doc.getString("last_name"));
                         cur.put("email_address", doc.getString("email_address"));
@@ -74,10 +76,12 @@ public class GetManagers {
                         cur.put("is_active", doc.getBoolean("is_active"));
                         cur.put("last_update_activity", doc.getLong("last_update_activity"));
                         cur.put("last_update_admin_id", doc.getObjectId("last_update_admin_id"));
+                        LogManager.write("WTF52");
                         cur.put("is_validated", doc.getBoolean("is_validated"));
                         cur.put("is_refused", doc.getBoolean("is_refused"));
                         cur.put("validation_date", doc.getLong("validation_date"));
                         cur.put("validator_admin_id", doc.getObjectId("validator_admin_id"));
+                        LogManager.write("WTF53");
                         cur.put("creation_date", doc.getLong("creation_date"));
 
                         LogManager.write("WTF5");
