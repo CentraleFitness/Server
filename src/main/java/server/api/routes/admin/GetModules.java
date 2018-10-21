@@ -43,12 +43,19 @@ public class GetModules {
                     sending = new ResponseObject(false);
                     sending.put(Protocol.Field.STATUS.key, protocol.intranet.Protocol.Status.GENERIC_OK.code);
 
+                    LogManager.write("WTF 1");
+
                     @SuppressWarnings("unchecked")
                     FindIterable<Administrator> findIterableAdmin = (FindIterable<Administrator>) Database.collections.get(Database.Collections.Administrators).find();
+                    LogManager.write("WTF 2");
                     Map<String,Object> admins = new HashMap<>();
+                    LogManager.write("WTF 3");
                     for (Document doc : findIterableAdmin) {
+                        LogManager.write("WTF 4");
                         admins.put(doc.getObjectId("_id").toString(), doc.getString("first_name") + " " + doc.getString("last_name"));
+                        LogManager.write("WTF 5");
                     }
+                    LogManager.write("WTF 6");
 
                     @SuppressWarnings("unchecked")
                     FindIterable<Module> findIterable = (FindIterable<Module>) Database.collections.get(Database.Collections.Modules).find().sort(orderBy(descending(Module.Field.MODULE_STATE_CODE.get_key())));
@@ -78,7 +85,6 @@ public class GetModules {
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_ERROR.code);
                 LogManager.write("Exception: " + e.toString());
-                System.out.println("Exception: " + e.toString());
             }
             response.end(new GsonBuilder().registerTypeAdapter(ObjectId.class, new ObjectIdSerializer()).create().toJson(sending));
         });
