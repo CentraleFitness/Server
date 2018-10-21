@@ -46,14 +46,18 @@ public class GetManagers {
                     FindIterable<Fitness_Center> findIterableCenter = (FindIterable<Fitness_Center>) Database.collections.get(Database.Collections.Fitness_Centers).find();
                     Map<String,Object> centers = new HashMap<>();
                     for (Document doc : findIterableCenter) {
+                        LogManager.write("WTF1");
                         centers.put(doc.getObjectId("_id").toString(), doc);
+                        LogManager.write("WTF2");
                     }
 
                     @SuppressWarnings("unchecked")
                     FindIterable<Administrator> findIterableAdmin = (FindIterable<Administrator>) Database.collections.get(Database.Collections.Administrators).find();
                     Map<String,Object> admins = new HashMap<>();
                     for (Document doc : findIterableAdmin) {
+                        LogManager.write("WTF3");
                         admins.put(doc.getObjectId("_id").toString(), doc.getString("first_name") + " " + doc.getString("last_name"));
+                        LogManager.write("WTF4");
                     }
 
                     @SuppressWarnings("unchecked")
