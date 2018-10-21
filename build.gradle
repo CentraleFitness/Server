@@ -21,7 +21,9 @@ dependencies {
     compile 'org.mongodb:mongo-java-driver:3.4.1'
     compile 'com.google.guava:guava:24.1-jre'
     compile 'commons-io:commons-io:2.6'
-	//compile 'org.mongodb:bson:2.3'
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
+    //compile 'org.mongodb:bson:2.3'
 }
 
 jar {
