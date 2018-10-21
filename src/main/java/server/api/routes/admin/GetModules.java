@@ -27,6 +27,8 @@ public class GetModules {
     public GetModules(Router router) {
         router.route(HttpMethod.GET, Protocol.Path.MODULE.path).handler(routingContext -> {
 
+            LogManager.write("WTF 11");
+            
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
             Administrator admin;
