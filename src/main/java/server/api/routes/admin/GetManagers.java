@@ -78,8 +78,11 @@ public class GetManagers {
                         cur.put("last_update_admin_id", doc.getObjectId("last_update_admin_id"));
                         LogManager.write("WTF52");
                         cur.put("is_validated", doc.getBoolean("is_validated"));
+                        LogManager.write("WTF521");
                         cur.put("is_refused", doc.getBoolean("is_refused"));
+                        LogManager.write("WTF522");
                         cur.put("validation_date", doc.getLong("validation_date"));
+                        LogManager.write("WTF523");
                         cur.put("validator_admin_id", doc.getObjectId("validator_admin_id"));
                         LogManager.write("WTF53");
                         cur.put("creation_date", doc.getLong("creation_date"));
