@@ -80,17 +80,23 @@ public class GetManagers {
                         cur.put("validator_admin_id", doc.getObjectId("validator_admin_id"));
                         cur.put("creation_date", doc.getLong("creation_date"));
 
+                        LogManager.write("WTF5");
+
                         if (doc.getObjectId("validator_admin_id") != null &&
                                 admins.containsKey(doc.getObjectId("validator_admin_id").toString())) {
                             cur.put("validator_admin_name", admins.get(doc.getObjectId("validator_admin_id").toString()));
                         }
+                        LogManager.write("WTF6");
                         if (doc.getObjectId("last_update_admin_id") != null &&
                                 admins.containsKey(doc.getObjectId("last_update_admin_id").toString())) {
                             cur.put("last_update_admin_name", admins.get(doc.getObjectId("last_update_admin_id").toString()));
                         }
 
+                        LogManager.write("WTF7");
                         //TODO ECLATER ???
                         cur.put("fitness_center", centers.get(doc.getObjectId("fitness_center_id").toString()));
+
+                        LogManager.write("WTF8");
 
                         managers.add(cur);
                     }
