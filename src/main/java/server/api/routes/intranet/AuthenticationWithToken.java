@@ -27,7 +27,7 @@ public class AuthenticationWithToken {
                 if (!Objects.equals(manager.getField(Fitness_Center_Manager.Field.TOKEN), received.get(Protocol.Field.TOKEN.key))) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
-                } else if (!((Boolean)manager.getField(Fitness_Center_Manager.Field.IS_REFUSED))) {
+                } else if (((Boolean)manager.getField(Fitness_Center_Manager.Field.IS_REFUSED))) {
 
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_ACCOUNT_REFUSED.code);
