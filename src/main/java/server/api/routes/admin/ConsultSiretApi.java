@@ -32,9 +32,7 @@ public class ConsultSiretApi {
             Administrator admin;
 
             try {
-                LogManager.write("XXX");
                 admin = (Administrator) Database.find_entity(Database.Collections.Administrators, Administrator.Field.EMAIL, Token.decodeToken((String) routingContext.request().getParam(Protocol.Field.TOKEN.key)).getIssuer());
-                LogManager.write("XXX1");
                 if (!Objects.equals(admin.getField(Administrator.Field.TOKEN), routingContext.request().getParam(Protocol.Field.TOKEN.key))) {
 
                     sending = new ResponseObject(true);
@@ -46,28 +44,19 @@ public class ConsultSiretApi {
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_MISSING_PARAM.code);
 
                 } else {
-                    LogManager.write("XXX2");
                     sending = new ResponseObject(false);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
 
                     String api_key = "bf387250a734234389eb6d21e96660db:aa37da76c33d45d0034e75743e9afbf2";
-                    LogManager.write("8");
                     byte[] cendentials = Base64.encodeBase64(api_key.getBytes());
 
-                    LogManager.write("7");
                     URL url = new URL("https://www.numero-de-siret.com/api/siret?siret=" + routingContext.request().getParam(Protocol.Field.SIRET.key));
-                    LogManager.write("6");
                     HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                    LogManager.write("5");
                     con.setRequestMethod("GET");
-                    LogManager.write("4");
                     con.setRequestProperty("Content-Type", "application/json");
-                    LogManager.write("3");
                     con.setRequestProperty("Authorization", "Basic " + cendentials);
 
-                    LogManager.write("2");
                     int status = con.getResponseCode();
-                    LogManager.write("1");
                     System.out.println(status);
                     LogManager.write("STATUS: " + status);
 
@@ -89,7 +78,6 @@ public class ConsultSiretApi {
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_ERROR.code);
                 LogManager.write("Exception: " + e.toString());
-                System.out.println("Exception: " + e.toString());
             }
             response.end(new GsonBuilder().registerTypeAdapter(ObjectId.class, new ObjectIdSerializer()).create().toJson(sending));
         });
