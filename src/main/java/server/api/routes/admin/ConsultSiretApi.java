@@ -34,6 +34,7 @@ public class ConsultSiretApi {
             try {
                 LogManager.write("XXX");
                 admin = (Administrator) Database.find_entity(Database.Collections.Administrators, Administrator.Field.EMAIL, Token.decodeToken((String) routingContext.request().getParam(Protocol.Field.TOKEN.key)).getIssuer());
+                LogManager.write("XXX1");
                 if (!Objects.equals(admin.getField(Administrator.Field.TOKEN), routingContext.request().getParam(Protocol.Field.TOKEN.key))) {
 
                     sending = new ResponseObject(true);
@@ -45,6 +46,7 @@ public class ConsultSiretApi {
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_MISSING_PARAM.code);
 
                 } else {
+                    LogManager.write("XXX2");
                     sending = new ResponseObject(false);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
 
