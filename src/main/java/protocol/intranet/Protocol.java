@@ -16,7 +16,7 @@ public class Protocol {
          * @param: EMAIL, PASSWORD
          * @return: STATUS, TOKEN.
          */
-        MANAGER_REGISTER("/manager/register"),
+        MANAGER_REGISTRATION("/manager/registration"),
 
         /**
          * @path: AUTHENTICATION:
@@ -31,6 +31,20 @@ public class Protocol {
          * @return: STATUS.
          */
         AUTHENTICATION_TOKEN("/authentication/token"),
+
+        /**
+         * @path: USER_GET_PROFILE:
+         * @param: TOKEN.
+         * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
+         */
+        MANAGER_ACTIVITY("/manager/set/activity"),
+
+        /**
+         * @path: USER_GET_PROFILE:
+         * @param: TOKEN.
+         * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
+         */
+        MANAGER_VALIDATION("/manager/set/validation"),
 
         /**
          * @path: USER_GET_PROFILE:
@@ -293,6 +307,12 @@ public class Protocol {
          */
         GET_FITNESS_CENTER_ID("/center/get/id"),
 
+        /**
+         * @path: ADD_FEEDBACK:
+         * @param: TOKEN.
+         * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
+         */
+        GET_SECONDARY_MANAGERS("/center/get/secondarymanagers"),
 
         ;
         public String path;
@@ -366,6 +386,12 @@ public class Protocol {
         MANAGER_FIRST_NAME("manager_first_name"),
         MANAGER_LAST_NAME("manager_last_name"),
         SIRET("siret"),
+        IS_PRINCIPAL("is_principal"),
+        FITNESS_CENTER_MANAGER_ID("fitness_center_manager_id"),
+        IS_ACTIVE("is_active"),
+        ADMINISTRATOR_ID("administrator_id"),
+        ADMINISTRATOR_NAME("administrator_name"),
+        IS_VALIDATED("is_validated"),
         ;
         public String key;
         Field(String key) {
@@ -391,6 +417,7 @@ public class Protocol {
         MGR_ERROR_ERROR_LASTNAME("702", "manager's last name is missing"),
         MGR_ERROR_ERROR_PHONE("703", "manager's phone number is missing"),
         MGR_ERROR_NO_CENTER("704", "manager do not have associated center"),
+        MGR_ERROR_NOT_PRINCIPAL("705", "manager do not have the authorization"),
         CTR_REG_SUCCESS("801", "ok"),
         CTR_ERROR_ERROR_NAME("802", "center's name is missing"),
         CTR_ERROR_ERROR_SIRET("808", "center's SIRET number is missing"),
@@ -399,6 +426,7 @@ public class Protocol {
         CTR_ERROR_ERROR_ZIP_CODE("805", "center's zip code is missing"),
         CTR_ERROR_ERROR_CITY("806", "center's city is missing"),
         CTR_ERROR_ALREADY_EXISTS("807", "center already exists"),
+        CTR_ERROR_DOESNT_EXIST("808", "center doesnt exist"),
         MISC_ERROR("401", "database problem"),
         GENERIC_MISSING_PARAM("402", "Missing parameters"),
         MISC_RANDOM("666", "Random error");

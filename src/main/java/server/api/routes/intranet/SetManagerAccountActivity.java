@@ -1,0 +1,87 @@
+package server.api.routes.intranet;
+
+import Tools.LogManager;
+import Tools.ObjectIdSerializer;
+import Tools.Token;
+import com.google.gson.GsonBuilder;
+import io.vertx.core.http.HttpMethod;
+import io.vertx.core.http.HttpServerResponse;
+import io.vertx.ext.web.Router;
+import model.Database;
+import model.entities.Fitness_Center;
+import model.entities.Fitness_Center_Manager;
+import org.bson.types.ObjectId;
+import protocol.ResponseObject;
+import protocol.intranet.Protocol;
+
+import java.util.Map;
+import java.util.Objects;
+
+public class SetManagerAccountActivity {
+    public SetManagerAccountActivity(Router router) {
+        router.route(HttpMethod.POST, Protocol.Path.MANAGER_ACTIVITY.path).handler(routingContext -> {
+
+            Map<String, Object> received = routingContext.getBodyAsJson().getMap();
+            ResponseObject sending;
+            HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
+            Fitness_Center_Manager me;
+            Fitness_Center center;
+
+            try {
+                me = (Fitness_Center_Manager) Database.find_entity(Database.Collections.Fitness_Center_Managers, Fitness_Center_Manager.Field.EMAIL, Token.decodeToken((String) received.get(Protocol.Field.TOKEN.key)).getIssuer());
+                if (!Objects.equals(me.getField(Fitness_Center_Manager.Field.TOKEN), received.get(Protocol.Field.TOKEN.key))) {
+
+                    sending = new ResponseObject(true);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
+
+                } else if (received.get(Protocol.Field.FITNESS_CENTER_MANAGER_ID.key) == null) {
+
+                    sending = new ResponseObject(true);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_MISSING_PARAM.code);
+
+                } else if (received.get(Protocol.Field.IS_ACTIVE.key) == null) {
+
+                    sending = new ResponseObject(true);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_MISSING_PARAM.code);
+
+                } else {
+
+                    center = (Fitness_Center) Database.find_entity(Database.Collections.Fitness_Centers, Fitness_Center.Field.ID, me.getField(Fitness_Center_Manager.Field.FITNESS_CENTER_ID));
+
+                    if (center == null) {
+                        sending = new ResponseObject(true);
+                        sending.put(Protocol.Field.STATUS.key, Protocol.Status.MGR_ERROR_NO_CENTER.code);
+                    } else if (!(Boolean)me.getField(Fitness_Center_Manager.Field.IS_PRINCIPAL)) {
+                        sending = new ResponseObject(true);
+                        sending.put(Protocol.Field.STATUS.key, Protocol.Status.MGR_ERROR_NOT_PRINCIPAL.code);
+
+                    } else {
+                        sending = new ResponseObject(false);
+                        sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
+
+                        Fitness_Center_Manager manager = (Fitness_Center_Manager) Database.find_entity(Database.Collections.Fitness_Center_Managers, Fitness_Center_Manager.Field.ID, new ObjectId((String) received.get(Protocol.Field.FITNESS_CENTER_MANAGER_ID.key)));
+
+                        Long time = System.currentTimeMillis();
+
+                        manager.setField(Fitness_Center_Manager.Field.IS_ACTIVE, received.get(Protocol.Field.IS_ACTIVE.key));
+                        manager.setField(Fitness_Center_Manager.Field.LAST_UPDATE_ACTIVITY, time);
+                        manager.setField(Fitness_Center_Manager.Field.LAST_UPDATE_ADMIN_ID, me.getField(Fitness_Center_Manager.Field.ID));
+
+                        manager.setField(Fitness_Center_Manager.Field.LAST_UPDATE_ADMIN_IS_MANAGER, true);
+
+                        Database.update_entity(Database.Collections.Fitness_Center_Managers, manager);
+
+                        sending.put(Protocol.Field.ADMINISTRATOR_ID.key, me.getField(Fitness_Center_Manager.Field.ID));
+                        sending.put(Protocol.Field.ADMINISTRATOR_NAME.key, me.getField(Fitness_Center_Manager.Field.FIRSTNAME) + " " + me.getField(Fitness_Center_Manager.Field.LASTNAME));
+                    }
+                }
+
+            } catch (Exception e) {
+                sending = new ResponseObject(true);
+                sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_ERROR.code);
+                LogManager.write("Exception: " + e.toString());
+            }
+            response.end(new GsonBuilder().registerTypeAdapter(ObjectId.class, new ObjectIdSerializer()).create().toJson(sending));
+        });
+    }
+}

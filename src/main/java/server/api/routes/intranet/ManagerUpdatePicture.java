@@ -7,6 +7,7 @@ import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import model.Database;
+import model.entities.Fitness_Center;
 import model.entities.Fitness_Center_Manager;
 import model.entities.Picture;
 import protocol.intranet.Protocol;
@@ -22,6 +23,7 @@ public class ManagerUpdatePicture {
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
             Fitness_Center_Manager manager;
+            Fitness_Center center;
             String pic64;
 
             try {
@@ -39,13 +41,20 @@ public class ManagerUpdatePicture {
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_MISSING_PARAM.code);
                 }
                 else {
-                    sending = new ResponseObject(false);
-                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
-                    Picture pic = (Picture) Database.new_entity(Database.Collections.Pictures);
-                    pic.setField(Picture.Field.PICTURE, pic64);
-                    manager.setField(Fitness_Center_Manager.Field.PICTURE_ID, pic.getField(Picture.Field.ID));
-                    Database.update_entity(Database.Collections.Pictures, pic);
-                    Database.update_entity(Database.Collections.Fitness_Center_Managers, manager);
+                    center = (Fitness_Center) Database.find_entity(Database.Collections.Fitness_Centers, Fitness_Center.Field.ID, manager.getField(Fitness_Center_Manager.Field.FITNESS_CENTER_ID));
+
+                    if (center == null) {
+                        sending = new ResponseObject(true);
+                        sending.put(Protocol.Field.STATUS.key, Protocol.Status.MGR_ERROR_NO_CENTER.code);
+                    } else {
+                        sending = new ResponseObject(false);
+                        sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
+                        Picture pic = (Picture) Database.new_entity(Database.Collections.Pictures);
+                        pic.setField(Picture.Field.PICTURE, pic64);
+                        manager.setField(Fitness_Center_Manager.Field.PICTURE_ID, pic.getField(Picture.Field.ID));
+                        Database.update_entity(Database.Collections.Pictures, pic);
+                        Database.update_entity(Database.Collections.Fitness_Center_Managers, manager);
+                    }
                 }
             }catch (Exception e){
                 sending = new ResponseObject(true);

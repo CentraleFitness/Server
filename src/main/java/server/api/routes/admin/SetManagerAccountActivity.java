@@ -55,6 +55,8 @@ public class SetManagerAccountActivity {
                     manager.setField(Fitness_Center_Manager.Field.LAST_UPDATE_ACTIVITY, time);
                     manager.setField(Fitness_Center_Manager.Field.LAST_UPDATE_ADMIN_ID, admin.getField(Administrator.Field.ID));
 
+                    manager.setField(Fitness_Center_Manager.Field.LAST_UPDATE_ADMIN_IS_MANAGER, false);
+
                     Database.update_entity(Database.Collections.Fitness_Center_Managers, manager);
 
                     sending.put(Protocol.Field.ADMINISTRATOR_ID.key, admin.getField(Administrator.Field.ID));

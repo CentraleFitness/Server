@@ -45,6 +45,7 @@ public class AuthenticationWithToken {
                 } else {
                     sending = new ResponseObject(false);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_SUCCESS.code);
+                    sending.put(Protocol.Field.IS_PRINCIPAL.key, manager.getField(Fitness_Center_Manager.Field.IS_PRINCIPAL));
                 }
             }catch (Exception e){
                 sending = new ResponseObject(true);

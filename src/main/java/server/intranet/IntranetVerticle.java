@@ -46,6 +46,8 @@ public class IntranetVerticle extends AbstractVerticle {
 
         new RegisterManagerAndCenter(this.router);
 
+        new RegisterManager(this.router);
+
         new AuthenticationWithCredentials(this.router);
         new AuthenticationWithToken(this.router);
 
@@ -54,6 +56,9 @@ public class IntranetVerticle extends AbstractVerticle {
         new ManagerUpdateProfile(this.router);
         new ManagerUpdatePicture(this.router);
         new ManagerGetPicture(this.router);
+
+        new ValidateManager(this.router);
+        new SetManagerAccountActivity(this.router);
 
         new CenterGetProfile(this.router);
         new CenterUpdateProfile(this.router);
@@ -96,6 +101,8 @@ public class IntranetVerticle extends AbstractVerticle {
         new GetStatistics(this.router);
 
         new GetFitnessCenterId(this.router);
+
+        new GetSecondaryManagers(this.router);
     }
 
 

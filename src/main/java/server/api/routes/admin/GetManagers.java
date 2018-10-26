@@ -57,6 +57,13 @@ public class GetManagers {
                     }
 
                     @SuppressWarnings("unchecked")
+                    FindIterable<Fitness_Center_Manager> findIterableManagers = (FindIterable<Fitness_Center_Manager>) Database.collections.get(Database.Collections.Fitness_Center_Managers).find();
+                    Map<String, Object> managers_principals = new HashMap<>();
+                    for (Document doc : findIterableManagers) {
+                        managers_principals.put(doc.getObjectId("_id").toString(), doc.getString("first_name") + " " + doc.getString("last_name"));
+                    }
+
+                    @SuppressWarnings("unchecked")
                     FindIterable<Fitness_Center_Manager> findIterable = (FindIterable<Fitness_Center_Manager>) Database.collections.get(Database.Collections.Fitness_Center_Managers).find().sort(orderBy(descending(Fitness_Center_Manager.Field.CREATION_DATE.get_key())));
                     List<Map<String,Object>> managers = new ArrayList<>();
                     HashMap<String,Object> cur;
@@ -70,20 +77,40 @@ public class GetManagers {
                         cur.put("is_active", doc.getBoolean("is_active"));
                         cur.put("last_update_activity", doc.getLong("last_update_activity"));
                         cur.put("last_update_admin_id", doc.getObjectId("last_update_admin_id"));
+                        cur.put("last_update_admin_is_manager", doc.getBoolean("last_update_admin_is_manager"));
                         cur.put("is_validated", doc.getBoolean("is_validated"));
                         cur.put("is_refused", doc.getBoolean("is_refused"));
                         cur.put("validation_date", doc.getLong("validation_date"));
                         cur.put("validator_admin_id", doc.getObjectId("validator_admin_id"));
+                        cur.put("validator_admin_is_manager", doc.getBoolean("validator_admin_is_manager"));
                         cur.put("creation_date", doc.getLong("creation_date"));
+                        cur.put("is_principal", doc.getBoolean("is_principal"));
 
 
-                        if (doc.getObjectId("validator_admin_id") != null &&
+                        if (!doc.getBoolean("validator_admin_is_manager") &&
+                                doc.getObjectId("validator_admin_id") != null &&
                                 admins.containsKey(doc.getObjectId("validator_admin_id").toString())) {
+
                             cur.put("validator_admin_name", admins.get(doc.getObjectId("validator_admin_id").toString()));
+
+                        } else if (doc.getBoolean("validator_admin_is_manager") &&
+                                doc.getObjectId("validator_admin_id") != null &&
+                                managers_principals.containsKey(doc.getObjectId("validator_admin_id").toString())) {
+
+                            cur.put("validator_admin_name", managers_principals.get(doc.getObjectId("validator_admin_id").toString()));
                         }
-                        if (doc.getObjectId("last_update_admin_id") != null &&
+
+                        if (!doc.getBoolean("last_update_admin_is_manager") &&
+                                doc.getObjectId("last_update_admin_id") != null &&
                                 admins.containsKey(doc.getObjectId("last_update_admin_id").toString())) {
+
                             cur.put("last_update_admin_name", admins.get(doc.getObjectId("last_update_admin_id").toString()));
+
+                        } else if (doc.getBoolean("last_update_admin_is_manager") &&
+                                doc.getObjectId("last_update_admin_id") != null &&
+                                managers_principals.containsKey(doc.getObjectId("last_update_admin_id").toString())) {
+
+                            cur.put("last_update_admin_name", managers_principals.get(doc.getObjectId("last_update_admin_id").toString()));
                         }
 
                         //TODO ECLATER ???

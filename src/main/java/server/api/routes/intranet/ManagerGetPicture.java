@@ -7,6 +7,7 @@ import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import model.Database;
+import model.entities.Fitness_Center;
 import model.entities.Fitness_Center_Manager;
 import model.entities.Picture;
 import protocol.intranet.Protocol;
@@ -22,6 +23,7 @@ public class ManagerGetPicture {
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
             Fitness_Center_Manager manager;
+            Fitness_Center center;
             Picture picture;
 
             try {
@@ -35,15 +37,22 @@ public class ManagerGetPicture {
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_ACCOUNT_INACTIVE.code);
 
                 } else {
-                    picture = (Picture) Database.find_entity(Database.Collections.Pictures, Picture.Field.ID, manager.getField(Fitness_Center_Manager.Field.PICTURE_ID));
+                    center = (Fitness_Center) Database.find_entity(Database.Collections.Fitness_Centers, Fitness_Center.Field.ID, manager.getField(Fitness_Center_Manager.Field.FITNESS_CENTER_ID));
 
-                    sending = new ResponseObject(false);
-                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
-
-                    if (picture == null) {
-                        sending.put(Protocol.Field.PICTURE.key, "");
+                    if (center == null) {
+                        sending = new ResponseObject(true);
+                        sending.put(Protocol.Field.STATUS.key, Protocol.Status.MGR_ERROR_NO_CENTER.code);
                     } else {
-                        sending.put(Protocol.Field.PICTURE.key, picture.getField(Picture.Field.PICTURE));
+                        picture = (Picture) Database.find_entity(Database.Collections.Pictures, Picture.Field.ID, manager.getField(Fitness_Center_Manager.Field.PICTURE_ID));
+
+                        sending = new ResponseObject(false);
+                        sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
+
+                        if (picture == null) {
+                            sending.put(Protocol.Field.PICTURE.key, "");
+                        } else {
+                            sending.put(Protocol.Field.PICTURE.key, picture.getField(Picture.Field.PICTURE));
+                        }
                     }
                 }
             }catch (Exception e){

@@ -72,6 +72,8 @@ public class ValidateManager {
                         manager.setField(Fitness_Center_Manager.Field.VALIDATION_DATE, time);
                         manager.setField(Fitness_Center_Manager.Field.VALIDATOR_ADMIN_ID, admin.getField(Administrator.Field.ID));
 
+                        manager.setField(Fitness_Center_Manager.Field.VALIDATOR_ADMIN_IS_MANAGER, false);
+
                         Database.update_entity(Database.Collections.Fitness_Center_Managers, manager);
 
                         sending.put(Protocol.Field.ADMINISTRATOR_ID.key, admin.getField(Administrator.Field.ID));

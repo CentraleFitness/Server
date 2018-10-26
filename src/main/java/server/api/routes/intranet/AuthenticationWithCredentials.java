@@ -43,7 +43,8 @@ public class AuthenticationWithCredentials {
                         sending = new ResponseObject(false);
                         sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_SUCCESS.code);
                         manager.setField(Fitness_Center_Manager.Field.TOKEN, new Token((String) received.get(Protocol.Field.EMAIL.key), (String) received.get(Protocol.Field.PASSWORD.key)).generate());
-                        sending.put(Protocol.Field.TOKEN.key, (String) manager.getField(Fitness_Center_Manager.Field.TOKEN));
+                        sending.put(Protocol.Field.TOKEN.key, manager.getField(Fitness_Center_Manager.Field.TOKEN));
+                        sending.put(Protocol.Field.IS_PRINCIPAL.key, manager.getField(Fitness_Center_Manager.Field.IS_PRINCIPAL));
                         Database.update_entity(Database.Collections.Fitness_Center_Managers, manager);
                     } else {
                         sending = new ResponseObject(true);

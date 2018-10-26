@@ -17,9 +17,9 @@ import protocol.intranet.Protocol;
 
 import java.util.Map;
 
-public class RegisterManagerAndCenter {
-    public RegisterManagerAndCenter(Router router) {
-        router.route(HttpMethod.POST, Protocol.Path.REGISTRATION.path).handler(routingContext -> {
+public class RegisterManager {
+    public RegisterManager(Router router) {
+        router.route(HttpMethod.POST, Protocol.Path.MANAGER_REGISTRATION.path).handler(routingContext -> {
             Map<String, Object> received = routingContext.getBodyAsJson().getMap();
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
@@ -41,25 +41,10 @@ public class RegisterManagerAndCenter {
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_ERROR_LASTNAME.code);
                 } else if (Database.find_entity(Database.Collections.Fitness_Center_Managers, Fitness_Center_Manager.Field.EMAIL, received.get(Protocol.Field.EMAIL.key)) == null) {
 
-                    if (received.get(Protocol.Field.NAME.key) == null) {
-                        sending = new ResponseObject(true);
-                        sending.put(Protocol.Field.STATUS.key, Protocol.Status.CTR_ERROR_ERROR_NAME.code);
-                    } else if (received.get(Protocol.Field.SIRET.key) == null) {
+                    if (received.get(Protocol.Field.SIRET.key) == null) {
                         sending = new ResponseObject(true);
                         sending.put(Protocol.Field.STATUS.key, Protocol.Status.CTR_ERROR_ERROR_SIRET.code);
-                    } else if (received.get(Protocol.Field.DESCRIPTION.key) == null) {
-                        sending = new ResponseObject(true);
-                        sending.put(Protocol.Field.STATUS.key, Protocol.Status.CTR_ERROR_ERROR_DESCRIPTION.code);
-                    } else if (received.get(Protocol.Field.ADDRESS.key) == null) {
-                        sending = new ResponseObject(true);
-                        sending.put(Protocol.Field.STATUS.key, Protocol.Status.CTR_ERROR_ERROR_ADDRESS.code);
-                    } else if (received.get(Protocol.Field.ZIP_CODE.key) == null) {
-                        sending = new ResponseObject(true);
-                        sending.put(Protocol.Field.STATUS.key, Protocol.Status.CTR_ERROR_ERROR_ZIP_CODE.code);
-                    } else if (received.get(Protocol.Field.CITY.key) == null) {
-                        sending = new ResponseObject(true);
-                        sending.put(Protocol.Field.STATUS.key, Protocol.Status.CTR_ERROR_ERROR_CITY.code);
-                    } else if (Database.find_entity(Database.Collections.Fitness_Centers, Fitness_Center.Field.SIRET, received.get(Protocol.Field.SIRET.key)) == null) {
+                    } else if ((center = (Fitness_Center) Database.find_entity(Database.Collections.Fitness_Centers, Fitness_Center.Field.SIRET, received.get(Protocol.Field.SIRET.key))) != null) {
 
                         Long time = System.currentTimeMillis();
 
@@ -85,34 +70,14 @@ public class RegisterManagerAndCenter {
 
                         manager.setField(Fitness_Center_Manager.Field.VALIDATOR_ADMIN_IS_MANAGER, false);
 
-                        manager.setField(Fitness_Center_Manager.Field.IS_PRINCIPAL, true);
+                        manager.setField(Fitness_Center_Manager.Field.IS_PRINCIPAL, false);
 
-                        center = (Fitness_Center) Database.new_entity(Database.Collections.Fitness_Centers);
-                        center.setField(Fitness_Center.Field.NAME, received.get(Protocol.Field.NAME.key));
-                        center.setField(Fitness_Center.Field.SIRET, received.get(Protocol.Field.SIRET.key));
-                        center.setField(Fitness_Center.Field.DESCRIPTION, received.get(Protocol.Field.DESCRIPTION.key));
-                        center.setField(Fitness_Center.Field.ADDRESS, received.get(Protocol.Field.ADDRESS.key));
-                        if (received.get(Protocol.Field.ADDRESS_SECOND.key) != null) {
-                            center.setField(Fitness_Center.Field.ADDRESS_SECOND, received.get(Protocol.Field.ADDRESS_SECOND.key));
-                        } else {
-                            center.setField(Fitness_Center.Field.ADDRESS_SECOND, "");
-                        }
-                        center.setField(Fitness_Center.Field.ZIP_CODE, received.get(Protocol.Field.ZIP_CODE.key));
-                        center.setField(Fitness_Center.Field.CITY, ((String)received.get(Protocol.Field.CITY.key)).toUpperCase());
-                        if (received.get(Protocol.Field.CENTER_PHONE.key) != null) {
-                            center.setField(Fitness_Center.Field.PHONE, received.get(Protocol.Field.CENTER_PHONE.key));
-                        } else {
-                            center.setField(Fitness_Center.Field.PHONE, "");
-                        }
-                        center.setField(Fitness_Center.Field.CREATION_DATE, time);
-
-                        Database.update_entity(Database.Collections.Fitness_Center_Managers, manager);
-
-                        Database.update_entity(Database.Collections.Fitness_Centers, center);
                         manager.setField(Fitness_Center_Manager.Field.FITNESS_CENTER_ID, center.getField(Fitness_Center.Field.ID));
+
                         Database.update_entity(Database.Collections.Fitness_Center_Managers, manager);
 
-                        if (Database.collections.get(Database.Collections.Statistics).count(Filters.eq("fitness_center_id", center.getField(Fitness_Center.Field.ID))) == 0) {
+
+                        /*if (Database.collections.get(Database.Collections.Statistics).count(Filters.eq("fitness_center_id", center.getField(Fitness_Center.Field.ID))) == 0) {
                             Statistic statistic = (Statistic) Database.new_entity(Database.Collections.Statistics);
                             statistic.setField(Statistic.Field.FITNESS_CENTER_ID, center.getField(Fitness_Center.Field.ID));
                             statistic.setField(Statistic.Field.PRODUCTION_DAY, 0);
@@ -121,13 +86,13 @@ public class RegisterManagerAndCenter {
                             statistic.setField(Statistic.Field.FREQUENTATION_MONTH, 0);
 
                             Database.update_entity(Database.Collections.Statistics, statistic);
-                        }
+                        }*/
 
                         sending = new ResponseObject(false);
                         sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_SUCCESS.code);
                     } else {
                         sending = new ResponseObject(true);
-                        sending.put(Protocol.Field.STATUS.key, Protocol.Status.CTR_ERROR_ALREADY_EXISTS.code);
+                        sending.put(Protocol.Field.STATUS.key, Protocol.Status.CTR_ERROR_DOESNT_EXIST.code);
                     }
 
                 } else {
@@ -135,13 +100,6 @@ public class RegisterManagerAndCenter {
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_ERROR_EMAIL_TAKEN.code);
                 }
             } catch (Exception e) {
-                if (manager != null) {
-                    Database.delete_entity(Database.Collections.Fitness_Center_Managers, Fitness_Center_Manager.Field.ID, manager.getField(Fitness_Center_Manager.Field.ID));
-                }
-                if (center != null) {
-                    Database.delete_entity(Database.Collections.Fitness_Centers, Fitness_Center.Field.ID, center.getField(Fitness_Center.Field.ID));
-                }
-
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_ERROR.code);
                 LogManager.write("Exception: " + e.toString());

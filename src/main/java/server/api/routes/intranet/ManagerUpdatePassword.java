@@ -8,6 +8,7 @@ import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import model.Database;
+import model.entities.Fitness_Center;
 import model.entities.Fitness_Center_Manager;
 import protocol.intranet.Protocol;
 import protocol.ResponseObject;
@@ -22,6 +23,7 @@ public class ManagerUpdatePassword {
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
             Fitness_Center_Manager manager;
+            Fitness_Center center;
 
             try {
                 manager = (Fitness_Center_Manager) Database.find_entity(Database.Collections.Fitness_Center_Managers, Fitness_Center_Manager.Field.EMAIL, Token.decodeToken((String) received.get(Protocol.Field.TOKEN.key)).getIssuer());
@@ -37,12 +39,19 @@ public class ManagerUpdatePassword {
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_ACCOUNT_INACTIVE.code);
 
                 } else {
-                    manager.setField(Fitness_Center_Manager.Field.PASSWORD_HASH, new PasswordAuthentication().hash(((String) received.get(Protocol.Field.NEW_PASSWORD.key)).toCharArray()));
-                    manager.setField(Fitness_Center_Manager.Field.TOKEN, new Token((String) manager.getField(Fitness_Center_Manager.Field.EMAIL), (String) received.get(Protocol.Field.NEW_PASSWORD.key)).generate());
-                    Database.update_entity(Database.Collections.Fitness_Center_Managers, manager);
-                    sending = new ResponseObject(false);
-                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
-                    sending.put(Protocol.Field.TOKEN.key, manager.getField(Fitness_Center_Manager.Field.TOKEN));
+                    center = (Fitness_Center) Database.find_entity(Database.Collections.Fitness_Centers, Fitness_Center.Field.ID, manager.getField(Fitness_Center_Manager.Field.FITNESS_CENTER_ID));
+
+                    if (center == null) {
+                        sending = new ResponseObject(true);
+                        sending.put(Protocol.Field.STATUS.key, Protocol.Status.MGR_ERROR_NO_CENTER.code);
+                    } else {
+                        manager.setField(Fitness_Center_Manager.Field.PASSWORD_HASH, new PasswordAuthentication().hash(((String) received.get(Protocol.Field.NEW_PASSWORD.key)).toCharArray()));
+                        manager.setField(Fitness_Center_Manager.Field.TOKEN, new Token((String) manager.getField(Fitness_Center_Manager.Field.EMAIL), (String) received.get(Protocol.Field.NEW_PASSWORD.key)).generate());
+                        Database.update_entity(Database.Collections.Fitness_Center_Managers, manager);
+                        sending = new ResponseObject(false);
+                        sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
+                        sending.put(Protocol.Field.TOKEN.key, manager.getField(Fitness_Center_Manager.Field.TOKEN));
+                    }
                 }
             } catch (Exception e){
                 sending = new ResponseObject(true);

@@ -26,6 +26,8 @@ public class Protocol {
 
         MODULE_STATE("/module_state"),
 
+        CONSULT_SIRET("/consult_siret"),
+
         ;
         public String path;
         Path(String path) {
@@ -63,6 +65,7 @@ public class Protocol {
         AUTO_GENERATE_UUID("auto_generate_uuid"),
         MODULE_STATE_CODE("module_state_code"),
         MODULE_STATE_ID("module_state_id"),
+        SIRET("siret"),
         ;
         public String key;
         Field(String key) {

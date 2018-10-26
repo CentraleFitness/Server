@@ -9,6 +9,7 @@ import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import model.Database;
 import model.entities.Feedback;
+import model.entities.Fitness_Center;
 import model.entities.Fitness_Center_Manager;
 import org.bson.types.ObjectId;
 import protocol.intranet.Protocol;
@@ -25,6 +26,7 @@ public class GetFeedbacks {
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
             Fitness_Center_Manager manager;
+            Fitness_Center center;
 
             try {
                 manager = (Fitness_Center_Manager) Database.find_entity(Database.Collections.Fitness_Center_Managers, Fitness_Center_Manager.Field.EMAIL, Token.decodeToken((String) received.get(Protocol.Field.TOKEN.key)).getIssuer());
@@ -37,11 +39,31 @@ public class GetFeedbacks {
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_ACCOUNT_INACTIVE.code);
 
                 } else {
-                    sending = new ResponseObject(false);
-                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
+                    center = (Fitness_Center) Database.find_entity(Database.Collections.Fitness_Centers, Fitness_Center.Field.ID, manager.getField(Fitness_Center_Manager.Field.FITNESS_CENTER_ID));
 
-                    LinkedList<Database.Entity> feedbacks = Database.find_entities(Database.Collections.Feedbacks, Feedback.Field.FITNESS_MANAGER_ID, manager.getField(Fitness_Center_Manager.Field.ID));
-                    sending.put(Protocol.Field.FEEDBACKS.key, feedbacks);
+                    if (center == null) {
+                        sending = new ResponseObject(true);
+                        sending.put(Protocol.Field.STATUS.key, Protocol.Status.MGR_ERROR_NO_CENTER.code);
+                    } else {
+                        sending = new ResponseObject(false);
+                        sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
+
+                        LinkedList<Database.Entity> feedbacks;
+
+                        if ((Boolean)manager.getField(Fitness_Center_Manager.Field.IS_PRINCIPAL)) {
+                            //TODO AJOUTER LE NOM DES MANAGERS
+                            feedbacks = Database.find_entities(Database.Collections.Feedbacks,
+                                    Feedback.Field.FITNESS_CENTER_ID,
+                                    center.getField(Fitness_Center.Field.ID));
+
+                        } else {
+                            feedbacks = Database.find_entities(Database.Collections.Feedbacks,
+                                    Feedback.Field.FITNESS_MANAGER_ID,
+                                    manager.getField(Fitness_Center_Manager.Field.ID));
+
+                        }
+                        sending.put(Protocol.Field.FEEDBACKS.key, feedbacks);
+                    }
                 }
             }catch (Exception e){
                 sending = new ResponseObject(true);

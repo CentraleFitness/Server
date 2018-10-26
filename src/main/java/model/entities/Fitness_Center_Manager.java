@@ -1,5 +1,6 @@
 package model.entities;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import model.Database;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -19,10 +20,13 @@ public class Fitness_Center_Manager extends Database.Entity {
         IS_ACTIVE("is_active", Boolean.class),
         LAST_UPDATE_ACTIVITY("last_update_activity", Long.class),
         LAST_UPDATE_ADMIN_ID("last_update_admin_id", ObjectId.class),
+        LAST_UPDATE_ADMIN_IS_MANAGER("last_update_admin_is_manager", Boolean.class),
         IS_VALIDATED("is_validated", Boolean.class),
         IS_REFUSED("is_refused", Boolean.class),
         VALIDATION_DATE("validation_date", Long.class),
         VALIDATOR_ADMIN_ID("validator_admin_id", ObjectId.class),
+        VALIDATOR_ADMIN_IS_MANAGER("validator_admin_is_manager", Boolean.class),
+        IS_PRINCIPAL("is_principal", Boolean.class),
         ;
         @Override
         public String get_key() {
