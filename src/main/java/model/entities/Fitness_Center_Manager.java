@@ -1,6 +1,5 @@
 package model.entities;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import model.Database;
 import org.bson.Document;
 import org.bson.types.ObjectId;
