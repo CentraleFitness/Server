@@ -32,6 +32,7 @@ public class ConsultSiretApi {
             Administrator admin;
 
             try {
+                LogManager.write("XXX");
                 admin = (Administrator) Database.find_entity(Database.Collections.Administrators, Administrator.Field.EMAIL, Token.decodeToken((String) routingContext.request().getParam(Protocol.Field.TOKEN.key)).getIssuer());
                 if (!Objects.equals(admin.getField(Administrator.Field.TOKEN), routingContext.request().getParam(Protocol.Field.TOKEN.key))) {
 
