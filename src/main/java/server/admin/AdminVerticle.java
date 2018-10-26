@@ -62,7 +62,7 @@ public class AdminVerticle extends AbstractVerticle {
         new SetManagerAccountActivity(this.router);
         new UndoRefuseManager(this.router);
 
-        new ConsultSiretApi(this.router);
+        //new ConsultSiretApi(this.router);
 
         new GetManagerFeedbacks(this.router);
         new UpdateManagerFeeback(this.router);
