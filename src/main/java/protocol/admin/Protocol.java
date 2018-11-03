@@ -66,6 +66,7 @@ public class Protocol {
         MODULE_STATE_CODE("module_state_code"),
         MODULE_STATE_ID("module_state_id"),
         SIRET("siret"),
+        INFO("info"),
         ;
         public String key;
         Field(String key) {
