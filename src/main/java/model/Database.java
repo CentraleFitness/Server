@@ -11,6 +11,7 @@ import java.util.Map;
 import Tools.PasswordAuthentication;
 import Tools.Token;
 import model.entities.*;
+import model.entities.Module;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
