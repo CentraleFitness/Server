@@ -5,11 +5,8 @@ import Tools.ObjectIdSerializer;
 import Tools.Token;
 import com.google.gson.GsonBuilder;
 import com.mongodb.util.JSON;
-import io.vertx.core.Future;
-import io.vertx.core.Handler;
-import io.vertx.core.MultiMap;
-import io.vertx.core.http.*;
-import io.vertx.core.streams.ReadStream;
+import io.vertx.core.http.HttpMethod;
+import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import model.Database;
 import model.entities.Administrator;
@@ -17,14 +14,11 @@ import org.apache.commons.codec.binary.Base64;
 import org.bson.types.ObjectId;
 import protocol.ResponseObject;
 import protocol.admin.Protocol;
-import sun.misc.BASE64Encoder;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;
 
 public class ConsultSiretApi {
 
