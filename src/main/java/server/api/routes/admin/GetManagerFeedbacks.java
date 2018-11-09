@@ -29,14 +29,13 @@ public class GetManagerFeedbacks {
     public GetManagerFeedbacks(Router router) {
         router.route(HttpMethod.GET, Protocol.Path.MANAGER_FEEDBACK.path).handler(routingContext -> {
 
-            Map<String, Object> received = routingContext.getBodyAsJson().getMap();
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
             Administrator admin;
 
             try {
-                admin = (Administrator) Database.find_entity(Database.Collections.Administrators, Administrator.Field.EMAIL, Token.decodeToken((String) received.get(Protocol.Field.TOKEN.key)).getIssuer());
-                if (!Objects.equals(admin.getField(Administrator.Field.TOKEN), received.get(Protocol.Field.TOKEN.key))) {
+                admin = (Administrator) Database.find_entity(Database.Collections.Administrators, Administrator.Field.EMAIL, Token.decodeToken(routingContext.request().getParam(Protocol.Field.TOKEN.key)).getIssuer());
+                if (!Objects.equals(admin.getField(Administrator.Field.TOKEN), routingContext.request().getParam(Protocol.Field.TOKEN.key))) {
 
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
@@ -48,9 +47,9 @@ public class GetManagerFeedbacks {
 
                     Bson filter = Filters.and();
 
-                    if (received.get(Protocol.Field.FITNESS_CENTER_ID.key) != null) {
+                    if (routingContext.request().getParam(Protocol.Field.FITNESS_CENTER_ID.key) != null) {
 
-                        Fitness_Center_Manager manager = (Fitness_Center_Manager) Database.find_entity(Database.Collections.Fitness_Center_Managers, Fitness_Center_Manager.Field.FITNESS_CENTER_ID, received.get(Protocol.Field.FITNESS_CENTER_ID.key));
+                        Fitness_Center_Manager manager = (Fitness_Center_Manager) Database.find_entity(Database.Collections.Fitness_Center_Managers, Fitness_Center_Manager.Field.FITNESS_CENTER_ID, routingContext.request().getParam(Protocol.Field.FITNESS_CENTER_ID.key));
 
                         filter = Filters.and(
                                 Filters.eq(Feedback.Field.FITNESS_MANAGER_ID.get_key(), manager.getField(Fitness_Center_Manager.Field.ID))
