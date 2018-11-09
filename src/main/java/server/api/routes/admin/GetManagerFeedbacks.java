@@ -45,20 +45,8 @@ public class GetManagerFeedbacks {
                     sending = new ResponseObject(false);
                     sending.put(Protocol.Field.STATUS.key, protocol.intranet.Protocol.Status.GENERIC_OK.code);
 
-                    Bson filter = Filters.and();
-
-                    if (routingContext.request().getParam(Protocol.Field.FITNESS_CENTER_ID.key) != null) {
-
-                        Fitness_Center_Manager manager = (Fitness_Center_Manager) Database.find_entity(Database.Collections.Fitness_Center_Managers, Fitness_Center_Manager.Field.FITNESS_CENTER_ID, routingContext.request().getParam(Protocol.Field.FITNESS_CENTER_ID.key));
-
-                        filter = Filters.and(
-                                Filters.eq(Feedback.Field.FITNESS_MANAGER_ID.get_key(), manager.getField(Fitness_Center_Manager.Field.ID))
-                        );
-
-                    }
-
                     @SuppressWarnings("unchecked")
-                    FindIterable<Feedback> findIterable = (FindIterable<Feedback>) Database.collections.get(Database.Collections.Feedbacks).find(filter).sort(orderBy(descending(Feedback.Field.UPDATE_DATE.get_key())));
+                    FindIterable<Feedback> findIterable = (FindIterable<Feedback>) Database.collections.get(Database.Collections.Feedbacks).find().sort(orderBy(descending(Feedback.Field.UPDATE_DATE.get_key())));
                     List<Map<String,Object>> feedbacks = new ArrayList<>();
                     HashMap<String,Object> cur;
                     for (Document doc : findIterable) {
