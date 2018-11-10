@@ -10,10 +10,7 @@ import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import model.Database;
-import model.entities.Administrator;
-import model.entities.Feedback;
-import model.entities.Fitness_Center_Manager;
-import model.entities.Module;
+import model.entities.*;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
@@ -46,6 +43,27 @@ public class GetManagerFeedbacks {
                     sending.put(Protocol.Field.STATUS.key, protocol.intranet.Protocol.Status.GENERIC_OK.code);
 
                     @SuppressWarnings("unchecked")
+                    FindIterable<Fitness_Center> findIterableCenter = (FindIterable<Fitness_Center>) Database.collections.get(Database.Collections.Fitness_Centers).find();
+                    Map<String,Object> centers = new HashMap<>();
+                    for (Document doc : findIterableCenter) {
+                        centers.put(doc.getObjectId("_id").toString(), doc);
+                    }
+
+                    @SuppressWarnings("unchecked")
+                    FindIterable<Fitness_Center_Manager> findIterableManagers = (FindIterable<Fitness_Center_Manager>) Database.collections.get(Database.Collections.Fitness_Center_Managers).find();
+                    Map<String, Object> managers = new HashMap<>();
+                    for (Document doc : findIterableManagers) {
+                        managers.put(doc.getObjectId("_id").toString(), doc.getString("first_name") + " " + doc.getString("last_name"));
+                    }
+
+                    @SuppressWarnings("unchecked")
+                    FindIterable<Feedback_State> findIterableFeedbackStates = (FindIterable<Feedback_State>) Database.collections.get(Database.Collections.Feedback_States).find();
+                    Map<String, Object> feedback_states = new HashMap<>();
+                    for (Document doc : findIterableFeedbackStates) {
+                        feedback_states.put(doc.getObjectId("_id").toString(), doc.getString("text_fr"));
+                    }
+
+                    @SuppressWarnings("unchecked")
                     FindIterable<Feedback> findIterable = (FindIterable<Feedback>) Database.collections.get(Database.Collections.Feedbacks).find().sort(orderBy(descending(Feedback.Field.UPDATE_DATE.get_key())));
                     List<Map<String,Object>> feedbacks = new ArrayList<>();
                     HashMap<String,Object> cur;
@@ -57,7 +75,26 @@ public class GetManagerFeedbacks {
                         cur.put("feedback_state_id", doc.getObjectId("feedback_state_id").toString());
                         cur.put("feedback_state", doc.getInteger("feedback_state"));
                         cur.put("fitness_manager_id", doc.getObjectId("fitness_manager_id").toString());
+                        cur.put("fitness_center_id", doc.getObjectId("fitness_center_id").toString());
                         cur.put("update_date", doc.getLong("update_date"));
+
+                        if (doc.getObjectId("fitness_manager_id") != null &&
+                                managers.containsKey(doc.getObjectId("fitness_manager_id").toString())) {
+
+                            cur.put("fitness_manager_name", managers.get(doc.getObjectId("fitness_manager_id").toString()));
+                        }
+
+                        if (doc.getObjectId("fitness_center_id") != null &&
+                                centers.containsKey(doc.getObjectId("fitness_center_id").toString())) {
+
+                            cur.put("fitness_center_name", centers.get(doc.getObjectId("fitness_center_id").toString()));
+                        }
+
+                        if (doc.getObjectId("feedback_state_id") != null &&
+                                feedback_states.containsKey(doc.getObjectId("feedback_state_id").toString())) {
+
+                            cur.put("feedback_state_name", feedback_states.get(doc.getObjectId("feedback_state_id").toString()));
+                        }
 
                         feedbacks.add(cur);
                     }
