@@ -87,7 +87,7 @@ public class GetManagerFeedbacks {
                         if (doc.getObjectId("fitness_center_id") != null &&
                                 centers.containsKey(doc.getObjectId("fitness_center_id").toString())) {
 
-                            cur.put("fitness_center_name", centers.get(doc.getObjectId("fitness_center_id").toString()));
+                            cur.put("fitness_center", centers.get(doc.getObjectId("fitness_center_id").toString()));
                         }
 
                         if (doc.getObjectId("feedback_state_id") != null &&
