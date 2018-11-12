@@ -73,6 +73,10 @@ public class PostCommentGetRange {
 					return;
 				}
 				List<ObjectId> comments = (List<ObjectId>) post.getField(Post.Field.COMMENTS);
+				if (comments == null) {
+					comments = new ArrayList<>();
+					post.setField(Post.Field.COMMENTS, comments);
+				}
 				List<ObjectId> deletedComments = new ArrayList<>();
 				List<Map<String, String>> commentsContents = new ArrayList<>();
 				comments.stream().skip(rStart).limit(rEnd).forEach(commentId -> {
