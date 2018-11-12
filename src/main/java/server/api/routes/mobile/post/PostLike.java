@@ -1,5 +1,6 @@
 package server.api.routes.mobile.post;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -69,6 +70,8 @@ public class PostLike {
 					return;
 				}
 				List<ObjectId> likes = (List<ObjectId>) post.getField(Post.Field.LIKES);
+				if (likes == null)
+					likes = new ArrayList<>();
 				List like = likes.stream()
 						.filter(likerId -> likerId.toString().equals(user.getField(User.Field.ID).toString()))
 						.collect(Collectors.toList());
