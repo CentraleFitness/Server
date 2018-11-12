@@ -83,6 +83,7 @@ public class PostCommentGetRange {
 				List<Map<String, String>> commentsContents = new ArrayList<>();
 				comments.stream().skip(rStart).limit(rEnd).forEach(commentId -> {
 					try {
+						System.out.println("coucou");
 						Map<String, String> commentContent = new TreeMap<>();
 						Post comment = (Post) Database.find_entity(Collections.Posts, Post.Field.ID, commentId);
 						if (comment == null) {
