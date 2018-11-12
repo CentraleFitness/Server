@@ -74,16 +74,13 @@ public class PostCommentGetRange {
 				}
 				List<ObjectId> comments = (List<ObjectId>) post.getField(Post.Field.COMMENTS);
 				if (comments == null) {
-					System.out.println("comments est null");
 					comments = new ArrayList<>();
 					post.setField(Post.Field.COMMENTS, comments);
 				}
-				System.out.println(comments == null);
 				List<ObjectId> deletedComments = new ArrayList<>();
 				List<Map<String, String>> commentsContents = new ArrayList<>();
 				comments.stream().skip(rStart).limit(rEnd).forEach(commentId -> {
 					try {
-						System.out.println("coucou");
 						Map<String, String> commentContent = new TreeMap<>();
 						Post comment = (Post) Database.find_entity(Collections.Posts, Post.Field.ID, commentId);
 						if (comment == null) {
