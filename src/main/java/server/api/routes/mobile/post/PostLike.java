@@ -70,8 +70,10 @@ public class PostLike {
 					return;
 				}
 				List<ObjectId> likes = (List<ObjectId>) post.getField(Post.Field.LIKES);
-				if (likes == null)
+				if (likes == null) {
 					likes = new ArrayList<>();
+					post.setField(Post.Field.LIKES, likes);
+				}
 				List like = likes.stream()
 						.filter(likerId -> likerId.toString().equals(user.getField(User.Field.ID).toString()))
 						.collect(Collectors.toList());
