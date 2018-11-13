@@ -64,6 +64,7 @@ public class AdminVerticle extends AbstractVerticle {
 
         new ConsultSiretApi(this.router);
 
+        new GetMobileFeedbacks(this.router);
         new GetManagerFeedbacks(this.router);
         new UpdateManagerFeeback(this.router);
 

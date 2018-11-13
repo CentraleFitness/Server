@@ -20,6 +20,8 @@ public class Protocol {
 
         MANAGER_FEEDBACK("/manager_feedback"),
 
+        MOBILE_FEEDBACK("/mobile_feedback"),
+
         FITNESS_CENTER("/fitness_center"),
 
         MODULE("/module"),
