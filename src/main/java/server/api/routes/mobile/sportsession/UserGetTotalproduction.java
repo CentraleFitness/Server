@@ -24,7 +24,7 @@ public class UserGetTotalproduction {
 
 			ResponseObject sending = null;
 			HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
-
+			LogManager.write("UserGetTotalProduction {");
 			try {
 				Map<String, Object> received = routingContext.getBodyAsJson().getMap();
 				String rToken = (String) received.get(Protocol.Field.TOKEN.key);
@@ -43,9 +43,11 @@ public class UserGetTotalproduction {
 					return;
 				}
 				ObjectId user_id = (ObjectId) user.getField(User.Field.ID);
+				LogManager.write("\telectric productions {");
 				Double production = Database.find_entities(Collections.ElectricProductions, ElectricProduction.Field.USER_ID, user_id)
 						.stream().map(entity -> (double)((ElectricProduction) entity)
-								.getField(ElectricProduction.Field.PRODUCTION_TOTAL)).reduce((tt, cc) -> tt + cc).orElse(0D);
+								.getField(ElectricProduction.Field.PRODUCTION_TOTAL)).peek(prod -> LogManager.write("\t"+prod.toString() + " ")).reduce((tt, cc) -> tt + cc).orElse(0D);
+				LogManager.write("\t}");
 				sending = new ResponseObject(false);
 				sending.put(Protocol.Field.PRODUCTION.key, production);
 				sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
@@ -54,6 +56,7 @@ public class UserGetTotalproduction {
 				sending.put(Protocol.Field.STATUS.key, Protocol.Status.INTERNAL_SERVER_ERROR.code);
 				LogManager.write(e);
 			} finally {
+				LogManager.write("}");
 				response.end(new GsonBuilder().create().toJson(sending));
 			}
 		});

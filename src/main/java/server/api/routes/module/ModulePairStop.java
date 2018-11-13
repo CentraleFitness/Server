@@ -27,10 +27,10 @@ public class ModulePairStop {
     public ModulePairStop(Router router) {
         router.route(HttpMethod.POST, Protocol.Path.MODULE_PAIR_STOP.path).handler(routingContext -> {
 
-            ResponseObject sending;
+            ResponseObject sending = null;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
 
-            label:try {
+            try {
                 Map<String, Object> received = routingContext.getBodyAsJson().getMap();
                 String rApiKey = (String) received.get(Protocol.Field.APIKEY.key);
                 ArrayList<String> rUUID = (ArrayList) received.get(Protocol.Field.UUID.key);
@@ -39,20 +39,20 @@ public class ModulePairStop {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_KO.code);
                     LogManager.write("Missing key " + Protocol.Field.APIKEY.key);
-                    break label;
+                    return;
                 }
                 if (rUUID == null) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_KO.code);
                     LogManager.write("Missing key " + Protocol.Field.PRODUCTION.key);
-                    break label;
+                    return;
                 }
                 Fitness_Center fitness_center = (Fitness_Center) Database.find_entity(Database.Collections.Fitness_Centers, Fitness_Center.Field.API_KEY, rApiKey);
                 if (fitness_center == null) {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_KO.code);
                     LogManager.write("ApiKey not found in database");
-                    break label;
+                    return;
                 }
 
                 //Stop every pairs
@@ -80,8 +80,9 @@ public class ModulePairStop {
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.INTERNAL_SERVER_ERROR.code);
                 LogManager.write(e);
-            }
-            response.end(new GsonBuilder().create().toJson(sending));
+            } finally {
+                response.end(new GsonBuilder().create().toJson(sending));
+			}
         });
     }
 }

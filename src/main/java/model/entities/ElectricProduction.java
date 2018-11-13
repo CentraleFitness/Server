@@ -4,6 +4,8 @@ import model.Database;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
+import Tools.LogManager;
+
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -69,16 +71,19 @@ public class ElectricProduction extends Database.Entity {
     }
 
     public void addProduction(Object production_list) {
-        ArrayList pl = (ArrayList) production_list;
+        ArrayList<Double> pl = (ArrayList) production_list;
         double production = 0d;
+        LogManager.write("production list going to be added="+production_list.toString());
         for (int i = 0, j = pl.size(); i < j; ++i) {
             production += (double)pl.get(i);
         }
+        LogManager.write("production sum to be added=" + new Double(production).toString());
         double finalProduction = production;
         compute(Field.PRODUCTION_TOTAL.key, (key, value) -> (double)value + finalProduction);
         compute(Field.PRODUCTION_YEAR.key, (key, value) -> (double)value + finalProduction);
         compute(Field.PRODUCTION_MONTH.key, (key, value) -> (double)value + finalProduction);
         compute(Field.PRODUCTION_DAY.key, (key, value) -> (double)value + finalProduction);
+        LogManager.write("updating the electric production");
         updateProduction();
     }
 }
