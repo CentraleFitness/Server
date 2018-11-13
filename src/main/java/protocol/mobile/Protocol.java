@@ -25,7 +25,7 @@ public class Protocol {
 		CUSTOMPROGRAM_GET_RANGE("/customProgram-get-range"), CUSTOMPROGRAM_GET_PREVIEW("/customProgram-get-preview"),
 		CUSTOMPROGRAM_GET_STEPS("/customProgram-get-steps"), CUSTOMPROGRAM_FAV_ADD("/customProgram-fav-add"),
 		CUSTOMPROGRAM_FAV_REMOVE("/customProgram-fav-REMOVE"),
-		CUSTOMPROGRAM_FAV_GET_RANGE("/customProgram-fav-get-range"),;
+		CUSTOMPROGRAM_FAV_GET_RANGE("/customProgram-fav-get-range"), UNAFFILIATE("/unaffiliate"), USER_GET_TOTALPRODUCTION("/user/get/totalproduction"),;
 		public String path;
 
 		Path(String path) {
