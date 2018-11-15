@@ -54,7 +54,7 @@ public class GetMobileFeedbacks {
                     FindIterable<User> findIterableusers = (FindIterable<User>) Database.collections.get(Database.Collections.Users).find();
                     Map<String, Object> users = new HashMap<>();
                     for (Document doc : findIterableusers) {
-                        users.put(doc.getObjectId("email").toString(), doc);
+                        users.put(doc.getString("email"), doc);
                     }
 
                     LogManager.write("3");
