@@ -48,7 +48,7 @@ public class PostCommentCreate {
 				if (rPostContent == null) {
 					sending = new ResponseObject(true);
 					sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_KO.code);
-					LogManager.write("Missing key " + Protocol.Field.POSTCONTENT.key);
+					LogManager.write("Missing key " + Protocol.Field.COMMENTCONTENT.key);
 					return;
 				}
 				JWT token = Token.decodeToken(rToken);

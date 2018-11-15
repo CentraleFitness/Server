@@ -1,21 +1,15 @@
 package server.api.routes.mobile.post.comment;
 
-import static com.mongodb.client.model.Filters.eq;
-
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
 
-import org.bson.Document;
 import org.bson.types.ObjectId;
 
 import com.auth0.jwt.JWT;
 import com.google.gson.GsonBuilder;
-import com.mongodb.BasicDBObject;
 
 import Tools.LogManager;
 import Tools.Token;
