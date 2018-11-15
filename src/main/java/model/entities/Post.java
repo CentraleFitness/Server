@@ -11,6 +11,7 @@ import model.Database.Entity;
 public class Post extends Entity {
     public enum Field implements Database.Entity_Field {
         ID("_id", ObjectId.class),
+        FITNESS_CENTERT_ID("fitness_center_id", ObjectId.class),
         POSTERID("posterId", ObjectId.class),
         POSTERNAME("posterName", String.class),
         IS_CENTER("is_center", Boolean.class),

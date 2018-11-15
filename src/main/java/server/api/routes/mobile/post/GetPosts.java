@@ -22,7 +22,6 @@ import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import model.Database;
-import model.Database.Collections;
 import model.entities.Event;
 import model.entities.Post;
 import model.entities.User;
@@ -39,6 +38,7 @@ public class GetPosts {
             label:try {
                 Map<String, Object> received = routingContext.getBodyAsJson().getMap();
                 String rToken = (String) received.get(Protocol.Field.TOKEN.key);
+                String rTargetId = (String) received.get(Protocol.Field.TARGETID.key);
                 Integer rStart = (Integer) received.get(Protocol.Field.START.key);
                 Integer rEnd = (Integer) received.get(Protocol.Field.END.key);
 
@@ -46,6 +46,12 @@ public class GetPosts {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_KO.code);
                     LogManager.write("Missing key " + Protocol.Field.TOKEN.key);
+                    break label;
+                }
+                if (rTargetId == null) {
+                    sending = new ResponseObject(true);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_KO.code);
+                    LogManager.write("Missing key " + Protocol.Field.TARGETID.key);
                     break label;
                 }
                 if (rStart == null) {
@@ -74,13 +80,12 @@ public class GetPosts {
                     LogManager.write(Protocol.Status.AUTH_ERROR_TOKEN.message);
                     break label;
                 }
-                
-                Database.find_entities(Collections.Users, User.Field.FITNESS_CENTER_ID, user.getField(User.Field.FITNESS_CENTER_ID)).addAll(null);
-                List<Map<String, Object>> postList =
-                        (List<Map<String, Object>>) Database
+                ObjectId targetId = new ObjectId(rTargetId);
+                List<Map<String, String>> postList =
+                        (List<Map<String, String>>) Database
                                 .collections
                                 .get(Database.Collections.Posts)
-                                .find(eq(Post.Field.POSTERID.get_key(), null))
+                                .find(eq(Post.Field.FITNESS_CENTERT_ID.get_key(), targetId))
                                 .sort(new BasicDBObject(Post.Field.DATE.get_key(), 1))
                                 .skip(rStart)
                                 .limit(rEnd)
@@ -88,10 +93,9 @@ public class GetPosts {
                                 .stream()
                                 .map(doc -> {
                                     Post post = new Post((Document) doc);
-                                    Map<String, Object> fields = new HashMap<>();
+                                    Map<String, String> fields = new HashMap<>();
                                     fields.put(Protocol.Field.POSTID.key, ((ObjectId)post.getField(Post.Field.ID)).toString());
                                     fields.put(Protocol.Field.POSTTYPE.key, (String)post.getField(Post.Field.TYPE));
-                                    fields.put(Protocol.Field.DATE.key, (Long)post.getField(Post.Field.DATE));
                                     return fields;
                                 })
                                 .collect(Collectors.toList());
