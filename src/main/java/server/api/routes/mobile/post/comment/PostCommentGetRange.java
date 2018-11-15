@@ -88,6 +88,7 @@ public class PostCommentGetRange {
 							return;
 						}
 						commentContent.put(Protocol.Field.COMMENTID.key, comment.getId().toString());
+						commentContent.put(Protocol.Field.NAME.key, (String) comment.getField(Post.Field.POSTERNAME));
 						commentContent.put(Protocol.Field.COMMENTCONTENT.key,
 								(String) comment.getField(Post.Field.CONTENT));
 						commentsContents.add(commentContent);
