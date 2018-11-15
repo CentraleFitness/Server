@@ -1,6 +1,7 @@
 package server.api.routes.mobile.post;
 
 import java.lang.reflect.InvocationTargetException;
+import java.sql.Date;
 import java.util.Map;
 
 import com.auth0.jwt.JWT;
@@ -78,6 +79,7 @@ public class PostCreate {
 				post.setField(Post.Field.TYPE, rPostType);
 				post.setField(Post.Field.PICTURE, rPostIcon);
 				post.setField(Post.Field.CONTENT, rPostContent);
+				post.setField(Post.Field.DATE, System.currentTimeMillis());
 				Database.update_entity(Collections.Posts, post);
 				sending = new ResponseObject(false);
 				sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);

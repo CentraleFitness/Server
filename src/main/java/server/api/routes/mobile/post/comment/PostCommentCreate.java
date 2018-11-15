@@ -80,6 +80,7 @@ public class PostCommentCreate {
 				comment.setField(Post.Field.POSTERNAME, (String) user.getField(User.Field.FIRSTNAME) + " "
 						+ (String) user.getField(User.Field.LASTNAME));
 				List<ObjectId> comments = (List<ObjectId>) post.getField(Post.Field.COMMENTS);
+				comment.setField(Post.Field.DATE, System.currentTimeMillis());
 				comments.add(comment.getId());
 				Database.update_entity(Collections.Posts, comment);
 				Database.update_entity(Collections.Posts, post);

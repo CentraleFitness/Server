@@ -73,10 +73,10 @@ public class PostCommentGetRange {
 					post.setField(Post.Field.COMMENTS, comments);
 				}
 				List<ObjectId> deletedComments = new ArrayList<>();
-				List<Map<String, String>> commentsContents = new ArrayList<>();
+				List<Map<String, Object>> commentsContents = new ArrayList<>();
 				comments.stream().skip(rStart).limit(rEnd).forEach(commentId -> {
 					try {
-						Map<String, String> commentContent = new TreeMap<>();
+						Map<String, Object> commentContent = new TreeMap<>();
 						Post comment = (Post) Database.find_entity(Collections.Posts, Post.Field.ID, commentId);
 						if (comment == null) {
 							deletedComments.add(commentId);
@@ -89,6 +89,7 @@ public class PostCommentGetRange {
 								.map(userl -> (String) userl.getField(User.Field.LOGIN)).orElse(""));
 						commentContent.put(Protocol.Field.COMMENTCONTENT.key,
 								(String) comment.getField(Post.Field.CONTENT));
+						commentContent.put(Protocol.Field.DATE.key, (Long) comment.getField(Post.Field.DATE));
 						commentsContents.add(commentContent);
 					} catch (InvocationTargetException | NoSuchMethodException | InstantiationException
 							| IllegalAccessException e) {

@@ -81,8 +81,8 @@ public class GetPosts {
                     break label;
                 }
                 ObjectId targetId = new ObjectId(rTargetId);
-                List<Map<String, String>> postList =
-                        (List<Map<String, String>>) Database
+                List<Map<String, Object>> postList =
+                        (List<Map<String, Object>>) Database
                                 .collections
                                 .get(Database.Collections.Posts)
                                 .find(eq(Post.Field.POSTERID.get_key(), targetId))
@@ -93,9 +93,10 @@ public class GetPosts {
                                 .stream()
                                 .map(doc -> {
                                     Post post = new Post((Document) doc);
-                                    Map<String, String> fields = new HashMap<>();
+                                    Map<String, Object> fields = new HashMap<>();
                                     fields.put(Protocol.Field.POSTID.key, ((ObjectId)post.getField(Post.Field.ID)).toString());
                                     fields.put(Protocol.Field.POSTTYPE.key, (String)post.getField(Post.Field.TYPE));
+                                    fields.put(Protocol.Field.DATE.key, (Long)post.getField(Post.Field.DATE));
                                     return fields;
                                 })
                                 .collect(Collectors.toList());
