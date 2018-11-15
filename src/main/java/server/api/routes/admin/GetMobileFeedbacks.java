@@ -81,6 +81,8 @@ public class GetMobileFeedbacks {
 
                         LogManager.write("XXX");
                         LogManager.write(user.toString());
+                        LogManager.write("XXX22");
+
 
                         if (user != null && doc.getString("email") != null && !doc.getString("email").equals("") &&
                                 centers.containsKey(user.getString("fitness_center_id"))) {
@@ -95,6 +97,8 @@ public class GetMobileFeedbacks {
                         feedbacks.add(cur);
                     }
                     sending.put(Protocol.Field.FEEDBACKS.key, feedbacks);
+                    sending.put(Protocol.Field.USERS.key, users);
+                    sending.put(Protocol.Field.CENTERS.key, centers);
                 }
 
             } catch (Exception e) {
