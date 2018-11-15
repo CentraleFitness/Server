@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
 
 import org.bson.types.ObjectId;
@@ -81,8 +82,11 @@ public class PostCommentGetRange {
 							deletedComments.add(commentId);
 							return;
 						}
+						User posterUser = (User) Database.find_entity(Collections.Users, User.Field.ID,
+								comment.getField(Post.Field.POSTERID));
 						commentContent.put(Protocol.Field.COMMENTID.key, comment.getId().toString());
-						commentContent.put(Protocol.Field.NAME.key, (String) comment.getField(Post.Field.POSTERNAME));
+						commentContent.put(Protocol.Field.NAME.key, Optional.ofNullable(posterUser)
+								.map(userl -> (String) userl.getField(User.Field.LOGIN)).orElse(""));
 						commentContent.put(Protocol.Field.COMMENTCONTENT.key,
 								(String) comment.getField(Post.Field.CONTENT));
 						commentsContents.add(commentContent);
