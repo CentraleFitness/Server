@@ -51,7 +51,7 @@ public class GetMobileFeedbacks {
                     FindIterable<User> findIterableusers = (FindIterable<User>) Database.collections.get(Database.Collections.Users).find();
                     Map<String, Object> users = new HashMap<>();
                     for (Document doc : findIterableusers) {
-                        users.put(doc.getObjectId("email").toString(), doc);
+                        users.put(doc.getString("email"), doc);
                     }
 
                     @SuppressWarnings("unchecked")
@@ -76,11 +76,17 @@ public class GetMobileFeedbacks {
 
                         user = (Document)users.get(doc.getString("email"));
 
-                        if (doc.getString("email") != null && !doc.getString("email").equals("") &&
-                                centers.containsKey(user.getObjectId("fitness_center_id"))) {
+                        LogManager.write("XXX");
 
-                            cur.put("fitness_center", centers.get(user.getObjectId("fitness_center_id")));
+                        if (user != null && doc.getString("email") != null && !doc.getString("email").equals("") &&
+                                centers.containsKey(user.getString("fitness_center_id"))) {
+
+                            LogManager.write("XXX323");
+
+                            cur.put("fitness_center", centers.get(user.getString("fitness_center_id")));
                         }
+
+                        LogManager.write("X");
 
                         feedbacks.add(cur);
                     }
