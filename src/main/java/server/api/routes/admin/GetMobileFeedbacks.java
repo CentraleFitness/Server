@@ -58,7 +58,7 @@ public class GetMobileFeedbacks {
                     FindIterable<MobileFeedback> findIterable = (FindIterable<MobileFeedback>) Database.collections.get(Database.Collections.MobileFeedbacks).find().sort(orderBy(descending(MobileFeedback.Field.DATE.get_key())));
                     List<Map<String,Object>> feedbacks = new ArrayList<>();
                     HashMap<String,Object> cur;
-                    Document user;
+                    Document user = null;
                     for (Document doc : findIterable) {
                         cur = new HashMap<>();
                         cur.put("_id", doc.getObjectId("_id").toString());
@@ -74,9 +74,13 @@ public class GetMobileFeedbacks {
                             cur.put("user", users.get(doc.getString("email")));
                         }
 
-                        user = (Document)users.get(doc.getString("email"));
+                        user = null;
+                        if (users.containsKey(doc.getString("email"))) {
+                            user = (Document) users.get(doc.getString("email"));
+                        }
 
                         LogManager.write("XXX");
+                        LogManager.write(user.toString());
 
                         if (user != null && doc.getString("email") != null && !doc.getString("email").equals("") &&
                                 centers.containsKey(user.getString("fitness_center_id"))) {
