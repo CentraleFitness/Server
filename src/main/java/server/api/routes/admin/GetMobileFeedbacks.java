@@ -36,7 +36,7 @@ public class GetMobileFeedbacks {
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
 
                 } else {
-                    
+
                     sending = new ResponseObject(false);
                     sending.put(Protocol.Field.STATUS.key, protocol.intranet.Protocol.Status.GENERIC_OK.code);
 
@@ -76,11 +76,15 @@ public class GetMobileFeedbacks {
 
                         user = (Document)users.get(doc.getString("email"));
 
+                        LogManager.write("XXX");
+
                         if (doc.getString("email") != null && !doc.getString("email").equals("") &&
                                 centers.containsKey(user.getString("fitness_center_id"))) {
 
                             cur.put("fitness_center", centers.get(user.getString("fitness_center_id")));
                         }
+
+                        LogManager.write("X");
 
                         feedbacks.add(cur);
                     }
