@@ -90,7 +90,6 @@ public class GetMobileFeedbacks {
                         }
 
                         LogManager.write("1");
-                        LogManager.write(user.toString());
 
 
                         if (user != null && doc.getString("email") != null && !doc.getString("email").equals("") &&
