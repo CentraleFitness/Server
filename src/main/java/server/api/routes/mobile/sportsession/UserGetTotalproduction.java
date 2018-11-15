@@ -16,7 +16,9 @@ import protocol.ResponseObject;
 import protocol.mobile.Protocol;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Optional;
 
 public class UserGetTotalproduction {
 	public UserGetTotalproduction(Router router) {
@@ -44,9 +46,15 @@ public class UserGetTotalproduction {
 				}
 				ObjectId user_id = (ObjectId) user.getField(User.Field.ID);
 				LogManager.write("\telectric productions {");
-				Double production = Database.find_entities(Collections.ElectricProductions, ElectricProduction.Field.USER_ID, user_id)
-						.stream().map(entity -> (double)((ElectricProduction) entity)
-								.getField(ElectricProduction.Field.PRODUCTION_TOTAL)).peek(prod -> LogManager.write("\t"+prod.toString() + " ")).reduce((tt, cc) -> tt + cc).orElse(0D);
+				;
+				Double production = Optional
+						.ofNullable(Database.find_entities(
+								Collections.ElectricProductions, ElectricProduction.Field.USER_ID, user_id))
+						.orElse(new LinkedList<>()).stream()
+						.map(entity -> (double) ((ElectricProduction) entity)
+								.getField(ElectricProduction.Field.PRODUCTION_TOTAL))
+						.peek(prod -> LogManager.write("\t" + prod.toString() + " ")).reduce((tt, cc) -> tt + cc)
+						.orElse(0D);
 				LogManager.write("\t}");
 				sending = new ResponseObject(false);
 				sending.put(Protocol.Field.PRODUCTION.key, production);

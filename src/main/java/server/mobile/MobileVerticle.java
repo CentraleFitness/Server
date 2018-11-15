@@ -31,6 +31,7 @@ import server.api.routes.mobile.sportsession.GetSportSession;
 import server.api.routes.mobile.sportsession.GetSportSessionStats;
 import server.api.routes.mobile.sportsession.GetSportSessions;
 import server.api.routes.mobile.sportsession.UserGetInstantproduction;
+import server.api.routes.mobile.sportsession.UserGetTotalproduction;
 import server.api.routes.mobile.sportsession.UserPairStart;
 import server.api.routes.mobile.sportsession.UserPairStop;
 import server.api.routes.mobile.user.auth.AuthenticationWithCredentials;
@@ -38,6 +39,7 @@ import server.api.routes.mobile.user.auth.AuthenticationWithToken;
 import server.api.routes.mobile.user.auth.Registration;
 import server.api.routes.mobile.user.profile.Affiliate;
 import server.api.routes.mobile.user.profile.GetAffiliation;
+import server.api.routes.mobile.user.profile.UnAffiliate;
 import server.api.routes.mobile.user.profile.UserGetPicture;
 import server.api.routes.mobile.user.profile.UserGetProfile;
 import server.api.routes.mobile.user.profile.UserUpdatePassword;
@@ -128,5 +130,7 @@ public class MobileVerticle extends AbstractVerticle {
         new CustomProgramFavRemove(router);
         new CustomProgramFavGetRange(router);
         new ChallengeInit(router);
+        new UnAffiliate(router);
+        new UserGetTotalproduction(router);
     }
 }
