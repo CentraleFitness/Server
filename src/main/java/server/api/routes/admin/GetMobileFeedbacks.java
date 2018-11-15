@@ -79,7 +79,7 @@ public class GetMobileFeedbacks {
                             user = (Document) users.get(doc.getString("email_address"));
                         }
 
-                        if (user != null && doc.getString("email") != null && !doc.getString("email").equals("") &&
+                        if (user != null && doc.getString("email_address") != null && !doc.getString("email_address").equals("") &&
                                 centers.containsKey(user.getString("fitness_center_id"))) {
 
 
