@@ -62,24 +62,24 @@ public class GetMobileFeedbacks {
                     for (Document doc : findIterable) {
                         cur = new HashMap<>();
                         cur.put("_id", doc.getObjectId("_id").toString());
-                        cur.put("email_address", doc.getString("email_address"));
+                        cur.put("email", doc.getString("email"));
                         cur.put("content", doc.getString("content"));
                         cur.put("date", doc.getString("date"));
                         cur.put("version", doc.getString("version"));
                         cur.put("__v", doc.getInteger("__v"));
 
-                        if (doc.getString("email_address") != null && !doc.getString("email_address").equals("") &&
-                                users.containsKey(doc.getString("email_address"))) {
+                        if (doc.getString("email") != null && !doc.getString("email").equals("") &&
+                                users.containsKey(doc.getString("email"))) {
 
-                            cur.put("user", users.get(doc.getString("email_address")));
+                            cur.put("user", users.get(doc.getString("email")));
                         }
 
                         user = null;
-                        if (users.containsKey(doc.getString("email_address"))) {
-                            user = (Document) users.get(doc.getString("email_address"));
+                        if (users.containsKey(doc.getString("email"))) {
+                            user = (Document) users.get(doc.getString("email"));
                         }
 
-                        if (user != null && doc.getString("email_address") != null && !doc.getString("email_address").equals("") &&
+                        if (user != null && doc.getString("email") != null && !doc.getString("email").equals("") &&
                                 centers.containsKey(user.getString("fitness_center_id"))) {
 
 
