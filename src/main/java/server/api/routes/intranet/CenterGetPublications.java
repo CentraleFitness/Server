@@ -55,7 +55,7 @@ public class CenterGetPublications {
                         Bson posts_filter = Filters.and(
                                 Filters.eq(Post.Field.FITNESS_CENTERT_ID.get_key(), center.getField(Fitness_Center.Field.ID))
                         );
-                        
+
                         List<ObjectId> comments_list = new ArrayList<>();
                         List<ObjectId> users_list = new ArrayList<>();
                         List<ObjectId> centers_list = new ArrayList<>();
@@ -64,12 +64,15 @@ public class CenterGetPublications {
                         FindIterable<Post> findIterable = (FindIterable<Post>) Database.collections.get(Database.Collections.Posts).find(posts_filter).sort(orderBy(ascending(Post.Field.DATE.get_key())));
                         for (Document doc : findIterable) {
 
-                            if (doc.getBoolean("is_center"))
+                            if (doc.getBoolean("is_center")) {
                                 centers_list.add(doc.getObjectId("fitness_center_id"));
-                            else
+                            } else {
                                 users_list.add(doc.getObjectId("posterId"));
+                            }
 
-                            if ((cur_com = (List<ObjectId>)doc.get("comments")) != null) {
+                            if ((cur_com = (List<ObjectId>)doc.get("comments")) != null &&
+                                    cur_com.size() > 0) {
+
                                 comments_list.addAll(cur_com);
                             }
                         }
@@ -121,8 +124,7 @@ public class CenterGetPublications {
                             comments.put(doc.getObjectId("_id").toString(), doc);
                         }
 
-                        List<HashMap<String, Object>> cur_comments;
-                        HashMap<String, Object> tmp;
+                        List<Object> cur_comments;
                         List<ObjectId> li;
                         Integer li_size;
 
@@ -185,9 +187,7 @@ public class CenterGetPublications {
                             cur_comments = new ArrayList<>();
                             if (li != null) {
                                 for (ObjectId cur_id : li) {
-                                    tmp =  new HashMap<>();
-                                    tmp.put("comments", comments.get(cur_id.toString()));
-                                    cur_comments.add(tmp);
+                                    cur_comments.add(comments.get(cur_id.toString()));
                                 }
                             }
                             cur.put("comments", cur_comments);

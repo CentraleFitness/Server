@@ -392,6 +392,8 @@ public class Protocol {
         ADMINISTRATOR_ID("administrator_id"),
         ADMINISTRATOR_NAME("administrator_name"),
         IS_VALIDATED("is_validated"),
+        POSTER_NAME("posterName"),
+        POSTER_PICTURE("posterPicture"),
         ;
         public String key;
         Field(String key) {

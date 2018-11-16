@@ -85,24 +85,17 @@ public class CenterAddPictureToAlbum {
 
                         sending.put(Protocol.Field.PICTURE_ID.key, pic.getField(Picture.Field.ID).toString());
 
-                        /*
+                        sending.put(Protocol.Field.POSTER_NAME.key, center.getField(Fitness_Center.Field.NAME));
 
-                        @SuppressWarnings("unchecked")
-                        ArrayList<Fitness_Center.Picture_Describe> album = (ArrayList<Fitness_Center.Picture_Describe>) center.getField(Fitness_Center.Field.ALBUM);
-                        Fitness_Center.Picture_Describe picture_describe = new Fitness_Center.Picture_Describe();
-                        picture_describe.setField(Fitness_Center.Picture_Describe.Field.PICTURE_ID, pic.getField(Picture.Field.ID));
-                        picture_describe.setField(Fitness_Center.Picture_Describe.Field.PICTURE, pic.getField(Picture.Field.PICTURE));
-                        picture_describe.setField(Fitness_Center.Picture_Describe.Field.TITLE, received.get(Protocol.Field.TITLE.key));
-                        picture_describe.setField(Fitness_Center.Picture_Describe.Field.DESCRIPTION, received.get(Protocol.Field.DESCRIPTION.key));
-                        picture_describe.setField(Fitness_Center.Picture_Describe.Field.CREATION_DATE, System.currentTimeMillis());
-                        album.add(picture_describe);
-                        //center.setField(Fitness_Center.Field.ALBUM, album);
+                        String picture = "";
+                        if (center.getField(Fitness_Center.Field.PICTURE_ID) != null &&
+                                !center.getField(Fitness_Center.Field.PICTURE_ID).equals("")) {
 
-                        Database.update_entity(Database.Collections.Pictures, pic);
-                        Database.update_entity(Database.Collections.Fitness_Centers, center);
-                        sending.put(Protocol.Field.PICTURE_ID.key, pic.getField(Picture.Field.ID).toString());
+                            Picture pic_poster = (Picture)Database.find_entity(Database.Collections.Pictures, Picture.Field.ID, center.getField(Fitness_Center.Field.PICTURE_ID));
+                            picture = (String)pic_poster.getField(Picture.Field.PICTURE);
+                        }
 
-                        */
+                        sending.put(Protocol.Field.POSTER_PICTURE.key, picture);
                     }
                 }
             }catch (Exception e){

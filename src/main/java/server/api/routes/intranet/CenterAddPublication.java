@@ -9,11 +9,13 @@ import io.vertx.ext.web.Router;
 import model.Database;
 import model.entities.Fitness_Center;
 import model.entities.Fitness_Center_Manager;
+import model.entities.Picture;
 import model.entities.Post;
 import org.bson.types.ObjectId;
 import protocol.intranet.Protocol;
 import protocol.ResponseObject;
 
+import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
@@ -65,17 +67,17 @@ public class CenterAddPublication {
                         Database.update_entity(Database.Collections.Posts, post);
 
                         sending.put(Protocol.Field.PUBLICATION_ID.key, post.getField(Post.Field.ID).toString());
+                        sending.put(Protocol.Field.POSTER_NAME.key, center.getField(Fitness_Center.Field.NAME));
 
-                        /*
-                        @SuppressWarnings("unchecked")
-                        ArrayList<Fitness_Center.Publication> publications = (ArrayList<Fitness_Center.Publication>) center.getField(Fitness_Center.Field.PUBLICATIONS);
-                        Fitness_Center.Publication publication = new Fitness_Center.Publication();
-                        publication.setField(Fitness_Center.Publication.Field.TEXT, text);
-                        publication.setField(Fitness_Center.Publication.Field.CREATION_DATE, System.currentTimeMillis());
-                        publications.add(publication);
-                        //center.setField(Fitness_Center.Field.PUBLICATIONS, publications);
-                        Database.update_entity(Database.Collections.Fitness_Centers, center);
-                        */
+                        String picture = "";
+                        if (center.getField(Fitness_Center.Field.PICTURE_ID) != null &&
+                                !center.getField(Fitness_Center.Field.PICTURE_ID).equals("")) {
+
+                            Picture pic = (Picture)Database.find_entity(Database.Collections.Pictures, Picture.Field.ID, center.getField(Fitness_Center.Field.PICTURE_ID));
+                            picture = (String)pic.getField(Picture.Field.PICTURE);
+                        }
+
+                        sending.put(Protocol.Field.POSTER_PICTURE.key, picture);
                     }
                 }
             }catch (Exception e){
