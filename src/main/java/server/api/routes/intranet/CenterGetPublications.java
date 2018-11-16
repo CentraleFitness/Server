@@ -69,7 +69,7 @@ public class CenterGetPublications {
                         for (Document doc : findIterable) {
 
                             LogManager.write("1.1");
-                            if (doc.getBoolean("is_center")) {
+                            if (doc.getBoolean("is_center") != null && doc.getBoolean("is_center")) {
                                 LogManager.write("1.2");
                                 centers_list.add(doc.getObjectId("fitness_center_id"));
                                 LogManager.write("1.3");
