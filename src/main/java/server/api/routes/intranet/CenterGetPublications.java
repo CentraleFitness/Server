@@ -166,7 +166,7 @@ public class CenterGetPublications {
 
                             LogManager.write("6");
 
-                            if (doc.getBoolean("is_center")) {
+                            if (doc.getBoolean("is_center") != null && doc.getBoolean("is_center")) {
                                 tmpUser = (Document)centers.get(doc.getObjectId("fitness_center_id").toString());
                             } else {
                                 tmpUser = (Document)users.get(doc.getObjectId("posterId").toString());
