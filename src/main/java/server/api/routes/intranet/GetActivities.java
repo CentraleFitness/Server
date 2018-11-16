@@ -55,7 +55,6 @@ public class GetActivities {
             }catch (Exception e){
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_ERROR.code);
-                System.out.println("Exception" + e.toString());
                 LogManager.write("Exception: " + e.toString());
             }
             response.end(new GsonBuilder().registerTypeAdapter(ObjectId.class, new ObjectIdSerializer()).create().toJson(sending));

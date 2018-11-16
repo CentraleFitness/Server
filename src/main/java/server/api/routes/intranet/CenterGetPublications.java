@@ -53,7 +53,7 @@ public class CenterGetPublications {
                         sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
 
                         Bson posts_filter = Filters.and(
-                                Filters.eq(Post.Field.FITNESS_CENTERT_ID.get_key(), center.getField(Fitness_Center.Field.ID))
+                            Filters.eq(Post.Field.FITNESS_CENTERT_ID.get_key(), center.getField(Fitness_Center.Field.ID))
                         );
 
                         List<ObjectId> comments_list = new ArrayList<>();
@@ -78,7 +78,7 @@ public class CenterGetPublications {
                         }
 
                         Bson users_filter = Filters.and(
-                                Filters.in(User.Field.ID.get_key(), users_list)
+                            Filters.in(User.Field.ID.get_key(), users_list)
                         );
 
                         List<ObjectId> pictures_list = new ArrayList<>();
@@ -87,11 +87,11 @@ public class CenterGetPublications {
                         for (Document doc : findIterableUsers) {
 
                             users.put(doc.getObjectId("_id").toString(), doc);
-                            users_list.add(doc.getObjectId("picture_id"));
+                            pictures_list.add(doc.getObjectId("picture_id"));
                         }
 
                         Bson centers_filter = Filters.and(
-                                Filters.in(Fitness_Center.Field.ID.get_key(), centers_list)
+                            Filters.in(Fitness_Center.Field.ID.get_key(), centers_list)
                         );
 
                         HashMap<String,Object> centers = new HashMap<>();
@@ -99,22 +99,21 @@ public class CenterGetPublications {
                         for (Document doc : findIterableCenters) {
 
                             centers.put(doc.getObjectId("_id").toString(), doc);
-                            centers_list.add(doc.getObjectId("picture_id"));
+                            pictures_list.add(doc.getObjectId("picture_id"));
                         }
 
                         Bson pictures_filter = Filters.and(
-                                Filters.in(Picture.Field.ID.get_key(), pictures_list)
+                            Filters.in(Picture.Field.ID.get_key(), pictures_list)
                         );
 
                         HashMap<String,Object> pictures = new HashMap<>();
                         FindIterable<Picture> findIterablePictures = (FindIterable<Picture>) Database.collections.get(Database.Collections.Pictures).find(pictures_filter);
                         for (Document doc : findIterablePictures) {
-
                             pictures.put(doc.getObjectId("_id").toString(), doc.getString("picture"));
                         }
 
                         Bson comments_filter = Filters.and(
-                                Filters.in(Post.Field.ID.get_key(), comments_list)
+                            Filters.in(Post.Field.ID.get_key(), comments_list)
                         );
 
                         HashMap<String,Object> comments = new HashMap<>();
@@ -152,13 +151,9 @@ public class CenterGetPublications {
                             if (tmpUser == null || tmpUser.getObjectId("picture_id") == null ||
                                     tmpUser.getObjectId("picture_id").toString().equals("")) {
 
-                                LogManager.write("WTF1" + doc.getString("content"));
                                 cur.put("posterPicture", "");
-                                LogManager.write("WTF3" + doc.getString("content"));
                             } else {
-                                LogManager.write("WTF2" + doc.getString("content"));
                                 cur.put("posterPicture", pictures.get(tmpUser.getObjectId("picture_id").toString()));
-                                LogManager.write("WTF4 " + tmpUser.getObjectId("picture_id").toString() + " == " + pictures.get(tmpUser.getObjectId("picture_id").toString()));
                             }
 
                             cur.put("date", doc.getLong("date"));
@@ -207,7 +202,6 @@ public class CenterGetPublications {
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_ERROR.code);
                 LogManager.write("Exception: " + e.toString());
-                System.out.println("Exception: " + e.toString());
             }
             response.end(new GsonBuilder().registerTypeAdapter(ObjectId.class, new ObjectIdSerializer()).create().toJson(sending));
         });
