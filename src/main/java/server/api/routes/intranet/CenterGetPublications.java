@@ -55,22 +55,45 @@ public class CenterGetPublications {
                         sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
 
                         Bson posts_filter = Filters.and(
-                                Filters.eq(Post.Field.FITNESS_CENTERT_ID.get_key(), center.getField(Fitness_Center.Field.ID))/*,
-                                Filters.eq(Post.Field.IS_CENTER.get_key(), true)*/
+                                Filters.eq(Post.Field.FITNESS_CENTERT_ID.get_key(), center.getField(Fitness_Center.Field.ID))
                         );
 
-                        @SuppressWarnings("unchecked")
+                        List<ObjectId> comments_list = new ArrayList<>();
+                        List<ObjectId> cur_com;
+
                         FindIterable<Post> findIterable = (FindIterable<Post>) Database.collections.get(Database.Collections.Posts).find(posts_filter).sort(orderBy(ascending(Post.Field.DATE.get_key())));
-                        List<Map<String,Object>> posts = new ArrayList<>();
-                        HashMap<String,Object> cur;
+                        for (Document doc : findIterable) {
+
+                            if ((cur_com = (List<ObjectId>)doc.get("comments")) != null) {
+                                comments_list.addAll(cur_com);
+                            }
+                        }
+
+                        Bson comments_filter = Filters.and(
+                                Filters.in(Post.Field.ID.get_key(), comments_list)
+                        );
+
+                        HashMap<String,Object> comments = new HashMap<>();
+                        FindIterable<Post> findIterableComments = (FindIterable<Post>) Database.collections.get(Database.Collections.Posts).find(comments_filter);
+                        for (Document doc : findIterableComments) {
+
+                            comments.put(doc.getObjectId("_id").toString(), doc);
+                        }
+
+                        List<HashMap<String, Object>> cur_comments;
+                        HashMap<String, Object> tmp;
                         List<ObjectId> li;
                         Integer li_size;
+
+                        HashMap<String, Object> cur;
+                        List<Map<String,Object>> posts = new ArrayList<>();
                         for (Document doc : findIterable) {
                             cur = new HashMap<>();
 
                             cur.put("_id", doc.getObjectId("_id").toString());
                             cur.put("fitness_center_id", doc.getObjectId("fitness_center_id").toString());
                             cur.put("posterId", doc.getObjectId("posterId").toString());
+                            cur.put("isMine", doc.getObjectId("posterId").toString().equals(manager.getField(Fitness_Center_Manager.Field.ID).toString()));
                             cur.put("posterName", doc.getString("posterName"));
 
                             cur.put("date", doc.getLong("date"));
@@ -100,20 +123,20 @@ public class CenterGetPublications {
 
                             cur.put("nb_comments", li_size);
 
-                            //LIKES("likes", List.class),
-                            //COMMENTS("comments", List.class),
+                            cur_comments = new ArrayList<>();
+                            if (li != null) {
+                                for (ObjectId cur_id : li) {
+                                    tmp =  new HashMap<>();
+                                    tmp.put("comments", comments.get(cur_id.toString()));
+                                    cur_comments.add(tmp);
+                                }
+                            }
+                            cur.put("comments", cur_comments);
 
                             posts.add(cur);
                         }
 
                         sending.put(Protocol.Field.PUBLICATIONS.key, posts);
-
-                        /*
-                        @SuppressWarnings("unchecked")
-                        ArrayList<Fitness_Center.Publication> publications = (ArrayList<Fitness_Center.Publication>) center.getField(Fitness_Center.Field.PUBLICATIONS);
-                        sending.put(Protocol.Field.PUBLICATIONS.key, publications);
-
-                        */
                     }
                 }
             }catch (Exception e){
