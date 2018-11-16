@@ -31,8 +31,6 @@ public class CenterGetPublications {
             Fitness_Center_Manager manager;
             Fitness_Center center;
 
-            LogManager.write("BEGIN");
-
             try {
                 manager = (Fitness_Center_Manager) Database.find_entity(Database.Collections.Fitness_Center_Managers, Fitness_Center_Manager.Field.EMAIL, Token.decodeToken((String) received.get(Protocol.Field.TOKEN.key)).getIssuer());
                 if (!Objects.equals(manager.getField(Fitness_Center_Manager.Field.TOKEN), received.get(Protocol.Field.TOKEN.key))) {
@@ -63,32 +61,21 @@ public class CenterGetPublications {
                         List<ObjectId> centers_list = new ArrayList<>();
                         List<ObjectId> cur_com;
 
-                        LogManager.write("1");
-
                         FindIterable<Post> findIterable = (FindIterable<Post>) Database.collections.get(Database.Collections.Posts).find(posts_filter).sort(orderBy(ascending(Post.Field.DATE.get_key())));
                         for (Document doc : findIterable) {
 
-                            LogManager.write("1.1");
                             if (doc.getBoolean("is_center") != null && doc.getBoolean("is_center")) {
-                                LogManager.write("1.2");
                                 centers_list.add(doc.getObjectId("fitness_center_id"));
-                                LogManager.write("1.3");
                             } else {
-                                LogManager.write("1.4");
                                 users_list.add(doc.getObjectId("posterId"));
-                                LogManager.write("1.5");
                             }
 
-                            LogManager.write("1.6");
                             if ((cur_com = (List<ObjectId>)doc.get("comments")) != null &&
                                     cur_com.size() > 0) {
 
-                                LogManager.write("1.7");
                                 comments_list.addAll(cur_com);
                             }
                         }
-
-                        LogManager.write("2");
 
                         Bson users_filter = Filters.and(
                                 Filters.in(User.Field.ID.get_key(), users_list)
@@ -103,8 +90,6 @@ public class CenterGetPublications {
                             users_list.add(doc.getObjectId("picture_id"));
                         }
 
-                        LogManager.write("2");
-
                         Bson centers_filter = Filters.and(
                                 Filters.in(Fitness_Center.Field.ID.get_key(), centers_list)
                         );
@@ -117,8 +102,6 @@ public class CenterGetPublications {
                             centers_list.add(doc.getObjectId("picture_id"));
                         }
 
-                        LogManager.write("3");
-
                         Bson pictures_filter = Filters.and(
                                 Filters.in(Picture.Field.ID.get_key(), pictures_list)
                         );
@@ -130,8 +113,6 @@ public class CenterGetPublications {
                             pictures.put(doc.getObjectId("_id").toString(), doc.getString("picture"));
                         }
 
-                        LogManager.write("4");
-
                         Bson comments_filter = Filters.and(
                                 Filters.in(Post.Field.ID.get_key(), comments_list)
                         );
@@ -142,8 +123,6 @@ public class CenterGetPublications {
 
                             comments.put(doc.getObjectId("_id").toString(), doc);
                         }
-
-                        LogManager.write("5");
 
                         List<Object> cur_comments;
                         List<ObjectId> li;
@@ -164,15 +143,11 @@ public class CenterGetPublications {
 
                             cur.put("likedByMe", true);
 
-                            LogManager.write("6");
-
                             if (doc.getBoolean("is_center") != null && doc.getBoolean("is_center")) {
                                 tmpUser = (Document)centers.get(doc.getObjectId("fitness_center_id").toString());
                             } else {
                                 tmpUser = (Document)users.get(doc.getObjectId("posterId").toString());
                             }
-
-                            LogManager.write("7");
 
                             if (tmpUser == null || tmpUser.getObjectId("picture_id") == null ||
                                     tmpUser.getObjectId("picture_id").toString().equals("")) {
@@ -182,30 +157,22 @@ public class CenterGetPublications {
                                 cur.put("posterPicture", pictures.get(tmpUser.getObjectId("picture_id").toString()));
                             }
 
-                            LogManager.write("8");
-
                             cur.put("date", doc.getLong("date"));
                             cur.put("content", doc.getString("content"));
                             cur.put("title", doc.getString("title"));
 
                             cur.put("type", doc.getString("type"));
 
-                            LogManager.write("9");
-
                             if (doc.getString("picture") != null && doc.getObjectId("picture_id") != null) {
                                 cur.put("picture", doc.getString("picture"));
                                 cur.put("picture_id", doc.getObjectId("picture_id").toString());
                             }
-
-                            LogManager.write("10");
 
                             if (doc.getObjectId("event_id") != null) {
                                 cur.put("event_id", doc.getObjectId("event_id").toString());
                                 cur.put("start_date", doc.getLong("start_date"));
                                 cur.put("end_date", doc.getLong("end_date"));
                             }
-
-                            LogManager.write("11");
 
                             li = (List<ObjectId>)doc.get("likes");
                             li_size = (li == null ? 0 : li.size());
@@ -223,8 +190,6 @@ public class CenterGetPublications {
                                     cur_comments.add(comments.get(cur_id.toString()));
                                 }
                             }
-
-                            LogManager.write("12");
 
                             cur.put("comments", cur_comments);
 
