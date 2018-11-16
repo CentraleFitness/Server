@@ -61,6 +61,8 @@ public class CenterGetPublications {
                         List<ObjectId> centers_list = new ArrayList<>();
                         List<ObjectId> cur_com;
 
+                        System.out.println("1");
+
                         FindIterable<Post> findIterable = (FindIterable<Post>) Database.collections.get(Database.Collections.Posts).find(posts_filter).sort(orderBy(ascending(Post.Field.DATE.get_key())));
                         for (Document doc : findIterable) {
 
@@ -77,6 +79,8 @@ public class CenterGetPublications {
                             }
                         }
 
+                        System.out.println("2");
+
                         Bson users_filter = Filters.and(
                                 Filters.in(User.Field.ID.get_key(), users_list)
                         );
@@ -90,6 +94,8 @@ public class CenterGetPublications {
                             users_list.add(doc.getObjectId("picture_id"));
                         }
 
+                        System.out.println("2");
+
                         Bson centers_filter = Filters.and(
                                 Filters.in(Fitness_Center.Field.ID.get_key(), centers_list)
                         );
@@ -102,6 +108,8 @@ public class CenterGetPublications {
                             centers_list.add(doc.getObjectId("picture_id"));
                         }
 
+                        System.out.println("3");
+
                         Bson pictures_filter = Filters.and(
                                 Filters.in(Picture.Field.ID.get_key(), pictures_list)
                         );
@@ -113,6 +121,8 @@ public class CenterGetPublications {
                             pictures.put(doc.getObjectId("_id").toString(), doc.getString("picture"));
                         }
 
+                        System.out.println("4");
+
                         Bson comments_filter = Filters.and(
                                 Filters.in(Post.Field.ID.get_key(), comments_list)
                         );
@@ -123,6 +133,8 @@ public class CenterGetPublications {
 
                             comments.put(doc.getObjectId("_id").toString(), doc);
                         }
+
+                        System.out.println("5");
 
                         List<Object> cur_comments;
                         List<ObjectId> li;
@@ -143,11 +155,15 @@ public class CenterGetPublications {
 
                             cur.put("likedByMe", true);
 
+                            System.out.println("6");
+
                             if (doc.getBoolean("is_center")) {
                                 tmpUser = (Document)centers.get(doc.getObjectId("fitness_center_id").toString());
                             } else {
                                 tmpUser = (Document)users.get(doc.getObjectId("posterId").toString());
                             }
+
+                            System.out.println("7");
 
                             if (tmpUser == null || tmpUser.getObjectId("picture_id") == null ||
                                     tmpUser.getObjectId("picture_id").toString().equals("")) {
@@ -157,22 +173,30 @@ public class CenterGetPublications {
                                 cur.put("posterPicture", pictures.get(tmpUser.getObjectId("picture_id").toString()));
                             }
 
+                            System.out.println("8");
+
                             cur.put("date", doc.getLong("date"));
                             cur.put("content", doc.getString("content"));
                             cur.put("title", doc.getString("title"));
 
                             cur.put("type", doc.getString("type"));
 
+                            System.out.println("9");
+
                             if (doc.getString("picture") != null && doc.getObjectId("picture_id") != null) {
                                 cur.put("picture", doc.getString("picture"));
                                 cur.put("picture_id", doc.getObjectId("picture_id").toString());
                             }
+
+                            System.out.println("10");
 
                             if (doc.getObjectId("event_id") != null) {
                                 cur.put("event_id", doc.getObjectId("event_id").toString());
                                 cur.put("start_date", doc.getLong("start_date"));
                                 cur.put("end_date", doc.getLong("end_date"));
                             }
+
+                            System.out.println("11");
 
                             li = (List<ObjectId>)doc.get("likes");
                             li_size = (li == null ? 0 : li.size());
@@ -190,6 +214,9 @@ public class CenterGetPublications {
                                     cur_comments.add(comments.get(cur_id.toString()));
                                 }
                             }
+
+                            System.out.println("12");
+
                             cur.put("comments", cur_comments);
 
                             posts.add(cur);
