@@ -68,15 +68,22 @@ public class CenterGetPublications {
                         FindIterable<Post> findIterable = (FindIterable<Post>) Database.collections.get(Database.Collections.Posts).find(posts_filter).sort(orderBy(ascending(Post.Field.DATE.get_key())));
                         for (Document doc : findIterable) {
 
+                            LogManager.write("1.1");
                             if (doc.getBoolean("is_center")) {
+                                LogManager.write("1.2");
                                 centers_list.add(doc.getObjectId("fitness_center_id"));
+                                LogManager.write("1.3");
                             } else {
+                                LogManager.write("1.4");
                                 users_list.add(doc.getObjectId("posterId"));
+                                LogManager.write("1.5");
                             }
 
+                            LogManager.write("1.6");
                             if ((cur_com = (List<ObjectId>)doc.get("comments")) != null &&
                                     cur_com.size() > 0) {
 
+                                LogManager.write("1.7");
                                 comments_list.addAll(cur_com);
                             }
                         }
