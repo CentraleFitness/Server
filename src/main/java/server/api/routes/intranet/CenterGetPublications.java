@@ -158,7 +158,7 @@ public class CenterGetPublications {
                             } else {
                                 LogManager.write("WTF2" + doc.getString("content"));
                                 cur.put("posterPicture", pictures.get(tmpUser.getObjectId("picture_id").toString()));
-                                LogManager.write("WTF4" + pictures.get(tmpUser.getObjectId("picture_id").toString()));
+                                LogManager.write("WTF4 " + tmpUser.getObjectId("picture_id").toString() + " == " + pictures.get(tmpUser.getObjectId("picture_id").toString()));
                             }
 
                             cur.put("date", doc.getLong("date"));
