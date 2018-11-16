@@ -40,8 +40,6 @@ public class GetMobileFeedbacks {
                     sending = new ResponseObject(false);
                     sending.put(Protocol.Field.STATUS.key, protocol.intranet.Protocol.Status.GENERIC_OK.code);
 
-                    LogManager.write("1");
-
                     @SuppressWarnings("unchecked")
                     FindIterable<Fitness_Center> findIterableCenter = (FindIterable<Fitness_Center>) Database.collections.get(Database.Collections.Fitness_Centers).find();
                     Map<String,Object> centers = new HashMap<>();
@@ -49,16 +47,12 @@ public class GetMobileFeedbacks {
                         centers.put(doc.getObjectId("_id").toString(), doc);
                     }
 
-                    LogManager.write("2");
-
                     @SuppressWarnings("unchecked")
                     FindIterable<User> findIterableusers = (FindIterable<User>) Database.collections.get(Database.Collections.Users).find();
                     Map<String, Object> users = new HashMap<>();
                     for (Document doc : findIterableusers) {
                         users.put(doc.getString("email_address"), doc);
                     }
-
-                    LogManager.write("3");
 
                     @SuppressWarnings("unchecked")
                     FindIterable<MobileFeedback> findIterable = (FindIterable<MobileFeedback>) Database.collections.get(Database.Collections.MobileFeedbacks).find().sort(orderBy(descending(MobileFeedback.Field.DATE.get_key())));
@@ -74,22 +68,16 @@ public class GetMobileFeedbacks {
                         cur.put("version", doc.getString("version"));
                         cur.put("__v", doc.getInteger("__v"));
 
-                        LogManager.write("4");
-
                         if (doc.getString("email") != null && !doc.getString("email").equals("") &&
                                 users.containsKey(doc.getString("email"))) {
 
                             cur.put("user", users.get(doc.getString("email")));
                         }
 
-                        LogManager.write("5");
-
                         user = null;
                         if (users.containsKey(doc.getString("email"))) {
                             user = (Document) users.get(doc.getString("email"));
                         }
-
-                        LogManager.write("6");
 
                         if (user != null && doc.getString("email") != null && !doc.getString("email").equals("") &&
                                 centers.containsKey(user.getObjectId("fitness_center_id").toString())) {
@@ -98,13 +86,9 @@ public class GetMobileFeedbacks {
                             cur.put("fitness_center", centers.get(user.getObjectId("fitness_center_id").toString()));
                         }
 
-                        LogManager.write("7");
-
                         feedbacks.add(cur);
                     }
                     sending.put(Protocol.Field.FEEDBACKS.key, feedbacks);
-                    sending.put(Protocol.Field.USERS.key, users);
-                    sending.put(Protocol.Field.CENTERS.key, centers);
                 }
 
             } catch (Exception e) {

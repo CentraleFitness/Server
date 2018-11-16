@@ -4,6 +4,7 @@ import Tools.LogManager;
 import Tools.ObjectIdSerializer;
 import Tools.Token;
 import com.google.gson.GsonBuilder;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Filters;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
@@ -18,9 +19,7 @@ import org.bson.types.ObjectId;
 import protocol.intranet.Protocol;
 import protocol.ResponseObject;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static com.mongodb.client.model.Indexes.ascending;
 import static com.mongodb.client.model.Sorts.orderBy;
@@ -56,28 +55,40 @@ public class CenterGetAlbum {
                         sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
 
                         Bson posts_filter = Filters.and(
-                                Filters.eq(Post.Field.POSTERID.get_key(), center.getField(Fitness_Center.Field.ID)),
+                                Filters.eq(Post.Field.FITNESS_CENTERT_ID.get_key(), center.getField(Fitness_Center.Field.ID)),
                                 Filters.eq(Post.Field.IS_CENTER.get_key(), true),
                                 Filters.eq(Post.Field.TYPE.get_key(), "PHOTO")
                         );
-                        @SuppressWarnings("unchecked")
-                        ArrayList<Document> posts = (ArrayList<Document>) Database.collections.get(Database.Collections.Posts).find(posts_filter).sort(orderBy(ascending(Post.Field.DATE.get_key()))).into(new ArrayList<Document>());
-
-                        sending.put(Protocol.Field.ALBUM.key, posts);
-
-                        /*
 
                         @SuppressWarnings("unchecked")
-                        ArrayList<Fitness_Center.Picture_Describe> album = (ArrayList<Fitness_Center.Picture_Describe>) center.getField(Fitness_Center.Field.ALBUM);
-                        sending.put(Protocol.Field.ALBUM.key, album);
+                        FindIterable<Post> findIterable = (FindIterable<Post>) Database.collections.get(Database.Collections.Posts).find(posts_filter).sort(orderBy(ascending(Post.Field.DATE.get_key())));
+                        List<Map<String,Object>> albums = new ArrayList<>();
+                        HashMap<String,Object> cur;
+                        for (Document doc : findIterable) {
+                            cur = new HashMap<>();
 
-                        */
+                            cur.put("_id", doc.getObjectId("_id").toString());
+                            cur.put("posterId", doc.getObjectId("posterId").toString());
+                            cur.put("posterName", doc.getString("posterName"));
+
+                            cur.put("date", doc.getLong("date"));
+                            cur.put("content", doc.getString("content"));
+                            cur.put("title", doc.getString("title"));
+
+                            cur.put("picture", doc.getString("picture"));
+                            cur.put("picture_id", doc.getObjectId("picture_id").toString());
+
+                            albums.add(cur);
+                        }
+
+                        sending.put(Protocol.Field.ALBUM.key, albums);
                     }
                 }
             }catch (Exception e){
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_ERROR.code);
                 LogManager.write("Exception: " + e.toString());
+                System.out.println("Exception: " + e.toString());
             }
             response.end(new GsonBuilder().registerTypeAdapter(ObjectId.class, new ObjectIdSerializer()).create().toJson(sending));
         });

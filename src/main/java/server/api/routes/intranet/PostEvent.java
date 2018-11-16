@@ -55,8 +55,9 @@ public class PostEvent {
 
                         Post post = (Post) Database.new_entity(Database.Collections.Posts);
 
-                        post.setField(Post.Field.POSTERID, new ObjectId(center.getField(Fitness_Center.Field.ID).toString()));
+                        post.setField(Post.Field.POSTERID, new ObjectId(manager.getField(Fitness_Center_Manager.Field.ID).toString()));
                         post.setField(Post.Field.POSTERNAME, center.getField(Fitness_Center.Field.NAME));
+                        post.setField(Post.Field.FITNESS_CENTERT_ID, center.getField(Fitness_Center.Field.ID));
                         post.setField(Post.Field.IS_CENTER, true);
                         post.setField(Post.Field.TYPE, "EVENT");
                         post.setField(Post.Field.DATE, System.currentTimeMillis());
