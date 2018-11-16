@@ -10,9 +10,7 @@ import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import model.Database;
-import model.entities.Fitness_Center;
-import model.entities.Fitness_Center_Manager;
-import model.entities.Post;
+import model.entities.*;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
@@ -57,16 +55,59 @@ public class CenterGetPublications {
                         Bson posts_filter = Filters.and(
                                 Filters.eq(Post.Field.FITNESS_CENTERT_ID.get_key(), center.getField(Fitness_Center.Field.ID))
                         );
-
+                        
                         List<ObjectId> comments_list = new ArrayList<>();
+                        List<ObjectId> users_list = new ArrayList<>();
+                        List<ObjectId> centers_list = new ArrayList<>();
                         List<ObjectId> cur_com;
 
                         FindIterable<Post> findIterable = (FindIterable<Post>) Database.collections.get(Database.Collections.Posts).find(posts_filter).sort(orderBy(ascending(Post.Field.DATE.get_key())));
                         for (Document doc : findIterable) {
 
+                            if (doc.getBoolean("is_center"))
+                                centers_list.add(doc.getObjectId("fitness_center_id"));
+                            else
+                                users_list.add(doc.getObjectId("posterId"));
+
                             if ((cur_com = (List<ObjectId>)doc.get("comments")) != null) {
                                 comments_list.addAll(cur_com);
                             }
+                        }
+
+                        Bson users_filter = Filters.and(
+                                Filters.in(User.Field.ID.get_key(), users_list)
+                        );
+
+                        List<ObjectId> pictures_list = new ArrayList<>();
+                        HashMap<String,Object> users = new HashMap<>();
+                        FindIterable<User> findIterableUsers = (FindIterable<User>) Database.collections.get(Database.Collections.Users).find(users_filter);
+                        for (Document doc : findIterableUsers) {
+
+                            users.put(doc.getObjectId("_id").toString(), doc);
+                            users_list.add(doc.getObjectId("picture_id"));
+                        }
+
+                        Bson centers_filter = Filters.and(
+                                Filters.in(Fitness_Center.Field.ID.get_key(), centers_list)
+                        );
+
+                        HashMap<String,Object> centers = new HashMap<>();
+                        FindIterable<Fitness_Center> findIterableCenters = (FindIterable<Fitness_Center>) Database.collections.get(Database.Collections.Fitness_Centers).find(centers_filter);
+                        for (Document doc : findIterableCenters) {
+
+                            centers.put(doc.getObjectId("_id").toString(), doc);
+                            centers_list.add(doc.getObjectId("picture_id"));
+                        }
+
+                        Bson pictures_filter = Filters.and(
+                                Filters.in(Picture.Field.ID.get_key(), pictures_list)
+                        );
+
+                        HashMap<String,Object> pictures = new HashMap<>();
+                        FindIterable<Picture> findIterablePictures = (FindIterable<Picture>) Database.collections.get(Database.Collections.Pictures).find(pictures_filter);
+                        for (Document doc : findIterablePictures) {
+
+                            pictures.put(doc.getObjectId("_id").toString(), doc.getString("picture"));
                         }
 
                         Bson comments_filter = Filters.and(
@@ -87,14 +128,32 @@ public class CenterGetPublications {
 
                         HashMap<String, Object> cur;
                         List<Map<String,Object>> posts = new ArrayList<>();
+                        Document tmpUser;
                         for (Document doc : findIterable) {
                             cur = new HashMap<>();
 
                             cur.put("_id", doc.getObjectId("_id").toString());
                             cur.put("fitness_center_id", doc.getObjectId("fitness_center_id").toString());
+                            cur.put("is_center", doc.getBoolean("is_center"));
                             cur.put("posterId", doc.getObjectId("posterId").toString());
                             cur.put("isMine", doc.getObjectId("posterId").toString().equals(manager.getField(Fitness_Center_Manager.Field.ID).toString()));
                             cur.put("posterName", doc.getString("posterName"));
+
+                            cur.put("likedByMe", true);
+
+                            if (doc.getBoolean("is_center")) {
+                                tmpUser = (Document)centers.get(doc.getObjectId("fitness_center_id").toString());
+                            } else {
+                                tmpUser = (Document)users.get(doc.getObjectId("posterId").toString());
+                            }
+
+                            if (tmpUser == null || tmpUser.getObjectId("picture_id") == null ||
+                                    tmpUser.getObjectId("picture_id").toString().equals("")) {
+
+                                cur.put("posterPicture", "");
+                            } else {
+                                cur.put("posterPicture", pictures.get(tmpUser.getObjectId("picture_id").toString()));
+                            }
 
                             cur.put("date", doc.getLong("date"));
                             cur.put("content", doc.getString("content"));
