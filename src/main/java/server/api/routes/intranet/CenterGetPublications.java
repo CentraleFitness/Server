@@ -31,6 +31,8 @@ public class CenterGetPublications {
             Fitness_Center_Manager manager;
             Fitness_Center center;
 
+            System.out.println("BEGIN");
+
             try {
                 manager = (Fitness_Center_Manager) Database.find_entity(Database.Collections.Fitness_Center_Managers, Fitness_Center_Manager.Field.EMAIL, Token.decodeToken((String) received.get(Protocol.Field.TOKEN.key)).getIssuer());
                 if (!Objects.equals(manager.getField(Fitness_Center_Manager.Field.TOKEN), received.get(Protocol.Field.TOKEN.key))) {
