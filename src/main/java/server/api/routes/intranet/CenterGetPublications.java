@@ -152,9 +152,13 @@ public class CenterGetPublications {
                             if (tmpUser == null || tmpUser.getObjectId("picture_id") == null ||
                                     tmpUser.getObjectId("picture_id").toString().equals("")) {
 
+                                LogManager.write("WTF1");
                                 cur.put("posterPicture", "");
+                                LogManager.write("WTF3");
                             } else {
+                                LogManager.write("WTF2");
                                 cur.put("posterPicture", pictures.get(tmpUser.getObjectId("picture_id").toString()));
+                                LogManager.write("WTF4");
                             }
 
                             cur.put("date", doc.getLong("date"));
