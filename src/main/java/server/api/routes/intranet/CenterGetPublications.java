@@ -116,9 +116,27 @@ public class CenterGetPublications {
                             Filters.in(Post.Field.ID.get_key(), comments_list)
                         );
 
+                        Document tmpUser;
+
                         HashMap<String,Object> comments = new HashMap<>();
                         FindIterable<Post> findIterableComments = (FindIterable<Post>) Database.collections.get(Database.Collections.Posts).find(comments_filter);
                         for (Document doc : findIterableComments) {
+
+                            doc.put("isMine", doc.getObjectId("posterId").toString().equals(manager.getField(Fitness_Center_Manager.Field.ID).toString()));
+
+                            if (doc.getBoolean("is_center") != null && doc.getBoolean("is_center")) {
+                                tmpUser = (Document)centers.get(doc.getObjectId("fitness_center_id").toString());
+                            } else {
+                                tmpUser = (Document)users.get(doc.getObjectId("posterId").toString());
+                            }
+
+                            if (tmpUser == null || tmpUser.getObjectId("picture_id") == null ||
+                                    tmpUser.getObjectId("picture_id").toString().equals("")) {
+
+                                doc.put("posterPicture", "");
+                            } else {
+                                doc.put("posterPicture", pictures.get(tmpUser.getObjectId("picture_id").toString()));
+                            }
 
                             comments.put(doc.getObjectId("_id").toString(), doc);
                         }
@@ -129,7 +147,6 @@ public class CenterGetPublications {
 
                         HashMap<String, Object> cur;
                         List<Map<String,Object>> posts = new ArrayList<>();
-                        Document tmpUser;
                         for (Document doc : findIterable) {
                             cur = new HashMap<>();
 
@@ -140,7 +157,7 @@ public class CenterGetPublications {
                             cur.put("isMine", doc.getObjectId("posterId").toString().equals(manager.getField(Fitness_Center_Manager.Field.ID).toString()));
                             cur.put("posterName", doc.getString("posterName"));
 
-                            cur.put("likedByMe", true);
+                            cur.put("likedByMe", false);
 
                             if (doc.getBoolean("is_center") != null && doc.getBoolean("is_center")) {
                                 tmpUser = (Document)centers.get(doc.getObjectId("fitness_center_id").toString());
