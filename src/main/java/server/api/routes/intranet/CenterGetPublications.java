@@ -157,7 +157,7 @@ public class CenterGetPublications {
                             cur.put("isMine", doc.getObjectId("posterId").toString().equals(manager.getField(Fitness_Center_Manager.Field.ID).toString()));
                             cur.put("posterName", doc.getString("posterName"));
 
-                            cur.put("likedByMe", false);
+                            cur.put("likedByMe", (doc.getBoolean("likedByClub") != null && doc.getBoolean("likedByClub")));
 
                             if (doc.getBoolean("is_center") != null && doc.getBoolean("is_center")) {
                                 tmpUser = (Document)centers.get(doc.getObjectId("fitness_center_id").toString());
@@ -193,7 +193,10 @@ public class CenterGetPublications {
                             li = (List<ObjectId>)doc.get("likes");
                             li_size = (li == null ? 0 : li.size());
 
-                            cur.put("nb_likes", li_size);
+                            cur.put("nb_likes", li_size + (
+                                    doc.getBoolean("likedByClub") != null &&
+                                            doc.getBoolean("likedByClub") ? 1 : 0)
+                            );
 
                             li = (List<ObjectId>)doc.get("comments");
                             li_size = (li == null ? 0 : li.size());
@@ -206,7 +209,6 @@ public class CenterGetPublications {
                                     cur_comments.add(comments.get(cur_id.toString()));
                                 }
                             }
-
                             cur.put("comments", cur_comments);
 
                             posts.add(cur);
@@ -219,6 +221,7 @@ public class CenterGetPublications {
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_ERROR.code);
                 LogManager.write("Exception: " + e.toString());
+                System.out.println("Exception: " + e.toString());
             }
             response.end(new GsonBuilder().registerTypeAdapter(ObjectId.class, new ObjectIdSerializer()).create().toJson(sending));
         });

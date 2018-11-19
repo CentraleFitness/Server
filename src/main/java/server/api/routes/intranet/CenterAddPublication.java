@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
+import javafx.geometry.Pos;
 import model.Database;
 import model.entities.Fitness_Center;
 import model.entities.Fitness_Center_Manager;
@@ -64,7 +65,31 @@ public class CenterAddPublication {
                         post.setField(Post.Field.DATE, System.currentTimeMillis());
                         post.setField(Post.Field.CONTENT, text);
 
+                        if (received.get(Protocol.Field.PUBLICATION_ID.key) == null) {
+
+                            //post.setField(Post.Field.FITNESS_CENTERT_ID, center.getField(Fitness_Center.Field.ID));
+                            post.setField(Post.Field.LIKED_BY_CLUB, false);
+                        }
+
                         Database.update_entity(Database.Collections.Posts, post);
+
+                        if (received.get(Protocol.Field.PUBLICATION_ID.key) != null) {
+
+                            Post publication = (Post) Database.find_entity(Database.Collections.Posts, Post.Field.ID, new ObjectId(received.get(Protocol.Field.PUBLICATION_ID.key).toString()));
+
+                            ArrayList<ObjectId> comments = (ArrayList<ObjectId>) publication.getField(Post.Field.COMMENTS);
+
+                            if (comments == null) {
+                                comments = new ArrayList<>();
+                            }
+
+                            comments.add((ObjectId)post.getField(Post.Field.ID));
+
+                            publication.setField(Post.Field.COMMENTS, comments);
+
+                            Database.update_entity(Database.Collections.Posts, publication);
+
+                        }
 
                         sending.put(Protocol.Field.PUBLICATION_ID.key, post.getField(Post.Field.ID).toString());
                         sending.put(Protocol.Field.POSTER_NAME.key, center.getField(Fitness_Center.Field.NAME));

@@ -64,6 +64,7 @@ public class CenterAddPictureToAlbum {
                         post.setField(Post.Field.IS_CENTER, true);
                         post.setField(Post.Field.TYPE, "PHOTO");
                         post.setField(Post.Field.DATE, System.currentTimeMillis());
+                        post.setField(Post.Field.LIKED_BY_CLUB, false);
 
                         if (received.get(Protocol.Field.DESCRIPTION.key) == null) {
                             post.setField(Post.Field.CONTENT, "");

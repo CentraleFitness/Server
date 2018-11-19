@@ -2,6 +2,7 @@ package model.entities;
 
 import java.util.List;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
@@ -29,6 +30,7 @@ public class Post extends Entity {
         START_DATE("start_date", Long.class),
         END_DATE("end_date", Long.class),
 
+        LIKED_BY_CLUB("likedByClub", Boolean.class),
         LIKES("likes", List.class),
         COMMENTS("comments", List.class),
         

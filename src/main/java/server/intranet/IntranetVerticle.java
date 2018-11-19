@@ -70,6 +70,7 @@ public class IntranetVerticle extends AbstractVerticle {
         new CenterGetAlbum(this.router);
 
         new CenterAddPublication(this.router);
+        new CenterLikePublication(this.router);
         new CenterDeletePublication(this.router);
         new CenterGetPublications(this.router);
 

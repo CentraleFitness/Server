@@ -53,22 +53,31 @@ public class CenterDeletePublication {
                         sending = new ResponseObject(false);
                         sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
 
-                        Database.delete_entity(Database.Collections.Posts, Post.Field.ID, new ObjectId(received.get(Protocol.Field.PUBLICATION_ID.key).toString()));
+                        if (received.get(Protocol.Field.COMMENT_ID.key) != null) {
 
-                        /*
-                        @SuppressWarnings("unchecked")
-                        ArrayList<Fitness_Center.Publication> publications = (ArrayList<Fitness_Center.Publication>) center.getField(Fitness_Center.Field.PUBLICATIONS);
-                        Document cur;
-                        for(Iterator<Fitness_Center.Publication> i = publications.iterator(); i.hasNext();) {
-                            cur = i.next();
-                            if (cur.get(Fitness_Center.Publication.Field.ID.get_key()).toString().equals(received.get(Protocol.Field.PUBLICATION_ID.key).toString())) {
-                                i.remove();
-                                break;
+                            Post post = (Post) Database.find_entity(Database.Collections.Posts, Post.Field.ID, new ObjectId(received.get(Protocol.Field.PUBLICATION_ID.key).toString()));
+
+                            ArrayList<ObjectId> comments = (ArrayList<ObjectId>) post.getField(Post.Field.COMMENTS);
+
+                            if (comments == null) {
+                                comments = new ArrayList<>();
                             }
-                        }
-                        Database.update_entity(Database.Collections.Fitness_Centers, center);
 
-                        */
+                            int index = comments.indexOf(new ObjectId(received.get(Protocol.Field.COMMENT_ID.key).toString()));
+
+                            if (index != -1) {
+                                comments.remove(index);
+                                post.setField(Post.Field.COMMENTS, comments);
+                                Database.update_entity(Database.Collections.Posts, post);
+                            }
+
+                            Database.delete_entity(Database.Collections.Posts, Post.Field.ID, new ObjectId(received.get(Protocol.Field.COMMENT_ID.key).toString()));
+
+                        } else {
+
+                            Database.delete_entity(Database.Collections.Posts, Post.Field.ID, new ObjectId(received.get(Protocol.Field.PUBLICATION_ID.key).toString()));
+
+                        }
                     }
                 }
             }catch (Exception e){

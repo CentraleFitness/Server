@@ -147,6 +147,13 @@ public class Protocol {
         CENTER_ADD_PUBLICATION("/club/add/publication"),
 
         /**
+         * @path: CENTER_LIKE_PUBLICATION:
+         * @param: TOKEN.
+         * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
+         */
+        CENTER_LIKE_PUBLICATION("/club/like/publication"),
+
+        /**
          * @path: CENTER_GET_PROFILE:
          * @param: TOKEN.
          * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
@@ -394,6 +401,7 @@ public class Protocol {
         IS_VALIDATED("is_validated"),
         POSTER_NAME("posterName"),
         POSTER_PICTURE("posterPicture"),
+        COMMENT_ID("comment_id"),
         ;
         public String key;
         Field(String key) {
