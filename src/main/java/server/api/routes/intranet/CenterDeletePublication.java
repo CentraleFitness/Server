@@ -10,13 +10,11 @@ import model.Database;
 import model.entities.Fitness_Center;
 import model.entities.Fitness_Center_Manager;
 import model.entities.Post;
-import org.bson.Document;
 import org.bson.types.ObjectId;
 import protocol.intranet.Protocol;
 import protocol.ResponseObject;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
 

@@ -6,7 +6,6 @@ import com.google.gson.GsonBuilder;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
-import javafx.geometry.Pos;
 import model.Database;
 import model.entities.Fitness_Center;
 import model.entities.Fitness_Center_Manager;
@@ -16,7 +15,6 @@ import org.bson.types.ObjectId;
 import protocol.intranet.Protocol;
 import protocol.ResponseObject;
 
-import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
