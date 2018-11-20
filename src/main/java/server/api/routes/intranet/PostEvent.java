@@ -7,10 +7,7 @@ import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import model.Database;
-import model.entities.Event;
-import model.entities.Fitness_Center;
-import model.entities.Fitness_Center_Manager;
-import model.entities.Post;
+import model.entities.*;
 import org.bson.types.ObjectId;
 import protocol.ResponseObject;
 import protocol.intranet.Protocol;
@@ -72,6 +69,31 @@ public class PostEvent {
                         post.setField(Post.Field.LIKED_BY_CLUB, false);
 
                         Database.update_entity(Database.Collections.Posts, post);
+
+                        Event evt = (Event) Database.find_entity(Database.Collections.Events, Event.Field.ID, new ObjectId(event.getField(Event.Field.ID).toString()));
+
+                        if (evt != null) {
+
+                            sending.put(Protocol.Field.TITLE.key, evt.getField(Event.Field.TITLE));
+                            sending.put(Protocol.Field.DESCRIPTION.key, evt.getField(Event.Field.DESCRIPTION));
+                            sending.put(Protocol.Field.PICTURE.key, evt.getField(Event.Field.PICTURE));
+                            sending.put(Protocol.Field.EVENT_ID.key, evt.getField(Event.Field.ID));
+                            sending.put(Protocol.Field.START_DATE.key, evt.getField(Event.Field.START_DATE));
+                            sending.put(Protocol.Field.END_DATE.key, evt.getField(Event.Field.END_DATE));
+                        }
+
+                        sending.put(Protocol.Field.PUBLICATION_ID.key, post.getField(Post.Field.ID).toString());
+                        sending.put(Protocol.Field.POSTER_NAME.key, center.getField(Fitness_Center.Field.NAME));
+
+                        String picture = "";
+                        if (center.getField(Fitness_Center.Field.PICTURE_ID) != null &&
+                                !center.getField(Fitness_Center.Field.PICTURE_ID).equals("")) {
+
+                            Picture pic_poster = (Picture)Database.find_entity(Database.Collections.Pictures, Picture.Field.ID, center.getField(Fitness_Center.Field.PICTURE_ID));
+                            picture = (String)pic_poster.getField(Picture.Field.PICTURE);
+                        }
+
+                        sending.put(Protocol.Field.POSTER_PICTURE.key, picture);
                     }
                 }
             }catch (Exception e){

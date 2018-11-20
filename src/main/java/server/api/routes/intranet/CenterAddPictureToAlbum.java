@@ -85,7 +85,7 @@ public class CenterAddPictureToAlbum {
                         Database.update_entity(Database.Collections.Pictures, pic);
 
                         sending.put(Protocol.Field.PICTURE_ID.key, pic.getField(Picture.Field.ID).toString());
-
+                        sending.put(Protocol.Field.PUBLICATION_ID.key, post.getField(Post.Field.ID).toString());
                         sending.put(Protocol.Field.POSTER_NAME.key, center.getField(Fitness_Center.Field.NAME));
 
                         String picture = "";
