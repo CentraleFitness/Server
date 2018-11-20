@@ -75,8 +75,7 @@ public class PostCreate {
 				Post post = (Post) Database.new_entity(Collections.Posts);
 				post.setField(Post.Field.POSTERID, user.getField(User.Field.ID));
 				post.setField(Post.Field.FITNESS_CENTERT_ID, user.getField(User.Field.FITNESS_CENTER_ID));
-				post.setField(Post.Field.POSTERNAME, (String) user.getField(User.Field.FIRSTNAME) + " "
-						+ (String) user.getField(User.Field.LASTNAME));
+				post.setField(Post.Field.POSTERNAME, (String) user.getField(User.Field.LOGIN));
 				post.setField(Post.Field.TYPE, rPostType);
 				post.setField(Post.Field.LIKED_BY_CLUB, false);
 				post.setField(Post.Field.IS_COMMENT, false);

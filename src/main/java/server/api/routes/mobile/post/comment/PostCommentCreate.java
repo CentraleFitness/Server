@@ -78,8 +78,7 @@ public class PostCommentCreate {
 				comment.setField(Post.Field.CONTENT, rPostContent);
 				comment.setField(Post.Field.POSTERID, user.getId());
 				comment.setField(Post.Field.IS_COMMENT, true);
-				comment.setField(Post.Field.POSTERNAME, (String) user.getField(User.Field.FIRSTNAME) + " "
-						+ (String) user.getField(User.Field.LASTNAME));
+				comment.setField(Post.Field.POSTERNAME, (String) user.getField(User.Field.LOGIN));
 				List<ObjectId> comments = (List<ObjectId>) post.getField(Post.Field.COMMENTS);
 				comment.setField(Post.Field.DATE, System.currentTimeMillis());
 				comments.add(comment.getId());
