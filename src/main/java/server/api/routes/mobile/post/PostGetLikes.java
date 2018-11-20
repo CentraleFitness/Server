@@ -71,7 +71,9 @@ public class PostGetLikes {
 				List<ObjectId> likes = (List<ObjectId>) post.getField(Post.Field.LIKES);
 				sending = new ResponseObject(false);
 				sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
-				sending.put(Protocol.Field.LIKES.key, likes == null ? 0 : likes.size());
+				sending.put(Protocol.Field.LIKES.key, (likes == null ? 0 : likes.size()) +
+						(post.getField(Post.Field.LIKED_BY_CLUB) == null ||
+								!(Boolean)post.getField(Post.Field.LIKED_BY_CLUB) ? 0 : 1));
 			} catch (Exception e) {
 				sending = new ResponseObject(true);
 				sending.put(Protocol.Field.STATUS.key, Protocol.Status.INTERNAL_SERVER_ERROR.code);
