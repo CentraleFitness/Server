@@ -109,6 +109,24 @@ public class GetPostContent {
 				sending.put(Protocol.Field.POSTICON.key,
 						Optional.ofNullable(picture).map(pic -> pic.getField(Picture.Field.PICTURE)).orElse(null));
 				sending.put(Protocol.Field.POSTCONTENT.key, post.getField(Post.Field.CONTENT));
+
+				if (post.getField(Post.Field.TYPE) != null &&
+						post.getField(Post.Field.TYPE).equals("PHOTO")) {
+
+					sending.put(Protocol.Field.POSTTITLE.key, post.getField(Post.Field.TITLE));
+					sending.put(Protocol.Field.POSTPICTURE.key, post.getField(Post.Field.PICTURE));
+				}
+
+				if (post.getField(Post.Field.TYPE) != null &&
+						post.getField(Post.Field.TYPE).equals("EVENT")) {
+
+					sending.put(Protocol.Field.POSTTITLE.key, post.getField(Post.Field.TITLE));
+					sending.put(Protocol.Field.POSTPICTURE.key, post.getField(Post.Field.PICTURE));
+					sending.put(Protocol.Field.POSTEVENTID.key, post.getField(Post.Field.EVENT_ID));
+					sending.put(Protocol.Field.POSTSTARTDATE.key, post.getField(Post.Field.START_DATE));
+					sending.put(Protocol.Field.POSTENDDATE.key, post.getField(Post.Field.END_DATE));
+				}
+
 				sending.put(Protocol.Field.NAME.key,
 						!isCenter
 								? Optional
