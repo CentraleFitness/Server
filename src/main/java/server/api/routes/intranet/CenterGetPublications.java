@@ -157,7 +157,8 @@ public class CenterGetPublications {
                             cur.put("fitness_center_id", doc.getObjectId("fitness_center_id").toString());
                             cur.put("is_center", doc.getBoolean("is_center"));
                             cur.put("posterId", doc.getObjectId("posterId").toString());
-                            cur.put("isMine", doc.getObjectId("posterId").toString().equals(manager.getField(Fitness_Center_Manager.Field.ID).toString()));
+                            cur.put("isMine", true);
+                            //cur.put("isMine", doc.getObjectId("posterId").toString().equals(manager.getField(Fitness_Center_Manager.Field.ID).toString()));
                             cur.put("posterName", doc.getString("posterName"));
 
                             cur.put("likedByMe", (doc.getBoolean("likedByClub") != null && doc.getBoolean("likedByClub")));
