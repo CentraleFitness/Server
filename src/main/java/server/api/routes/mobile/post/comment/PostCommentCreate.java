@@ -77,6 +77,7 @@ public class PostCommentCreate {
 				Post comment = (Post) Database.new_entity(Collections.Posts);
 				comment.setField(Post.Field.CONTENT, rPostContent);
 				comment.setField(Post.Field.POSTERID, user.getId());
+				comment.setField(Post.Field.IS_COMMENT, true);
 				comment.setField(Post.Field.POSTERNAME, (String) user.getField(User.Field.FIRSTNAME) + " "
 						+ (String) user.getField(User.Field.LASTNAME));
 				List<ObjectId> comments = (List<ObjectId>) post.getField(Post.Field.COMMENTS);

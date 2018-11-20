@@ -1,6 +1,8 @@
 package server.api.routes.mobile.post;
 
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.or;
+import static com.mongodb.client.model.Filters.and;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -85,7 +87,12 @@ public class GetPosts {
                         (List<Map<String, String>>) Database
                                 .collections
                                 .get(Database.Collections.Posts)
-                                .find(eq(Post.Field.FITNESS_CENTERT_ID.get_key(), targetId))
+                                .find(and(
+                                        eq(Post.Field.FITNESS_CENTERT_ID.get_key(), targetId),
+
+                                        or(eq(Post.Field.IS_COMMENT.get_key(), false),
+                                                eq(Post.Field.IS_COMMENT.get_key(), null))
+                                ))
                                 .sort(new BasicDBObject(Post.Field.DATE.get_key(), 1))
                                 .skip(rStart)
                                 .limit(rEnd)
@@ -96,6 +103,9 @@ public class GetPosts {
                                     Map<String, String> fields = new HashMap<>();
                                     fields.put(Protocol.Field.POSTID.key, ((ObjectId)post.getField(Post.Field.ID)).toString());
                                     fields.put(Protocol.Field.POSTTYPE.key, (String)post.getField(Post.Field.TYPE));
+                                    if (post.getField(Post.Field.EVENT_ID) != null) {
+                                        fields.put(Protocol.Field.EVENTID.key, (String) post.getField(Post.Field.EVENT_ID));
+                                    }
                                     return fields;
                                 })
                                 .collect(Collectors.toList());

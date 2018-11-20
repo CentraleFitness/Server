@@ -78,6 +78,8 @@ public class PostCreate {
 				post.setField(Post.Field.POSTERNAME, (String) user.getField(User.Field.FIRSTNAME) + " "
 						+ (String) user.getField(User.Field.LASTNAME));
 				post.setField(Post.Field.TYPE, rPostType);
+				post.setField(Post.Field.LIKED_BY_CLUB, false);
+				post.setField(Post.Field.IS_COMMENT, false);
 				post.setField(Post.Field.PICTURE, rPostIcon);
 				post.setField(Post.Field.CONTENT, rPostContent);
 				post.setField(Post.Field.DATE, System.currentTimeMillis());
