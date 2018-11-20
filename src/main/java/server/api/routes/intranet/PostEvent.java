@@ -59,6 +59,7 @@ public class PostEvent {
                         post.setField(Post.Field.POSTERNAME, center.getField(Fitness_Center.Field.NAME));
                         post.setField(Post.Field.FITNESS_CENTERT_ID, center.getField(Fitness_Center.Field.ID));
                         post.setField(Post.Field.IS_CENTER, true);
+                        post.setField(Post.Field.IS_COMMENT, false);
                         post.setField(Post.Field.TYPE, "EVENT");
                         post.setField(Post.Field.DATE, System.currentTimeMillis());
                         post.setField(Post.Field.CONTENT, event.getField(Event.Field.DESCRIPTION));

@@ -16,6 +16,7 @@ public class Post extends Entity {
         POSTERID("posterId", ObjectId.class),
         POSTERNAME("posterName", String.class),
         IS_CENTER("is_center", Boolean.class),
+        IS_COMMENT("is_comment", Boolean.class),
         TYPE("type", String.class),
         DATE("date", Long.class),
 

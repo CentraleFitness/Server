@@ -65,8 +65,11 @@ public class CenterAddPublication {
 
                         if (received.get(Protocol.Field.PUBLICATION_ID.key) == null) {
 
-                            //post.setField(Post.Field.FITNESS_CENTERT_ID, center.getField(Fitness_Center.Field.ID));
+                            post.setField(Post.Field.IS_COMMENT, false);
                             post.setField(Post.Field.LIKED_BY_CLUB, false);
+                        } else {
+
+                            post.setField(Post.Field.IS_COMMENT, true);
                         }
 
                         Database.update_entity(Database.Collections.Posts, post);

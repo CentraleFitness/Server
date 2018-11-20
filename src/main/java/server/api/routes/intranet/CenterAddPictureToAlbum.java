@@ -61,6 +61,7 @@ public class CenterAddPictureToAlbum {
                         post.setField(Post.Field.POSTERNAME, center.getField(Fitness_Center.Field.NAME));
                         post.setField(Post.Field.FITNESS_CENTERT_ID, center.getField(Fitness_Center.Field.ID));
                         post.setField(Post.Field.IS_CENTER, true);
+                        post.setField(Post.Field.IS_COMMENT, false);
                         post.setField(Post.Field.TYPE, "PHOTO");
                         post.setField(Post.Field.DATE, System.currentTimeMillis());
                         post.setField(Post.Field.LIKED_BY_CLUB, false);

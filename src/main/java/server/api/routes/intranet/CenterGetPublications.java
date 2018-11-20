@@ -53,7 +53,10 @@ public class CenterGetPublications {
                         sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
 
                         Bson posts_filter = Filters.and(
-                            Filters.eq(Post.Field.FITNESS_CENTERT_ID.get_key(), center.getField(Fitness_Center.Field.ID))
+                            Filters.eq(Post.Field.FITNESS_CENTERT_ID.get_key(), center.getField(Fitness_Center.Field.ID)),
+
+                            Filters.or(Filters.eq(Post.Field.IS_COMMENT.get_key(), false),
+                                        Filters.eq(Post.Field.IS_COMMENT.get_key(), null))
                         );
 
                         List<ObjectId> comments_list = new ArrayList<>();
