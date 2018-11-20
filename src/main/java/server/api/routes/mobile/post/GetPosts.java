@@ -104,7 +104,7 @@ public class GetPosts {
                                     fields.put(Protocol.Field.POSTID.key, ((ObjectId)post.getField(Post.Field.ID)).toString());
                                     fields.put(Protocol.Field.POSTTYPE.key, (String)post.getField(Post.Field.TYPE));
                                     if (post.getField(Post.Field.EVENT_ID) != null) {
-                                        fields.put(Protocol.Field.EVENTID.key, (String) post.getField(Post.Field.EVENT_ID));
+                                        fields.put(Protocol.Field.EVENTID.key, post.getField(Post.Field.EVENT_ID).toString());
                                     }
                                     return fields;
                                 })
