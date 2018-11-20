@@ -71,6 +71,8 @@ public class CenterGetAlbum {
                             cur.put("posterId", doc.getObjectId("posterId").toString());
                             cur.put("posterName", doc.getString("posterName"));
 
+                            cur.put("creation_date", doc.getLong("date"));
+
                             cur.put("date", doc.getLong("date"));
                             cur.put("content", doc.getString("content"));
                             cur.put("title", doc.getString("title"));
