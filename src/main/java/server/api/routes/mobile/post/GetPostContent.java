@@ -1,9 +1,13 @@
 package server.api.routes.mobile.post;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 
+import com.mongodb.BasicDBObject;
+import model.entities.*;
+import org.bson.Document;
 import org.bson.types.ObjectId;
 
 import com.auth0.jwt.JWT;
@@ -16,11 +20,6 @@ import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import model.Database;
 import model.Database.Collections;
-import model.entities.Fitness_Center;
-import model.entities.Fitness_Center_Manager;
-import model.entities.Picture;
-import model.entities.Post;
-import model.entities.User;
 import protocol.ResponseObject;
 import protocol.mobile.Protocol;
 
@@ -123,8 +122,10 @@ public class GetPostContent {
 					sending.put(Protocol.Field.POSTTITLE.key, post.getField(Post.Field.TITLE));
 					sending.put(Protocol.Field.POSTPICTURE.key, post.getField(Post.Field.PICTURE));
 					sending.put(Protocol.Field.POSTEVENTID.key, post.getField(Post.Field.EVENT_ID));
+					Document eventParticipation = Database.find_entity(Database.Collections.TUPLE_Event_Users, new BasicDBObject("$and", Arrays.asList(new BasicDBObject(TUPLE_Event_User.Field.EVENT_ID.get_key(), post.getField(Post.Field.EVENT_ID)), new BasicDBObject(TUPLE_Event_User.Field.USER_ID.get_key(), user.getField(User.Field.ID)))));
 					sending.put(Protocol.Field.POSTSTARTDATE.key, post.getField(Post.Field.START_DATE));
 					sending.put(Protocol.Field.POSTENDDATE.key, post.getField(Post.Field.END_DATE));
+					sending.put(Protocol.Field.ISREG.key, eventParticipation!=null);
 				}
 
 				sending.put(Protocol.Field.NAME.key,
