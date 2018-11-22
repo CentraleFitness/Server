@@ -2,7 +2,6 @@ package model.entities;
 
 import java.util.List;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
@@ -34,6 +33,8 @@ public class Post extends Entity {
         LIKED_BY_CLUB("likedByClub", Boolean.class),
         LIKES("likes", List.class),
         COMMENTS("comments", List.class),
+        
+        IS_REPORTED("is_reported", Boolean.class),
         
         ;
         @Override
