@@ -121,7 +121,7 @@ public class GetPostContent {
 
 					sending.put(Protocol.Field.POSTTITLE.key, post.getField(Post.Field.TITLE));
 					sending.put(Protocol.Field.POSTPICTURE.key, post.getField(Post.Field.PICTURE));
-					sending.put(Protocol.Field.POSTEVENTID.key, post.getField(Post.Field.EVENT_ID));
+					sending.put(Protocol.Field.POSTEVENTID.key, post.getField(Post.Field.EVENT_ID).toString());
 					Document eventParticipation = Database.find_entity(Database.Collections.TUPLE_Event_Users, new BasicDBObject("$and", Arrays.asList(new BasicDBObject(TUPLE_Event_User.Field.EVENT_ID.get_key(), post.getField(Post.Field.EVENT_ID)), new BasicDBObject(TUPLE_Event_User.Field.USER_ID.get_key(), user.getField(User.Field.ID)))));
 					sending.put(Protocol.Field.POSTSTARTDATE.key, post.getField(Post.Field.START_DATE));
 					sending.put(Protocol.Field.POSTENDDATE.key, post.getField(Post.Field.END_DATE));
