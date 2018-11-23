@@ -83,7 +83,9 @@ public class GetUsers {
                         cur = new HashMap<>();
                         cur.put("_id", doc.getObjectId("_id").toString());
                         LogManager.write("GETUSERS 6");
-                        cur.put("fitness_center_id", doc.getObjectId("fitness_center_id").toString());
+                        if (doc.getObjectId("fitness_center_id") != null) {
+                            cur.put("fitness_center_id", doc.getObjectId("fitness_center_id").toString());
+                        }
                         LogManager.write("GETUSERS 7");
                         cur.put("login", doc.getString("login"));
                         LogManager.write("GETUSERS 8");
