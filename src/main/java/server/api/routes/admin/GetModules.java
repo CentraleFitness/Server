@@ -43,7 +43,7 @@ public class GetModules {
                     sending = new ResponseObject(false);
                     sending.put(Protocol.Field.STATUS.key, protocol.intranet.Protocol.Status.GENERIC_OK.code);
 
-                    System.out.println("GETMODULES 1");
+                    LogManager.write("GETMODULES 1");
 
                     @SuppressWarnings("unchecked")
                     FindIterable<Administrator> findIterableAdmin = (FindIterable<Administrator>) Database.collections.get(Database.Collections.Administrators).find();
@@ -52,7 +52,7 @@ public class GetModules {
                         admins.put(doc.getObjectId("_id").toString(), doc.getString("first_name") + " " + doc.getString("last_name"));
                     }
 
-                    System.out.println("GETMODULES 2");
+                    LogManager.write("GETMODULES 2");
 
                     @SuppressWarnings("unchecked")
                     FindIterable<Module> findIterable = (FindIterable<Module>) Database.collections.get(Database.Collections.Modules).find().sort(orderBy(descending(Module.Field.MODULE_STATE_CODE.get_key())));
@@ -61,29 +61,29 @@ public class GetModules {
                     for (Document doc : findIterable) {
                         cur = new HashMap<>();
                         cur.put("_id", doc.getObjectId("_id").toString());
-                        System.out.println("GETMODULES 3");
+                        LogManager.write("GETMODULES 3");
                         cur.put("UUID", doc.getString("UUID"));
-                        System.out.println("GETMODULES 4");
+                        LogManager.write("GETMODULES 4");
                         cur.put("fitness_center_id", doc.getObjectId("fitness_center_id").toString());
-                        System.out.println("GETMODULES 5");
+                        LogManager.write("GETMODULES 5");
                         cur.put("machine_type", doc.getString("machine_type"));
-                        System.out.println("GETMODULES 6");
+                        LogManager.write("GETMODULES 6");
                         cur.put("module_state_id", doc.getObjectId("module_state_id").toString());
-                        System.out.println("GETMODULES 7");
+                        LogManager.write("GETMODULES 7");
                         cur.put("module_state_code", doc.getInteger("module_state_code"));
-                        System.out.println("GETMODULES 8");
+                        LogManager.write("GETMODULES 8");
                         cur.put("creation_date", doc.getLong("creation_date"));
-                        System.out.println("GETMODULES 9");
+                        LogManager.write("GETMODULES 9");
                         cur.put("update_date", doc.getLong("update_date"));
-                        System.out.println("GETMODULES 10");
+                        LogManager.write("GETMODULES 10");
                         cur.put("creator_admin_id", doc.getObjectId("creator_admin_id").toString());
-                        System.out.println("GETMODULES 11");
+                        LogManager.write("GETMODULES 11");
 
                         if (doc.getObjectId("creator_admin_id") != null &&
                                 admins.containsKey(doc.getObjectId("creator_admin_id").toString())) {
                             cur.put("creator_admin_name", admins.get(doc.getObjectId("creator_admin_id").toString()));
                         }
-                        System.out.println("GETMODULES 12");
+                        LogManager.write("GETMODULES 12");
                         modules.add(cur);
                     }
                     sending.put(Protocol.Field.MODULES.key, modules);
