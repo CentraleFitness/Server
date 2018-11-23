@@ -73,6 +73,8 @@ public class AdminVerticle extends AbstractVerticle {
         new UpdateModule(this.router);
         new GetModuleStates(this.router);
 
+        new GetUsers(this.router);
+
 
     }
 

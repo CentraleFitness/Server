@@ -26,6 +26,8 @@ public class Protocol {
 
         MODULE("/module"),
 
+        USER("/user"),
+
         MODULE_STATE("/module_state"),
 
         CONSULT_SIRET("/consult_siret"),
