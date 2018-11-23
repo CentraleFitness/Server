@@ -80,7 +80,9 @@ public class GetUsers {
                         cur.put("first_name", doc.getString("first_name"));
                         cur.put("last_name", doc.getString("last_name"));
                         cur.put("email_address", doc.getString("email_address"));
-                        cur.put("picture_id", doc.getString("picture_id"));
+                        cur.put("picture_id", doc.getObjectId("picture_id"));
+
+                        cur.put("reported_by_club", doc.getBoolean("reported_by_club"));
 
                         if (centers.containsKey(doc.getObjectId("fitness_center_id").toString())) {
                             cur.put("fitness_center", centers.get(doc.getObjectId("fitness_center_id").toString()));
@@ -88,7 +90,9 @@ public class GetUsers {
 
                         cur.put("nb_report",
                                 (post_reports.containsKey(doc.getObjectId("_id").toString()) ?
-                                post_reports.get(doc.getObjectId("_id").toString()) : 0)
+                                post_reports.get(doc.getObjectId("_id").toString()) : 0) +
+                                        (doc.getBoolean("reported_by_club") != null &&
+                                                doc.getBoolean("reported_by_club") ? 1 : 0)
                         );
 
                         users.add(cur);

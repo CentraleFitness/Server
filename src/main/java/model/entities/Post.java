@@ -35,6 +35,7 @@ public class Post extends Entity {
         COMMENTS("comments", List.class),
         
         IS_REPORTED("is_reported", List.class),
+        REPORTED_BY_CLUB("reported_by_club", Boolean.class),
         
         ;
         @Override
