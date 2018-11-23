@@ -103,7 +103,9 @@ public class GetUsers {
                                         false : doc.getBoolean("reported_by_club")));
 
                         LogManager.write("GETUSERS 13");
-                        if (centers.containsKey(doc.getObjectId("fitness_center_id").toString())) {
+                        if (doc.getObjectId("fitness_center_id") != null &&
+                                centers.containsKey(doc.getObjectId("fitness_center_id").toString())) {
+                            
                             cur.put("fitness_center", centers.get(doc.getObjectId("fitness_center_id").toString()));
                         }
                         LogManager.write("GETUSERS 14");
