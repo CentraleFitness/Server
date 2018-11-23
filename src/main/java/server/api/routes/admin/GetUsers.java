@@ -39,11 +39,15 @@ public class GetUsers {
                     sending = new ResponseObject(false);
                     sending.put(Protocol.Field.STATUS.key, protocol.intranet.Protocol.Status.GENERIC_OK.code);
 
+                    System.out.println("GETUSERS 1");
+
                     FindIterable<Fitness_Center> findIterableCenter = (FindIterable<Fitness_Center>) Database.collections.get(Database.Collections.Fitness_Centers).find();
                     Map<String,Object> centers = new HashMap<>();
                     for (Document doc : findIterableCenter) {
                         centers.put(doc.getObjectId("_id").toString(), doc);
                     }
+
+                    System.out.println("GETUSERS 2");
 
                     Bson posts_filter = Filters.and(
                             Filters.or(
@@ -59,6 +63,7 @@ public class GetUsers {
                         if (!post_reports.containsKey(doc.getObjectId("posterId").toString())) {
                             post_reports.put(doc.getObjectId("posterId").toString(), 0);
                         }
+                        System.out.println("GETUSERS 3");
                         if ((doc.getBoolean("is_center") == null || !doc.getBoolean("is_center")) &&
                                 (doc.get("is_reported")) != null && ((ArrayList<ObjectId>)doc.get("is_reported")).size() > 0) {
                             post_reports.put(
@@ -66,7 +71,9 @@ public class GetUsers {
                                     post_reports.get(doc.getObjectId("posterId").toString()) + ((ArrayList<ObjectId>)doc.get("is_reported")).size()
                             );
                         }
+                        System.out.println("GETUSERS 4");
                     }
+                    System.out.println("GETUSERS 5");
 
                     @SuppressWarnings("unchecked")
                     FindIterable<User> findIterable = (FindIterable<User>) Database.collections.get(Database.Collections.Users).find();
@@ -75,25 +82,36 @@ public class GetUsers {
                     for (Document doc : findIterable) {
                         cur = new HashMap<>();
                         cur.put("_id", doc.getObjectId("_id").toString());
+                        System.out.println("GETUSERS 6");
                         cur.put("fitness_center_id", doc.getObjectId("fitness_center_id").toString());
+                        System.out.println("GETUSERS 7");
                         cur.put("login", doc.getString("login"));
+                        System.out.println("GETUSERS 8");
                         cur.put("first_name", doc.getString("first_name"));
+                        System.out.println("GETUSERS 9");
                         cur.put("last_name", doc.getString("last_name"));
+                        System.out.println("GETUSERS 10");
                         cur.put("email_address", doc.getString("email_address"));
+                        System.out.println("GETUSERS 11");
                         cur.put("picture_id", doc.getObjectId("picture_id"));
+                        System.out.println("GETUSERS 12");
 
-                        cur.put("reported_by_club", doc.getBoolean("reported_by_club"));
+                        cur.put("reported_by_club",
+                                (doc.getBoolean("reported_by_club") == null ?
+                                        false : doc.getBoolean("reported_by_club")));
 
+                        System.out.println("GETUSERS 13");
                         if (centers.containsKey(doc.getObjectId("fitness_center_id").toString())) {
                             cur.put("fitness_center", centers.get(doc.getObjectId("fitness_center_id").toString()));
                         }
-
+                        System.out.println("GETUSERS 14");
                         cur.put("nb_report",
                                 (post_reports.containsKey(doc.getObjectId("_id").toString()) ?
                                 post_reports.get(doc.getObjectId("_id").toString()) : 0) +
                                         (doc.getBoolean("reported_by_club") != null &&
                                                 doc.getBoolean("reported_by_club") ? 1 : 0)
                         );
+                        System.out.println("GETUSERS 15");
 
                         users.add(cur);
                     }
@@ -106,7 +124,9 @@ public class GetUsers {
                         }
                     }
 
+                    System.out.println("GETUSERS 16");
                     users.sort(new SortByNbReport());
+                    System.out.println("GETUSERS 17");
 
                     sending.put(Protocol.Field.USERS.key, users);
                 }
