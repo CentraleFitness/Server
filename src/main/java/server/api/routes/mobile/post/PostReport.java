@@ -69,7 +69,18 @@ public class PostReport {
 					LogManager.write(Protocol.Status.POST_NOT_FOUND.message);
 					return;
 				}
-				post.setField(Post.Field.IS_REPORTED, true);
+				List<ObjectId> reports = (List<ObjectId>) post.getField(Post.Field.IS_REPORTED);
+				if (reports == null) {
+					reports = new ArrayList<>();
+					post.setField(Post.Field.IS_REPORTED, reports);
+				}
+				List report = reports.stream()
+						.filter(likerId -> likerId.toString().equals(user.getField(User.Field.ID).toString()))
+						.collect(Collectors.toList());
+				if (report.size() > 0)
+					reports.removeAll(report);
+				else
+					reports.add((ObjectId) user.getField(User.Field.ID));
 				Database.update_entity(Collections.Posts, post);
 				sending = new ResponseObject(false);
 				sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
