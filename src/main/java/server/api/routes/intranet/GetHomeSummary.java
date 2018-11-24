@@ -57,7 +57,10 @@ public class GetHomeSummary {
                         Bson event_filter = Filters.and(
                                 Filters.eq(Event.Field.FITNESS_CENTER_ID.get_key(), center.getField(Fitness_Center.Field.ID)),
                                 Filters.eq(Event.Field.IS_DELETED.get_key(), false),
-                                Filters.gte(Event.Field.START_DATE.get_key(), time)
+                                Filters.or(
+                                    Filters.gte(Event.Field.START_DATE.get_key(), time),
+                                    Filters.gte(Event.Field.END_DATE.get_key(), time)
+                                )
                         );
                         @SuppressWarnings("unchecked")
                         ArrayList<Document> events = (ArrayList<Document>) Database.collections.get(Database.Collections.Events).find(event_filter).limit(3).into(new ArrayList<Document>());

@@ -4,6 +4,8 @@ import Tools.LogManager;
 import Tools.ObjectIdSerializer;
 import Tools.Token;
 import com.google.gson.GsonBuilder;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.model.Filters;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
@@ -11,13 +13,16 @@ import model.Database;
 import model.entities.Feedback;
 import model.entities.Fitness_Center;
 import model.entities.Fitness_Center_Manager;
+import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import protocol.intranet.Protocol;
 import protocol.ResponseObject;
 
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+
+import static com.mongodb.client.model.Sorts.descending;
+import static com.mongodb.client.model.Sorts.orderBy;
 
 public class GetFeedbacks {
     public GetFeedbacks(Router router) {
@@ -48,20 +53,39 @@ public class GetFeedbacks {
                         sending = new ResponseObject(false);
                         sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
 
-                        LinkedList<Database.Entity> feedbacks;
+                        Bson managers_filter = Filters.and(
+                                Filters.eq(
+                                    Fitness_Center_Manager.Field.FITNESS_CENTER_ID.get_key(),
+                                    center.getField(Fitness_Center.Field.ID)
+                                )
+                        );
 
-                        if ((Boolean)manager.getField(Fitness_Center_Manager.Field.IS_PRINCIPAL)) {
-                            //TODO AJOUTER LE NOM DES MANAGERS
-                            feedbacks = Database.find_entities(Database.Collections.Feedbacks,
-                                    Feedback.Field.FITNESS_CENTER_ID,
-                                    center.getField(Fitness_Center.Field.ID));
-
-                        } else {
-                            feedbacks = Database.find_entities(Database.Collections.Feedbacks,
-                                    Feedback.Field.FITNESS_MANAGER_ID,
-                                    manager.getField(Fitness_Center_Manager.Field.ID));
-
+                        HashMap<String,Object> managers = new HashMap<>();
+                        FindIterable<Fitness_Center_Manager> findIterableManager = (FindIterable<Fitness_Center_Manager>) Database.collections.get(Database.Collections.Fitness_Center_Managers).find(managers_filter);
+                        for (Document doc : findIterableManager) {
+                            managers.put(doc.getObjectId("_id").toString(), doc.getString("first_name") + " " + doc.getString("last_name"));
                         }
+
+                        Bson feedbacks_filter = Filters.and(
+                                Filters.eq(
+                                    Feedback.Field.FITNESS_CENTER_ID.get_key(),
+                                    center.getField(Fitness_Center.Field.ID)
+                                )
+                        );
+
+                        List<Document> feedbacks = new ArrayList<>();
+                        FindIterable<Feedback> findIterableFeedbacks = (FindIterable<Feedback>) Database.collections.get(Database.Collections.Feedbacks).find(feedbacks_filter).sort(orderBy(descending(Feedback.Field.UPDATE_DATE.get_key())));
+                        for (Document doc : findIterableFeedbacks) {
+
+                            if (doc.getObjectId("fitness_manager_id") != null &&
+                                    managers.containsKey(doc.getObjectId("fitness_manager_id").toString())) {
+
+                                doc.put("fitness_manager_name", managers.get(doc.getObjectId("fitness_manager_id").toString()));
+                            }
+
+                            feedbacks.add(doc);
+                        }
+
                         sending.put(Protocol.Field.FEEDBACKS.key, feedbacks);
                     }
                 }

@@ -409,6 +409,7 @@ public class Protocol {
         POSTER_NAME("posterName"),
         POSTER_PICTURE("posterPicture"),
         COMMENT_ID("comment_id"),
+        FITNESS_MANAGER_NAME("fitness_manager_name"),
         ;
         public String key;
         Field(String key) {

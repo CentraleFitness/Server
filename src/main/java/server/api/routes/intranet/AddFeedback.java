@@ -14,6 +14,7 @@ import model.entities.Fitness_Center_Manager;
 import protocol.intranet.Protocol;
 import protocol.ResponseObject;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
 
@@ -65,8 +66,12 @@ public class AddFeedback {
                         feedback.setField(Feedback.Field.FITNESS_CENTER_ID, center.getField(Fitness_Center.Field.ID));
                         feedback.setField(Feedback.Field.CREATION_DATE, time);
                         feedback.setField(Feedback.Field.UPDATE_DATE, time);
+                        feedback.setField(Feedback.Field.RESPONSES, new ArrayList<>());
                         Database.update_entity(Database.Collections.Feedbacks, feedback);
                         sending.put(Protocol.Field.FEEDBACK_ID.key, feedback.getField(Feedback.Field.ID).toString());
+                        sending.put(Protocol.Field.FITNESS_MANAGER_NAME.key,
+                                manager.getField(Fitness_Center_Manager.Field.FIRSTNAME) + " " +
+                                        manager.getField(Fitness_Center_Manager.Field.LASTNAME));
                     }
                 }
             } catch (Exception e) {
