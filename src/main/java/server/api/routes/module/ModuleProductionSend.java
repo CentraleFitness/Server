@@ -71,7 +71,7 @@ public class ModuleProductionSend {
                         ArrayList sportSessionProduction = (ArrayList) sportSession.getField(SportSession.Field.PRODUCTION);
                         ArrayList pendingProduction = (ArrayList) sportSession.getField(SportSession.Field.PENDING_PRODUCTION);
                         sportSessionProduction.add(production);
-                        pendingProduction.add(pendingProduction);
+                        pendingProduction.add(production);
                         Database.update_entity(Database.Collections.SportSessions, sportSession);
                     }
                 }
