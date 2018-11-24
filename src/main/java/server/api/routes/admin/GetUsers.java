@@ -39,6 +39,14 @@ public class GetUsers {
                     sending = new ResponseObject(false);
                     sending.put(Protocol.Field.STATUS.key, protocol.intranet.Protocol.Status.GENERIC_OK.code);
 
+                    FindIterable<Administrator> findIterableAdmin = (FindIterable<Administrator>) Database.collections.get(Database.Collections.Administrators).find();
+                    Map<String,Object> admins = new HashMap<>();
+                    for (Document doc : findIterableAdmin) {
+                        admins.put(doc.getObjectId("_id").toString(),
+                                doc.getString("first_name") + " " + doc.getString("last_name")
+                        );
+                    }
+
                     FindIterable<Fitness_Center> findIterableCenter = (FindIterable<Fitness_Center>) Database.collections.get(Database.Collections.Fitness_Centers).find();
                     Map<String,Object> centers = new HashMap<>();
                     for (Document doc : findIterableCenter) {
@@ -119,6 +127,18 @@ public class GetUsers {
                             cur.put("creation_date", doc.getLong("creation_date"));
                         }
                         cur.put("is_active", doc.getBoolean("is_active") != null && doc.getBoolean("is_active"));
+
+                        if (doc.getLong("last_update_activity") != null) {
+                            cur.put("last_update_activity", doc.getLong("last_update_activity"));
+                        }
+                        if (doc.getObjectId("last_update_admin_id") != null) {
+                            cur.put("last_update_admin_id", doc.getObjectId("last_update_admin_id").toString());
+
+                            if (admins.containsKey(doc.getObjectId("last_update_admin_id").toString())) {
+                                cur.put("last_update_admin_name",
+                                        admins.get(doc.getObjectId("last_update_admin_id").toString()));
+                            }
+                        }
 
                         cur.put("login", doc.getString("login"));
                         cur.put("first_name", doc.getString("first_name"));

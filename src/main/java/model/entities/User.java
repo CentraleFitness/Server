@@ -23,6 +23,8 @@ public class User extends Entity {
         EMAIL("email_address", String.class),
         PICTURE_ID("picture_id", ObjectId.class),
         IS_ACTIVE("is_active", Boolean.class),
+        LAST_UPDATE_ACTIVITY("last_update_activity", Long.class),
+        LAST_UPDATE_ADMIN_ID("last_update_admin_id", ObjectId.class),
         FRIENDS("friends", HashMap.class),
         BLOCKED_USERS("blocked_users", HashMap.class),
         FAVORITES_CUSTOM_PROGRAMS("favorites_custom_programs", HashSet.class),
