@@ -87,7 +87,7 @@ public class Protocol {
 		REG_ERROR_LOGIN("302", "registration failed, bad login"),
 		REG_ERROR_PASSWORD("303", "registration failed, bad password"),
 		AUTH_SUCCESS("201", "authentication successful"), AUTH_ERROR_TOKEN("202", "authentication failed, bad token"),
-		AUTH_ERROR_CREDENTIALS("501", "authentication failed, bad credentials"), GENERIC_KO("401", "ko"),
+		AUTH_ERROR_CREDENTIALS("501", "authentication failed, bad credentials"), AUTH_ERROR_INNACTIVE("502", "inncative account"), GENERIC_KO("401", "ko"),
 		INTERNAL_SERVER_ERROR("666", "Random error"), SPORT_SESSION_NO_SESSION("410", "No sport session"),
 		SPORT_SESSION_BAD_SESSIONID("411", "Bad session id"), NO_AFFILIATION("412", "Not affiliated with sport center"),
 		POST_NOT_FOUND("413", "Post not found"), CENTER_NOT_FOUND("414", "Fitness center not found"),
