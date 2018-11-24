@@ -74,6 +74,7 @@ public class PostGetLikes {
 				sending.put(Protocol.Field.LIKES.key, (likes == null ? 0 : likes.size()) +
 						(post.getField(Post.Field.LIKED_BY_CLUB) == null ||
 								!(Boolean)post.getField(Post.Field.LIKED_BY_CLUB) ? 0 : 1));
+				sending.put("liked", likes.stream().filter(liked -> liked.equals(user.getField(User.Field.ID))).count() > 0);
 			} catch (Exception e) {
 				sending = new ResponseObject(true);
 				sending.put(Protocol.Field.STATUS.key, Protocol.Status.INTERNAL_SERVER_ERROR.code);
