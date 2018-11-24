@@ -17,6 +17,7 @@ public class SportSession extends Database.Entity {
         USER_ID("user_id", ObjectId.class),
         EXPIRATION("expiration", Long.class),
         PRODUCTION("production", ArrayList.class), 
+        PENDING_PRODUCTION("pending_production", ArrayList.class), 
         CREATION_DATE("creation_date", Long.class),
         DURATION("duration", Long.class),
         ;
@@ -41,6 +42,7 @@ public class SportSession extends Database.Entity {
         setField(Field.USER_ID, null);
         setField(Field.EXPIRATION, 0L);
         setField(Field.PRODUCTION, new ArrayList());
+        setField(Field.PENDING_PRODUCTION, new ArrayList());
         setField(Field.CREATION_DATE, new Date().getTime());
     }
 

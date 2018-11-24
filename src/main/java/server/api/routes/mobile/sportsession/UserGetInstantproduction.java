@@ -47,9 +47,9 @@ public class UserGetInstantproduction {
                     LogManager.write("Not in sport session");
                     break label;
                 }
-                ArrayList production = (ArrayList) sportSession.getField(SportSession.Field.PRODUCTION);
+                ArrayList production = (ArrayList) sportSession.getField(SportSession.Field.PENDING_PRODUCTION);
                 ArrayList emptyProd = new ArrayList();
-                sportSession.setField(SportSession.Field.PRODUCTION, emptyProd);
+                sportSession.setField(SportSession.Field.PENDING_PRODUCTION, emptyProd);
                 Database.update_entity(Database.Collections.SportSessions, sportSession);
                 sending = new ResponseObject(false);
                 sending.put(Protocol.Field.PRODUCTION.key, production);

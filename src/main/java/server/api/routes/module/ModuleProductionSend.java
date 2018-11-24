@@ -69,7 +69,9 @@ public class ModuleProductionSend {
                     SportSession sportSession = (SportSession) Database.find_entity(Database.Collections.SportSessions, SportSession.Field.MODULE_ID, module_id);
                     if (sportSession != null) {
                         ArrayList sportSessionProduction = (ArrayList) sportSession.getField(SportSession.Field.PRODUCTION);
+                        ArrayList pendingProduction = (ArrayList) sportSession.getField(SportSession.Field.PENDING_PRODUCTION);
                         sportSessionProduction.add(production);
+                        pendingProduction.add(pendingProduction);
                         Database.update_entity(Database.Collections.SportSessions, sportSession);
                     }
                 }
