@@ -147,6 +147,13 @@ public class Protocol {
         CENTER_ADD_PUBLICATION("/club/add/publication"),
 
         /**
+         * @path: CENTER_GET_PROFILE:
+         * @param: TOKEN.
+         * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
+         */
+        CENTER_REPORT_PUBLICATION("/club/report/publication"),
+
+        /**
          * @path: CENTER_LIKE_PUBLICATION:
          * @param: TOKEN.
          * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.

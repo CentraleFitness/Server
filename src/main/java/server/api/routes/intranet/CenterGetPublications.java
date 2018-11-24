@@ -141,6 +141,10 @@ public class CenterGetPublications {
                                 doc.put("posterPicture", pictures.get(tmpUser.getObjectId("picture_id").toString()));
                             }
 
+                            if (doc.getBoolean("reported_by_club") == null) {
+                                doc.put("reported_by_club", false);
+                            }
+
                             comments.put(doc.getObjectId("_id").toString(), doc);
                         }
 
@@ -180,6 +184,9 @@ public class CenterGetPublications {
                             cur.put("date", doc.getLong("date"));
                             cur.put("content", doc.getString("content"));
                             cur.put("title", doc.getString("title"));
+
+                            cur.put("reported_by_club",
+                                    (doc.getBoolean("reported_by_club") != null && doc.getBoolean("reported_by_club")));
 
                             cur.put("type", doc.getString("type"));
 
