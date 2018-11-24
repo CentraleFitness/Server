@@ -99,7 +99,7 @@ public class GetUsers {
                                     (doc.getBoolean("reported_by_club") != null && doc.getBoolean("reported_by_club") ? 1 : 0)
                             );
 
-                            post_reported.get(doc.getObjectId("posterId").toString()).add(doc);
+                            post_reported.get(doc.getObjectId("posterId").toString()).add(cur_posts);
                         }
 
                         if (!post_reports.containsKey(doc.getObjectId("posterId").toString())) {

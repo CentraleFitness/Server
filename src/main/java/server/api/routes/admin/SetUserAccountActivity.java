@@ -52,6 +52,10 @@ public class SetUserAccountActivity {
 
                     Long time = System.currentTimeMillis();
 
+                    if (!(Boolean)received.get(Protocol.Field.IS_ACTIVE.key)) {
+                        user.setField(Fitness_Center_Manager.Field.TOKEN, "");
+                    }
+
                     user.setField(Fitness_Center_Manager.Field.IS_ACTIVE, received.get(Protocol.Field.IS_ACTIVE.key));
                     user.setField(Fitness_Center_Manager.Field.LAST_UPDATE_ACTIVITY, time);
                     user.setField(Fitness_Center_Manager.Field.LAST_UPDATE_ADMIN_ID, admin.getField(Administrator.Field.ID));
