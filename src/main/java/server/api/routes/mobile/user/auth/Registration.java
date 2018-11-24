@@ -60,6 +60,7 @@ public class Registration {
                     user.setField(User.Field.LOGIN, rLogin);
                     user.setField(User.Field.PASSWORD_HASH, new PasswordAuthentication().hash((rPassword).toCharArray()));
                     user.setField(User.Field.FIRSTNAME, rFirstname);
+                    user.setField(User.Field.CREATION_DATE, System.currentTimeMillis());
                     user.setField(User.Field.LASTNAME, rLasname);
                     user.setField(User.Field.PHONE, rPhone);
                     user.setField(User.Field.EMAIL, rEmail);

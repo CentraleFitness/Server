@@ -13,6 +13,7 @@ public class User extends Entity {
     public enum Field implements Entity_Field {
         ID("_id", ObjectId.class),
         FITNESS_CENTER_ID("fitness_center_id", ObjectId.class),
+        CREATION_DATE("creation_date", Long.class),
         LOGIN("login", String.class),
         PASSWORD_HASH("passwordHash", String.class),
         TOKEN("token", String.class),

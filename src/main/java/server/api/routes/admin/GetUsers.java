@@ -52,15 +52,46 @@ public class GetUsers {
                             )
                     );
 
+                    HashMap<String,ArrayList<Object>> post_reported = new HashMap<>();
                     HashMap<String,Integer> post_reports = new HashMap<>();
+                    HashMap<String,Object> cur_posts;
                     FindIterable<Post> findIterablePosts = (FindIterable<Post>) Database.collections.get(Database.Collections.Posts).find(posts_filter);
                     for (Document doc : findIterablePosts) {
+
+                        if (!post_reported.containsKey(doc.getObjectId("posterId").toString())) {
+                            post_reported.put(doc.getObjectId("posterId").toString(), new ArrayList<>());
+                        }
+                        if (doc.get("is_reported") != null && ((ArrayList<ObjectId>)doc.get("is_reported")).size() > 0) {
+
+                            cur_posts = new HashMap<>();
+                            cur_posts.put("_id", doc.getObjectId("_id").toString());
+                            cur_posts.put("posterName", doc.getString("posterName"));
+                            cur_posts.put("is_comment", doc.getBoolean("is_comment"));
+                            cur_posts.put("type", doc.getString("type"));
+                            cur_posts.put("date", doc.getLong("date"));
+                            cur_posts.put("content", doc.getString("content"));
+                            cur_posts.put("title", doc.getString("title"));
+                            cur_posts.put("picture", doc.getString("picture"));
+                            cur_posts.put("event_id", doc.getObjectId("event_id").toString());
+                            cur_posts.put("start_date", doc.getLong("start_date"));
+                            cur_posts.put("end_date", doc.getLong("end_date"));
+                            cur_posts.put("nb_likes",
+                                    (doc.get("likes") != null ? ((ArrayList<ObjectId>)doc.get("likes")).size() : 0) +
+                                    (doc.getBoolean("likedByClub") != null && doc.getBoolean("likedByClub") ? 1 : 0)
+                            );
+                            cur_posts.put("nb_comments", ((ArrayList<ObjectId>)doc.get("comments")).size());
+                            cur_posts.put("nb_reports",
+                                    (doc.get("is_reported") != null ? ((ArrayList<ObjectId>)doc.get("is_reported")).size() : 0) +
+                                    (doc.getBoolean("reported_by_club") != null && doc.getBoolean("reported_by_club") ? 1 : 0)
+                            );
+
+                            post_reported.get(doc.getObjectId("posterId").toString()).add(doc);
+                        }
 
                         if (!post_reports.containsKey(doc.getObjectId("posterId").toString())) {
                             post_reports.put(doc.getObjectId("posterId").toString(), 0);
                         }
-                        if ((doc.getBoolean("is_center") == null || !doc.getBoolean("is_center")) &&
-                                (doc.get("is_reported")) != null && ((ArrayList<ObjectId>)doc.get("is_reported")).size() > 0) {
+                        if (doc.get("is_reported") != null && ((ArrayList<ObjectId>)doc.get("is_reported")).size() > 0) {
                             post_reports.put(
                                     doc.getObjectId("posterId").toString(),
                                     post_reports.get(doc.getObjectId("posterId").toString()) + ((ArrayList<ObjectId>)doc.get("is_reported")).size()
@@ -78,15 +109,12 @@ public class GetUsers {
                         if (doc.getObjectId("fitness_center_id") != null) {
                             cur.put("fitness_center_id", doc.getObjectId("fitness_center_id").toString());
                         }
+                        cur.put("creation_date", doc.getLong("creation_date"));
                         cur.put("login", doc.getString("login"));
                         cur.put("first_name", doc.getString("first_name"));
                         cur.put("last_name", doc.getString("last_name"));
                         cur.put("email_address", doc.getString("email_address"));
                         cur.put("picture_id", doc.getObjectId("picture_id"));
-
-                        cur.put("reported_by_club",
-                                (doc.getBoolean("reported_by_club") == null ?
-                                        false : doc.getBoolean("reported_by_club")));
 
                         if (doc.getObjectId("fitness_center_id") != null &&
                                 centers.containsKey(doc.getObjectId("fitness_center_id").toString())) {
@@ -98,6 +126,11 @@ public class GetUsers {
                                 post_reports.get(doc.getObjectId("_id").toString()) : 0) +
                                         (doc.getBoolean("reported_by_club") != null &&
                                                 doc.getBoolean("reported_by_club") ? 1 : 0)
+                        );
+                        cur.put("reported_posts",
+                                (post_reported.containsKey(doc.getObjectId("_id").toString()) ?
+                                        post_reported.get(doc.getObjectId("_id").toString()) :
+                                        new ArrayList<>())
                         );
 
                         users.add(cur);
