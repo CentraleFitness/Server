@@ -22,6 +22,7 @@ public class User extends Entity {
         PHONE("phone_number", String.class),
         EMAIL("email_address", String.class),
         PICTURE_ID("picture_id", ObjectId.class),
+        IS_ACTIVE("is_active", Boolean.class),
         FRIENDS("friends", HashMap.class),
         BLOCKED_USERS("blocked_users", HashMap.class),
         FAVORITES_CUSTOM_PROGRAMS("favorites_custom_programs", HashSet.class),

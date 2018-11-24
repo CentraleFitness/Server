@@ -45,6 +45,12 @@ public class GetUsers {
                         centers.put(doc.getObjectId("_id").toString(), doc);
                     }
 
+                    FindIterable<Picture> findIterablePicture = (FindIterable<Picture>) Database.collections.get(Database.Collections.Pictures).find();
+                    Map<String,Object> pictures = new HashMap<>();
+                    for (Document doc : findIterablePicture) {
+                        pictures.put(doc.getObjectId("_id").toString(), doc.getString("picture"));
+                    }
+
                     Bson posts_filter = Filters.and(
                             Filters.or(
                                 Filters.eq(Post.Field.IS_CENTER.get_key(), null),
@@ -109,12 +115,24 @@ public class GetUsers {
                         if (doc.getObjectId("fitness_center_id") != null) {
                             cur.put("fitness_center_id", doc.getObjectId("fitness_center_id").toString());
                         }
-                        cur.put("creation_date", doc.getLong("creation_date"));
+                        if (doc.getLong("creation_date") != null) {
+                            cur.put("creation_date", doc.getLong("creation_date"));
+                        }
+                        cur.put("is_active", doc.getBoolean("is_active") != null && doc.getBoolean("is_active"));
+
                         cur.put("login", doc.getString("login"));
                         cur.put("first_name", doc.getString("first_name"));
                         cur.put("last_name", doc.getString("last_name"));
                         cur.put("email_address", doc.getString("email_address"));
                         cur.put("picture_id", doc.getObjectId("picture_id"));
+
+                        if (doc.getObjectId("picture_id") != null &&
+                                pictures.containsKey(doc.getObjectId("picture_id").toString())) {
+
+                            cur.put("picture", pictures.get(doc.getObjectId("picture_id").toString()));
+                        } else {
+                            cur.put("picture", "");
+                        }
 
                         if (doc.getObjectId("fitness_center_id") != null &&
                                 centers.containsKey(doc.getObjectId("fitness_center_id").toString())) {
