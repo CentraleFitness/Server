@@ -16,6 +16,8 @@ public class Protocol {
 
         MANAGER_ACTIVITY("/manager_activity"),
 
+        USER_ACTIVITY("/user_activity"),
+
         MANAGER_UNDO_REFUSE ("/manager_undo_refuse"),
 
         MANAGER_FEEDBACK("/manager_feedback"),
@@ -73,6 +75,7 @@ public class Protocol {
         INFO("info"),
         USERS("users"),
         CENTERS("centers"),
+        USER_ID("user_id"),
         ;
         public String key;
         Field(String key) {

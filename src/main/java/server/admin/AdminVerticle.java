@@ -74,6 +74,7 @@ public class AdminVerticle extends AbstractVerticle {
         new GetModuleStates(this.router);
 
         new GetUsers(this.router);
+        new SetUserAccountActivity(this.router);
 
 
     }
