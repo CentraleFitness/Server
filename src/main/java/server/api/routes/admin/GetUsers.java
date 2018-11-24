@@ -80,7 +80,7 @@ public class GetUsers {
                             cur_posts = new HashMap<>();
                             cur_posts.put("_id", doc.getObjectId("_id").toString());
                             cur_posts.put("posterName", doc.getString("posterName"));
-                            cur_posts.put("is_comment", doc.getBoolean("is_comment"));
+                            cur_posts.put("is_comment", (doc.getBoolean("is_comment") != null && doc.getBoolean("is_comment")));
                             cur_posts.put("type", doc.getString("type"));
                             cur_posts.put("date", doc.getLong("date"));
                             cur_posts.put("content", doc.getString("content"));
