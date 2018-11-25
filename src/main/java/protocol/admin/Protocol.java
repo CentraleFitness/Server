@@ -22,6 +22,8 @@ public class Protocol {
 
         MANAGER_FEEDBACK("/manager_feedback"),
 
+        FEEDBACK_RESPONSE("/feedback_response"),
+
         MOBILE_FEEDBACK("/mobile_feedback"),
 
         FITNESS_CENTER("/fitness_center"),
@@ -76,6 +78,8 @@ public class Protocol {
         USERS("users"),
         CENTERS("centers"),
         USER_ID("user_id"),
+        CONTENT("content"),
+        FEEDBACK_STATE_CODE("feedback_state_code"),
         ;
         public String key;
         Field(String key) {

@@ -77,6 +77,7 @@ public class IntranetVerticle extends AbstractVerticle {
 
         new GetFeedbackStates(this.router);
         new AddFeedback(this.router);
+        new AddResponseFeedback(this.router);
         new GetFeedbacks(this.router);
 
         new AddEvent(this.router);

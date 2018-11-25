@@ -186,6 +186,13 @@ public class Protocol {
          * @param: TOKEN.
          * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
          */
+        ADD_RESPONSE_FEEDBACK("/manager/add/response_feedback"),
+
+        /**
+         * @path: ADD_FEEDBACK:
+         * @param: TOKEN.
+         * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
+         */
         GET_FEEDBACKS("/manager/get/feedbacks"),
 
         /**
@@ -410,6 +417,7 @@ public class Protocol {
         POSTER_PICTURE("posterPicture"),
         COMMENT_ID("comment_id"),
         FITNESS_MANAGER_NAME("fitness_manager_name"),
+        CONTENT("content"),
         ;
         public String key;
         Field(String key) {
