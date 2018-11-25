@@ -3,15 +3,20 @@ package server.api.routes.intranet;
 import Tools.LogManager;
 import Tools.Token;
 import com.google.gson.GsonBuilder;
+import com.mongodb.BasicDBObject;
+import com.mongodb.client.model.Filters;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import model.Database;
 import model.entities.*;
+import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import protocol.intranet.Protocol;
 import protocol.ResponseObject;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Objects;
@@ -93,6 +98,7 @@ public class UpdateEvent {
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_ERROR.code);
                 LogManager.write("Exception: " + e.toString());
+                System.out.println("Exception: " + e.toString());
             }
             response.end(new GsonBuilder().create().toJson(sending));
         });

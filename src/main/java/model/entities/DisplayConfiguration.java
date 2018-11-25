@@ -16,7 +16,7 @@ public class DisplayConfiguration extends Entity {
         SHOW_EVENTS("show_events", Boolean.class),
         SELECTED_EVENTS("selected_events", ArrayList.class),
         SHOW_NEWS("show_news", Boolean.class),
-        NEWS_TYPE("news_type", String.class),
+        NEWS_TYPE("news_type", List.class),
         SHOW_GLOBAL_PERFORMANCES("show_global_performances", Boolean.class),
         PERFORMANCES_TYPE("performances_type", String.class),
         SHOW_RANKING_DISCIPLINE("show_ranking_discipline", Boolean.class),

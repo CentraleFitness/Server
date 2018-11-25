@@ -51,6 +51,8 @@ public class CenterDeletePublication {
                         sending = new ResponseObject(false);
                         sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
 
+                        Post post_to_delete;
+
                         if (received.get(Protocol.Field.COMMENT_ID.key) != null) {
 
                             Post post = (Post) Database.find_entity(Database.Collections.Posts, Post.Field.ID, new ObjectId(received.get(Protocol.Field.PUBLICATION_ID.key).toString()));
@@ -69,12 +71,23 @@ public class CenterDeletePublication {
                                 Database.update_entity(Database.Collections.Posts, post);
                             }
 
-                            Database.delete_entity(Database.Collections.Posts, Post.Field.ID, new ObjectId(received.get(Protocol.Field.COMMENT_ID.key).toString()));
+                            //Database.delete_entity(Database.Collections.Posts, Post.Field.ID, new ObjectId(received.get(Protocol.Field.COMMENT_ID.key).toString()));
+
+                            post_to_delete = (Post) Database.find_entity(Database.Collections.Posts, Post.Field.ID, new ObjectId(received.get(Protocol.Field.COMMENT_ID.key).toString()));
+
+                            post_to_delete.setField(Post.Field.IS_DELETED, true);
+
+                            Database.update_entity(Database.Collections.Posts, post_to_delete);
 
                         } else {
 
-                            Database.delete_entity(Database.Collections.Posts, Post.Field.ID, new ObjectId(received.get(Protocol.Field.PUBLICATION_ID.key).toString()));
+                            //Database.delete_entity(Database.Collections.Posts, Post.Field.ID, new ObjectId(received.get(Protocol.Field.PUBLICATION_ID.key).toString()));
 
+                            post_to_delete = (Post) Database.find_entity(Database.Collections.Posts, Post.Field.ID, new ObjectId(received.get(Protocol.Field.PUBLICATION_ID.key).toString()));
+
+                            post_to_delete.setField(Post.Field.IS_DELETED, true);
+
+                            Database.update_entity(Database.Collections.Posts, post_to_delete);
                         }
                     }
                 }

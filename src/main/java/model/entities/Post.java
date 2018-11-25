@@ -36,6 +36,8 @@ public class Post extends Entity {
         
         IS_REPORTED("is_reported", List.class),
         REPORTED_BY_CLUB("reported_by_club", Boolean.class),
+
+        IS_DELETED("is_deleted", Boolean.class),
         
         ;
         @Override

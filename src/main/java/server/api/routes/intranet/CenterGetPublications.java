@@ -55,13 +55,21 @@ public class CenterGetPublications {
                         Bson posts_filter = Filters.and(
                             Filters.eq(Post.Field.FITNESS_CENTERT_ID.get_key(), center.getField(Fitness_Center.Field.ID)),
 
-                            Filters.or(Filters.eq(Post.Field.IS_COMMENT.get_key(), false),
-                                        Filters.eq(Post.Field.IS_COMMENT.get_key(), null))
+                            Filters.or(
+                                Filters.eq(Post.Field.IS_COMMENT.get_key(), false),
+                                Filters.eq(Post.Field.IS_COMMENT.get_key(), null)
+                            ),
+
+                            Filters.or(
+                                Filters.eq(Post.Field.IS_DELETED.get_key(), false),
+                                Filters.eq(Post.Field.IS_DELETED.get_key(), null)
+                            )
                         );
 
                         List<ObjectId> comments_list = new ArrayList<>();
                         List<ObjectId> users_list = new ArrayList<>();
                         List<ObjectId> centers_list = new ArrayList<>();
+                        List<ObjectId> event_list = new ArrayList<>();
                         List<ObjectId> cur_com;
 
                         FindIterable<Post> findIterable = (FindIterable<Post>) Database.collections.get(Database.Collections.Posts).find(posts_filter).sort(orderBy(ascending(Post.Field.DATE.get_key())));
@@ -78,6 +86,10 @@ public class CenterGetPublications {
 
                                 comments_list.addAll(cur_com);
                             }
+
+                            if (doc.getObjectId("event_id") != null) {
+                                event_list.add(doc.getObjectId("event_id"));
+                            }
                         }
 
                         Bson users_filter = Filters.and(
@@ -91,6 +103,17 @@ public class CenterGetPublications {
 
                             users.put(doc.getObjectId("_id").toString(), doc);
                             pictures_list.add(doc.getObjectId("picture_id"));
+                        }
+
+                        Bson events_filter = Filters.and(
+                                Filters.in(Event.Field.ID.get_key(), event_list)
+                        );
+
+                        HashMap<String,Object> events = new HashMap<>();
+                        FindIterable<Event> findIterableEvents = (FindIterable<Event>) Database.collections.get(Database.Collections.Events).find(events_filter);
+                        for (Document doc : findIterableEvents) {
+
+                            events.put(doc.getObjectId("_id").toString(), doc);
                         }
 
                         Bson centers_filter = Filters.and(
@@ -116,7 +139,12 @@ public class CenterGetPublications {
                         }
 
                         Bson comments_filter = Filters.and(
-                            Filters.in(Post.Field.ID.get_key(), comments_list)
+                            Filters.in(Post.Field.ID.get_key(), comments_list),
+
+                            Filters.or(
+                                    Filters.eq(Post.Field.IS_DELETED.get_key(), false),
+                                    Filters.eq(Post.Field.IS_DELETED.get_key(), null)
+                            )
                         );
 
                         Document tmpUser;
@@ -196,6 +224,11 @@ public class CenterGetPublications {
                             }
 
                             if (doc.getObjectId("event_id") != null) {
+                                cur.put("event_is_deleted",
+                                        events.containsKey(doc.getObjectId("event_id").toString()) ?
+                                        ((Document)events.get(doc.getObjectId("event_id").toString())).getBoolean("is_deleted") :
+                                        true
+                                );
                                 cur.put("event_id", doc.getObjectId("event_id").toString());
                                 cur.put("start_date", doc.getLong("start_date"));
                                 cur.put("end_date", doc.getLong("end_date"));

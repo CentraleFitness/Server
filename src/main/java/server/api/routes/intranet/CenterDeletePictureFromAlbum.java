@@ -53,22 +53,13 @@ public class CenterDeletePictureFromAlbum {
                         sending = new ResponseObject(false);
                         sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
 
-                        Database.delete_entity(Database.Collections.Posts, Post.Field.PICTURE_ID, new ObjectId(received.get(Protocol.Field.PICTURE_ID.key).toString()));
+                        //Database.delete_entity(Database.Collections.Posts, Post.Field.PICTURE_ID, new ObjectId(received.get(Protocol.Field.PICTURE_ID.key).toString()));
 
-                        /*
-                        @SuppressWarnings("unchecked")
-                        ArrayList<Fitness_Center.Picture_Describe> album = (ArrayList<Fitness_Center.Picture_Describe>) center.getField(Fitness_Center.Field.ALBUM);
-                        Document cur;
-                        for(Iterator<Fitness_Center.Picture_Describe> i = album.iterator(); i.hasNext();) {
-                            cur = i.next();
-                            if (cur.get(Fitness_Center.Picture_Describe.Field.PICTURE_ID.get_key()).toString().equals(received.get(Protocol.Field.PICTURE_ID.key).toString())) {
-                                i.remove();
-                                break;
-                            }
-                        }
-                        Database.update_entity(Database.Collections.Fitness_Centers, center);
+                        Post post = (Post) Database.find_entity(Database.Collections.Posts, Post.Field.PICTURE_ID, new ObjectId(received.get(Protocol.Field.PICTURE_ID.key).toString()));
 
-                        */
+                        post.setField(Post.Field.IS_DELETED, true);
+
+                        Database.update_entity(Database.Collections.Posts, post);
                     }
                 }
             }catch (Exception e){

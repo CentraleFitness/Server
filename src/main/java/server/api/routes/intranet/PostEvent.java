@@ -77,7 +77,7 @@ public class PostEvent {
                             sending.put(Protocol.Field.TITLE.key, evt.getField(Event.Field.TITLE));
                             sending.put(Protocol.Field.DESCRIPTION.key, evt.getField(Event.Field.DESCRIPTION));
                             sending.put(Protocol.Field.PICTURE.key, evt.getField(Event.Field.PICTURE));
-                            sending.put(Protocol.Field.EVENT_ID.key, evt.getField(Event.Field.ID));
+                            sending.put(Protocol.Field.EVENT_ID.key, evt.getField(Event.Field.ID).toString());
                             sending.put(Protocol.Field.START_DATE.key, evt.getField(Event.Field.START_DATE));
                             sending.put(Protocol.Field.END_DATE.key, evt.getField(Event.Field.END_DATE));
                         }

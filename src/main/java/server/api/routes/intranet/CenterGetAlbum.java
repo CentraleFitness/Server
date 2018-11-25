@@ -57,7 +57,11 @@ public class CenterGetAlbum {
                         Bson posts_filter = Filters.and(
                                 Filters.eq(Post.Field.FITNESS_CENTERT_ID.get_key(), center.getField(Fitness_Center.Field.ID)),
                                 Filters.eq(Post.Field.IS_CENTER.get_key(), true),
-                                Filters.eq(Post.Field.TYPE.get_key(), "PHOTO")
+                                Filters.eq(Post.Field.TYPE.get_key(), "PHOTO"),
+                                Filters.or(
+                                    Filters.eq(Post.Field.IS_DELETED.get_key(), false),
+                                    Filters.eq(Post.Field.IS_DELETED.get_key(), null)
+                                )
                         );
 
                         @SuppressWarnings("unchecked")

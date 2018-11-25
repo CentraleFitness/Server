@@ -73,8 +73,17 @@ public class GetEvents {
                             ArrayList<ObjectId> selected_events = (ArrayList<ObjectId>)configuration.getField(DisplayConfiguration.Field.SELECTED_EVENTS);
                             @SuppressWarnings("unchecked")
                             FindIterable<Document> event_users = Database.collections.get(Database.Collections.TUPLE_Event_Users).find(Filters.or(filters));
+
+                            Bson posts_filter = Filters.and(
+                                Filters.or(filters),
+                                Filters.or(
+                                    Filters.eq(Post.Field.IS_DELETED.get_key(), false),
+                                    Filters.eq(Post.Field.IS_DELETED.get_key(), null)
+                                )
+                            );
+
                             @SuppressWarnings("unchecked")
-                            FindIterable<Document> event_posts = Database.collections.get(Database.Collections.Posts).find(Filters.or(filters));
+                            FindIterable<Document> event_posts = Database.collections.get(Database.Collections.Posts).find(posts_filter);
 
                             for (Document entity : event_users) {
                                 counter.get(entity.get(TUPLE_Event_User.Field.EVENT_ID.get_key()).toString()).incrementAndGet();
