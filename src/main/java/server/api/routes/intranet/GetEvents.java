@@ -90,7 +90,9 @@ public class GetEvents {
                             }
 
                             for (Document entity : event_posts) {
-                                last_post.put(entity.get(Post.Field.EVENT_ID.get_key()).toString(), (Long)entity.get(Post.Field.DATE.get_key()));
+                                if (last_post.get(entity.get(Post.Field.EVENT_ID.get_key()).toString()) < (Long)entity.get(Post.Field.DATE.get_key())) {
+                                    last_post.put(entity.get(Post.Field.EVENT_ID.get_key()).toString(), (Long)entity.get(Post.Field.DATE.get_key()));
+                                }
                             }
 
                             for (Document cur :events) {

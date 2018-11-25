@@ -4,6 +4,7 @@ import Tools.LogManager;
 import Tools.Token;
 import com.google.gson.GsonBuilder;
 import com.mongodb.BasicDBObject;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Filters;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
@@ -90,8 +91,39 @@ public class UpdateEvent {
                         event.setField(Event.Field.UPDATE_DATE, time);
                         Database.update_entity(Database.Collections.Events, event);
 
+                        BasicDBObject newDocument = new BasicDBObject();
+                        newDocument.append("$set",
+                                new BasicDBObject()
+                                        .append("title", event.getField(Event.Field.TITLE))
+                                        .append("content", event.getField(Event.Field.DESCRIPTION))
+                                        .append("start_date", event.getField(Event.Field.START_DATE))
+                                        .append("end_date", event.getField(Event.Field.END_DATE))
+                                        .append("picture", event.getField(Event.Field.PICTURE))
+                        );
+
+                        BasicDBObject searchQuery = new BasicDBObject().append("event_id", event.getField(Event.Field.ID));
+
+                        Database.collections.get(Database.Collections.Posts).updateMany(searchQuery, newDocument);
+
+                        Bson posts_filter = Filters.and(
+                                Filters.eq(Post.Field.EVENT_ID.get_key(), event.getField(Event.Field.ID)),
+                                Filters.or(
+                                        Filters.eq(Post.Field.IS_DELETED.get_key(), false),
+                                        Filters.eq(Post.Field.IS_DELETED.get_key(), null)
+                                )
+                        );
+
+                        FindIterable<Document> event_posts = Database.collections.get(Database.Collections.Posts).find(posts_filter);
+                        Long last_post = 0L;
+                        for (Document entity : event_posts) {
+                            if (last_post < (Long)entity.get(Post.Field.DATE.get_key())) {
+                                last_post = (Long)entity.get(Post.Field.DATE.get_key());
+                            }
+                        }
+
                         LinkedList<Database.Entity> event_users = Database.find_entities(Database.Collections.TUPLE_Event_Users, TUPLE_Event_User.Field.EVENT_ID, event.getField(Event.Field.ID));
                         sending.put(Protocol.Field.NB_SUBSCRIBERS.key, event_users.size());
+                        sending.put(Protocol.Field.LAST_POST.key, last_post);
                     }
                 }
             } catch (Exception e) {
