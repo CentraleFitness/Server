@@ -77,6 +77,7 @@ public class GetManagerFeedbacks {
                         cur.put("fitness_manager_id", doc.getObjectId("fitness_manager_id").toString());
                         cur.put("fitness_center_id", doc.getObjectId("fitness_center_id").toString());
                         cur.put("update_date", doc.getLong("update_date"));
+                        cur.put("responses", doc.get("responses"));
 
                         if (doc.getObjectId("fitness_manager_id") != null &&
                                 managers.containsKey(doc.getObjectId("fitness_manager_id").toString())) {
