@@ -40,12 +40,16 @@ public class GetMobileFeedbacks {
                     sending = new ResponseObject(false);
                     sending.put(Protocol.Field.STATUS.key, protocol.intranet.Protocol.Status.GENERIC_OK.code);
 
+                    System.out.println("1");
+
                     @SuppressWarnings("unchecked")
                     FindIterable<Fitness_Center> findIterableCenter = (FindIterable<Fitness_Center>) Database.collections.get(Database.Collections.Fitness_Centers).find();
                     Map<String,Object> centers = new HashMap<>();
                     for (Document doc : findIterableCenter) {
                         centers.put(doc.getObjectId("_id").toString(), doc);
                     }
+
+                    System.out.println("2");
 
                     @SuppressWarnings("unchecked")
                     FindIterable<User> findIterableusers = (FindIterable<User>) Database.collections.get(Database.Collections.Users).find();
@@ -54,6 +58,8 @@ public class GetMobileFeedbacks {
                         users.put(doc.getString("email_address"), doc);
                     }
 
+                    System.out.println("3");
+
                     @SuppressWarnings("unchecked")
                     FindIterable<MobileFeedback> findIterable = (FindIterable<MobileFeedback>) Database.collections.get(Database.Collections.MobileFeedbacks).find().sort(orderBy(descending(MobileFeedback.Field.DATE.get_key())));
                     List<Map<String,Object>> feedbacks = new ArrayList<>();
@@ -61,21 +67,30 @@ public class GetMobileFeedbacks {
                     Document user = null;
                     for (Document doc : findIterable) {
                         cur = new HashMap<>();
+                        System.out.println("4");
                         cur.put("_id", doc.getObjectId("_id").toString());
+                        System.out.println("5");
                         cur.put("email", doc.getString("email"));
+                        System.out.println("6");
                         cur.put("content", doc.getString("content"));
+                        System.out.println("7");
                         cur.put("date", doc.getString("date"));
+                        System.out.println("8");
                         cur.put("version", doc.getString("version"));
+                        System.out.println("9");
                         cur.put("__v", doc.getInteger("__v"));
+                        System.out.println("10");
 
                         if (doc.getString("email") != null && !doc.getString("email").equals("") &&
                                 users.containsKey(doc.getString("email"))) {
 
+                            System.out.println("11");
                             cur.put("user", users.get(doc.getString("email")));
                         }
 
                         user = null;
                         if (users.containsKey(doc.getString("email"))) {
+                            System.out.println("12");
                             user = (Document) users.get(doc.getString("email"));
                         }
 
@@ -83,9 +98,11 @@ public class GetMobileFeedbacks {
                                 centers.containsKey(user.getObjectId("fitness_center_id").toString())) {
 
 
+                            System.out.println("13");
                             cur.put("fitness_center", centers.get(user.getObjectId("fitness_center_id").toString()));
                         }
 
+                        System.out.println("14");
                         feedbacks.add(cur);
                     }
                     sending.put(Protocol.Field.FEEDBACKS.key, feedbacks);
@@ -95,6 +112,7 @@ public class GetMobileFeedbacks {
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_ERROR.code);
                 LogManager.write("Exception: " + e.toString());
+                System.out.println("Exception: " + e.toString());
             }
             response.end(new GsonBuilder().registerTypeAdapter(ObjectId.class, new ObjectIdSerializer()).create().toJson(sending));
         });
