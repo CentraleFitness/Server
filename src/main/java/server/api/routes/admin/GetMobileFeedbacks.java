@@ -40,7 +40,7 @@ public class GetMobileFeedbacks {
                     sending = new ResponseObject(false);
                     sending.put(Protocol.Field.STATUS.key, protocol.intranet.Protocol.Status.GENERIC_OK.code);
 
-                    System.out.println("1");
+                    LogManager.write("1");
 
                     @SuppressWarnings("unchecked")
                     FindIterable<Fitness_Center> findIterableCenter = (FindIterable<Fitness_Center>) Database.collections.get(Database.Collections.Fitness_Centers).find();
@@ -49,7 +49,7 @@ public class GetMobileFeedbacks {
                         centers.put(doc.getObjectId("_id").toString(), doc);
                     }
 
-                    System.out.println("2");
+                    LogManager.write("2");
 
                     @SuppressWarnings("unchecked")
                     FindIterable<User> findIterableusers = (FindIterable<User>) Database.collections.get(Database.Collections.Users).find();
@@ -58,7 +58,7 @@ public class GetMobileFeedbacks {
                         users.put(doc.getString("email_address"), doc);
                     }
 
-                    System.out.println("3");
+                    LogManager.write("3");
 
                     @SuppressWarnings("unchecked")
                     FindIterable<MobileFeedback> findIterable = (FindIterable<MobileFeedback>) Database.collections.get(Database.Collections.MobileFeedbacks).find().sort(orderBy(descending(MobileFeedback.Field.DATE.get_key())));
@@ -67,30 +67,30 @@ public class GetMobileFeedbacks {
                     Document user = null;
                     for (Document doc : findIterable) {
                         cur = new HashMap<>();
-                        System.out.println("4");
+                        LogManager.write("4");
                         cur.put("_id", doc.getObjectId("_id").toString());
-                        System.out.println("5");
+                        LogManager.write("5");
                         cur.put("email", doc.getString("email"));
-                        System.out.println("6");
+                        LogManager.write("6");
                         cur.put("content", doc.getString("content"));
-                        System.out.println("7");
+                        LogManager.write("7");
                         cur.put("date", doc.getString("date"));
-                        System.out.println("8");
+                        LogManager.write("8");
                         cur.put("version", doc.getString("version"));
-                        System.out.println("9");
+                        LogManager.write("9");
                         cur.put("__v", doc.getInteger("__v"));
-                        System.out.println("10");
+                        LogManager.write("10");
 
                         if (doc.getString("email") != null && !doc.getString("email").equals("") &&
                                 users.containsKey(doc.getString("email"))) {
 
-                            System.out.println("11");
+                            LogManager.write("11");
                             cur.put("user", users.get(doc.getString("email")));
                         }
 
                         user = null;
                         if (users.containsKey(doc.getString("email"))) {
-                            System.out.println("12");
+                            LogManager.write("12");
                             user = (Document) users.get(doc.getString("email"));
                         }
 
@@ -98,11 +98,11 @@ public class GetMobileFeedbacks {
                                 centers.containsKey(user.getObjectId("fitness_center_id").toString())) {
 
 
-                            System.out.println("13");
+                            LogManager.write("13");
                             cur.put("fitness_center", centers.get(user.getObjectId("fitness_center_id").toString()));
                         }
 
-                        System.out.println("14");
+                        LogManager.write("14");
                         feedbacks.add(cur);
                     }
                     sending.put(Protocol.Field.FEEDBACKS.key, feedbacks);
