@@ -4,19 +4,20 @@ import Tools.LogManager;
 import Tools.ObjectIdSerializer;
 import Tools.Token;
 import com.google.gson.GsonBuilder;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.model.Filters;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import model.Database;
-import model.entities.Fitness_Center;
-import model.entities.Fitness_Center_Manager;
-import model.entities.Statistic;
+import model.entities.*;
+import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import protocol.ResponseObject;
 import protocol.intranet.Protocol;
 
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class GetStatistics {
     public GetStatistics(Router router) {
@@ -46,16 +47,98 @@ public class GetStatistics {
                         sending = new ResponseObject(false);
                         sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
 
-                        Statistic statistic = (Statistic) Database.find_entity(Database.Collections.Statistics, Statistic.Field.FITNESS_CENTER_ID, center.getField(Fitness_Center.Field.ID));
+                        Bson users_filter = Filters.and(
+                                Filters.eq(User.Field.FITNESS_CENTER_ID.get_key(),
+                                        manager.getField(Fitness_Center_Manager.Field.FITNESS_CENTER_ID))
+                        );
 
-                        sending.put(Protocol.Field.PRODUCTION_DAY.key, statistic.getField(Statistic.Field.PRODUCTION_DAY));
-                        sending.put(Protocol.Field.PRODUCTION_MONTH.key, statistic.getField(Statistic.Field.PRODUCTION_MONTH));
-                        sending.put(Protocol.Field.FREQUENTATION_DAY.key, statistic.getField(Statistic.Field.FREQUENTATION_DAY));
-                        sending.put(Protocol.Field.FREQUENTATION_MONTH.key, statistic.getField(Statistic.Field.FREQUENTATION_MONTH));
+                        List<ObjectId> users = new ArrayList<>();
+                        FindIterable<User> findIterableUsers = (FindIterable<User>) Database.collections.get(Database.Collections.Users).find(users_filter);
+                        for (Document doc : findIterableUsers) {
+
+                            users.add(doc.getObjectId("_id"));
+                        }
+
+                        Bson production_filter = Filters.and(
+                                Filters.in(ElectricProduction.Field.USER_ID.get_key(), users)
+                        );
+
+                        Double production_day = 0d;
+                        Double production_month = 0d;
+                        Double production_year = 0d;
+                        Double production_total = 0d;
+                        HashMap<ObjectId, Double> modules = new HashMap<>();
+                        Double total_production_modules = 0d;
+                        FindIterable<ElectricProduction> findIterableProductions = (FindIterable<ElectricProduction>) Database.collections.get(Database.Collections.ElectricProductions).find(production_filter);
+                        for (Document doc : findIterableProductions) {
+
+                            production_day += doc.getDouble("production_day");
+                            production_month += doc.getDouble("production_month");
+                            production_year += doc.getDouble("production_year");
+                            production_total += doc.getDouble("production_total");
+
+                            total_production_modules += doc.getDouble("production_total");
+                            modules.put(doc.getObjectId("module_id"), 0d);
+                        }
+
+                        Double day_duration = (24d * (60d * 60d * 1000d));
+                        Bson users_day_filter = Filters.and(
+                                Filters.gte(User.Field.CREATION_DATE.get_key(),
+                                        System.currentTimeMillis() - day_duration),
+                                Filters.eq(User.Field.FITNESS_CENTER_ID.get_key(),
+                                        manager.getField(Fitness_Center_Manager.Field.FITNESS_CENTER_ID))
+                        );
+
+                        List<ObjectId> users_day = new ArrayList<>();
+                        findIterableUsers = (FindIterable<User>) Database.collections.get(Database.Collections.Users).find(users_day_filter);
+                        for (Document doc : findIterableUsers) {
+
+                            users_day.add(doc.getObjectId("_id"));
+                        }
+
+                        Bson users_month_filter = Filters.and(
+                                Filters.gte(User.Field.CREATION_DATE.get_key(),
+                                        System.currentTimeMillis() - (day_duration * 31)),
+                                Filters.eq(User.Field.FITNESS_CENTER_ID.get_key(),
+                                        manager.getField(Fitness_Center_Manager.Field.FITNESS_CENTER_ID))
+                        );
+
+                        List<ObjectId> users_month = new ArrayList<>();
+                        findIterableUsers = (FindIterable<User>) Database.collections.get(Database.Collections.Users).find(users_month_filter);
+                        for (Document doc : findIterableUsers) {
+
+                            users_month.add(doc.getObjectId("_id"));
+                        }
+
+                        Bson users_year_filter = Filters.and(
+                                Filters.gte(User.Field.CREATION_DATE.get_key(),
+                                        System.currentTimeMillis() - (day_duration * 365)),
+                                Filters.eq(User.Field.FITNESS_CENTER_ID.get_key(),
+                                        manager.getField(Fitness_Center_Manager.Field.FITNESS_CENTER_ID))
+                        );
+
+                        List<ObjectId> users_year = new ArrayList<>();
+                        findIterableUsers = (FindIterable<User>) Database.collections.get(Database.Collections.Users).find(users_year_filter);
+                        for (Document doc : findIterableUsers) {
+
+                            users_year.add(doc.getObjectId("_id"));
+                        }
+
+                        sending.put(Protocol.Field.PRODUCTION_DAY.key, production_day);
+                        sending.put(Protocol.Field.PRODUCTION_MONTH.key, production_month);
+                        sending.put(Protocol.Field.PRODUCTION_YEAR.key, production_year);
+                        sending.put(Protocol.Field.PRODUCTION_TOTAL.key, production_total);
+                        sending.put(Protocol.Field.AVERAGE_BY_MODULE.key, (modules.size() == 0 ? 0 : total_production_modules / modules.size()));
+
+                        sending.put(Protocol.Field.FREQUENTATION_DAY.key, users_day.size());
+                        sending.put(Protocol.Field.FREQUENTATION_MONTH.key, users_month.size());
+                        sending.put(Protocol.Field.FREQUENTATION_YEAR.key, users_year.size());
+
+                        sending.put(Protocol.Field.NB_SUBSCRIBERS.key, users.size());
 
                     }
                 }
-            }catch (Exception e){
+            } catch (Exception e){
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_ERROR.code);
                 LogManager.write("Exception: " + e.toString());

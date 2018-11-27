@@ -418,6 +418,10 @@ public class Protocol {
         COMMENT_ID("comment_id"),
         FITNESS_MANAGER_NAME("fitness_manager_name"),
         CONTENT("content"),
+        PRODUCTION_YEAR("production_year"),
+        PRODUCTION_TOTAL("production_total"),
+        AVERAGE_BY_MODULE("average_by_module"),
+        FREQUENTATION_YEAR("frequentation_year"),
         ;
         public String key;
         Field(String key) {
