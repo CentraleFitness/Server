@@ -97,8 +97,8 @@ public class GetMobileFeedbacks {
                         LogManager.write("12X");
 
                         if (user != null && doc.getString("email") != null && !doc.getString("email").equals("") &&
+                                user.getObjectId("fitness_center_id") != null &&
                                 centers.containsKey(user.getObjectId("fitness_center_id").toString())) {
-
 
                             LogManager.write("13");
                             cur.put("fitness_center", centers.get(user.getObjectId("fitness_center_id").toString()));
