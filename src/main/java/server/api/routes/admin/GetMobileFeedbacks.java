@@ -94,6 +94,8 @@ public class GetMobileFeedbacks {
                             user = (Document) users.get(doc.getString("email"));
                         }
 
+                        LogManager.write("12X");
+
                         if (user != null && doc.getString("email") != null && !doc.getString("email").equals("") &&
                                 centers.containsKey(user.getObjectId("fitness_center_id").toString())) {
 
