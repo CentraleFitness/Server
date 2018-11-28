@@ -66,6 +66,7 @@ public class AdminVerticle extends AbstractVerticle {
 
         new GetMobileFeedbacks(this.router);
         new GetManagerFeedbacks(this.router);
+        new GetFeedbackStates(this.router);
         new AddFeedbackResponse(this.router);
         new UpdateManagerFeeback(this.router);
 
