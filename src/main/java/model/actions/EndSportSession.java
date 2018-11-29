@@ -4,6 +4,7 @@ import model.Database;
 import model.Database.Collections;
 import model.entities.ElectricProduction;
 import model.entities.Module;
+import model.entities.ModuleState;
 import model.entities.SportSession;
 import model.misc.Runnable.new_Event;
 
@@ -44,7 +45,11 @@ public class EndSportSession {
 					sportSession.getField(SportSession.Field.MODULE_ID));
 			if (module != null) {
 				module.setField(Module.Field.NEED_NEW_SESSION_ID, true);
-				module.setField(Module.Field.MODULE_STATE_CODE, 2);
+                ModuleState moduleState = (ModuleState) Database.find_entity(Collections.ModuleStates, ModuleState.Field.CODE, 3);
+                if (moduleState != null) {
+                	module.setField(Module.Field.MODULE_STATE_ID, moduleState.getField(ModuleState.Field.ID));
+                	module.setField(Module.Field.MODULE_STATE_CODE, moduleState.getField(ModuleState.Field.CODE));
+                }
 				Database.update_entity(Database.Collections.Modules, module);
 			} else
 				LogManager.write("Associated module not found (module==null).");

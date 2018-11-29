@@ -11,6 +11,7 @@ import model.Database;
 import model.Database.Collections;
 import model.actions.EndSportSession;
 import model.entities.Module;
+import model.entities.ModuleState;
 import model.entities.SportSession;
 import model.entities.User;
 import org.bson.types.ObjectId;
@@ -67,7 +68,11 @@ public class UserPairStart {
                     LogManager.write("Bad session id");
                     break label;
                 }
-                module.setField(Module.Field.MODULE_STATE_CODE, 3);
+                ModuleState moduleState = (ModuleState) Database.find_entity(Collections.ModuleStates, ModuleState.Field.CODE, 3);
+                if (moduleState != null) {
+                	module.setField(Module.Field.MODULE_STATE_ID, moduleState.getField(ModuleState.Field.ID));
+                	module.setField(Module.Field.MODULE_STATE_CODE, moduleState.getField(ModuleState.Field.CODE));
+                }
                 ObjectId moduleID = (ObjectId) module.getField(Module.Field.ID);
                 SportSession moduleSession = (SportSession) Database.find_entity(Database.Collections.SportSessions, SportSession.Field.MODULE_ID, moduleID);
                 if (moduleSession != null) EndSportSession.end(moduleSession);
