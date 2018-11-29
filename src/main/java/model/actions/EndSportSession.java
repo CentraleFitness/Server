@@ -44,6 +44,7 @@ public class EndSportSession {
 					sportSession.getField(SportSession.Field.MODULE_ID));
 			if (module != null) {
 				module.setField(Module.Field.NEED_NEW_SESSION_ID, true);
+				module.setField(Module.Field.MODULE_STATE_CODE, 2);
 				Database.update_entity(Database.Collections.Modules, module);
 			} else
 				LogManager.write("Associated module not found (module==null).");

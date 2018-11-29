@@ -8,6 +8,7 @@ import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import model.Database;
+import model.Database.Collections;
 import model.actions.EndSportSession;
 import model.entities.Module;
 import model.entities.SportSession;
@@ -66,6 +67,7 @@ public class UserPairStart {
                     LogManager.write("Bad session id");
                     break label;
                 }
+                module.setField(Module.Field.MODULE_STATE_CODE, 3);
                 ObjectId moduleID = (ObjectId) module.getField(Module.Field.ID);
                 SportSession moduleSession = (SportSession) Database.find_entity(Database.Collections.SportSessions, SportSession.Field.MODULE_ID, moduleID);
                 if (moduleSession != null) EndSportSession.end(moduleSession);
@@ -76,7 +78,8 @@ public class UserPairStart {
                 userSession.setField(SportSession.Field.MODULE_ID, moduleID);
                 userSession.setField(SportSession.Field.PRODUCTION, new ArrayList());
                 userSession.setField(SportSession.Field.EXPIRATION, 0L);
-                Database.update_entity(Database.Collections.SportSessions, userSession);
+                Database.update_entity(Collections.SportSessions, userSession);
+                Database.update_entity(Collections.Modules, module);
                 sending = new ResponseObject(false);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
             } catch (Exception e) {
