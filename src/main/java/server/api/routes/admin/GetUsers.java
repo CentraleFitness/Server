@@ -94,7 +94,8 @@ public class GetUsers {
                                     (doc.get("likes") != null ? ((ArrayList<ObjectId>)doc.get("likes")).size() : 0) +
                                     (doc.getBoolean("likedByClub") != null && doc.getBoolean("likedByClub") ? 1 : 0)
                             );
-                            cur_posts.put("nb_comments", ((ArrayList<ObjectId>)doc.get("comments")).size());
+                            cur_posts.put("nb_comments",
+                                    (doc.get("comments") != null ? ((ArrayList<ObjectId>)doc.get("comments")).size() : 0));
                             cur_posts.put("nb_reports",
                                     (doc.get("is_reported") != null ? ((ArrayList<ObjectId>)doc.get("is_reported")).size() : 0) +
                                     (doc.getBoolean("reported_by_club") != null && doc.getBoolean("reported_by_club") ? 1 : 0)
