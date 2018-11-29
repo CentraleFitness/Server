@@ -95,17 +95,27 @@ public class GetUsers {
 
                             cur_posts = new HashMap<>();
                             cur_posts.put("_id", doc.getObjectId("_id").toString());
+                            LogManager.write("E5.1");
                             cur_posts.put("posterName", doc.getString("posterName"));
+                            LogManager.write("E5.2");
                             cur_posts.put("is_comment", (doc.getBoolean("is_comment") != null && doc.getBoolean("is_comment")));
+                            LogManager.write("E5.3");
                             cur_posts.put("type", doc.getString("type"));
+                            LogManager.write("E5.4");
                             cur_posts.put("date", doc.getLong("date"));
+                            LogManager.write("E5.5");
                             cur_posts.put("content", doc.getString("content"));
+                            LogManager.write("E5.6");
                             cur_posts.put("title", doc.getString("title"));
+                            LogManager.write("E5.7");
                             cur_posts.put("picture", doc.getString("picture"));
+                            LogManager.write("E5.8");
                             cur_posts.put("event_id", doc.getObjectId("event_id").toString());
+                            LogManager.write("E5.9");
                             cur_posts.put("start_date", doc.getLong("start_date"));
+                            LogManager.write("E5.10");
                             cur_posts.put("end_date", doc.getLong("end_date"));
-
+                            
                             LogManager.write("E6");
 
                             cur_posts.put("nb_likes",
