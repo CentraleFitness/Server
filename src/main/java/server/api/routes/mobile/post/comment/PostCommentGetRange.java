@@ -89,6 +89,7 @@ public class PostCommentGetRange {
 								comment.getField(Post.Field.POSTERID));
 						commentContent.put(Protocol.Field.COMMENTID.key, comment.getId().toString());
 						commentContent.put(Protocol.Field.NAME.key, comment.getField(Post.Field.POSTERNAME));
+						commentContent.put(Protocol.Field.IS_CENTER.key, comment.getField(Post.Field.IS_CENTER));
 						commentContent.put(Protocol.Field.IS_MINE.key, (comment.getField(Post.Field.POSTERID) == user.getField(User.Field.ID)));
 						commentContent.put(Protocol.Field.COMMENTCONTENT.key,
 								(String) comment.getField(Post.Field.CONTENT));

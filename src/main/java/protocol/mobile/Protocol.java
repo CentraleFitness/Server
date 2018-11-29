@@ -73,7 +73,8 @@ public class Protocol {
 		COMMENTS("comments"), NAME("name"), LOGO("logo"), NBSTEPS("nbsteps"), STEPS("steps"),
 		CUSTOMPROGRAMID("custom program id"), FILTERS("filters"), CUSTOMPROGRAMS("custom programs"),
 		FAVORITE("favorite"), NOTE("note"), CREATOR("creator"), POSTTITLE("post title"), POSTPICTURE("post picture"),
-		POSTEVENTID("post event_id"), POSTSTARTDATE("post start_date"), POSTENDDATE("post end_date"), IS_MINE("is_mine");
+		POSTEVENTID("post event_id"), POSTSTARTDATE("post start_date"), POSTENDDATE("post end_date"), IS_MINE("is_mine"),
+		IS_CENTER("is_center");
 		public String key;
 
 		Field(String key) {
