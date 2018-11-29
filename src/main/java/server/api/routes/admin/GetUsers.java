@@ -145,7 +145,8 @@ public class GetUsers {
 
                             post_reports.put(
                                     doc.getObjectId("posterId").toString(),
-                                    post_reports.get(doc.getObjectId("posterId").toString()) + ((ArrayList<ObjectId>)doc.get("is_reported")).size()
+                                    post_reports.get(doc.getObjectId("posterId").toString()) +
+                                            (doc.get("is_reported") != null ? ((ArrayList<ObjectId>)doc.get("is_reported")).size() : 0)
                             );
 
                             LogManager.write("E11");
