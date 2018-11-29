@@ -78,7 +78,10 @@ public class PostCommentGetRange {
 					try {
 						Map<String, Object> commentContent = new TreeMap<>();
 						Post comment = (Post) Database.find_entity(Collections.Posts, Post.Field.ID, commentId);
-						if (comment == null) {
+						if (comment == null ||
+								(comment.getField(Post.Field.IS_DELETED) != null &&
+										(Boolean) comment.getField(Post.Field.IS_DELETED) == true)) {
+
 							deletedComments.add(commentId);
 							return;
 						}

@@ -90,6 +90,11 @@ public class GetPosts {
                                 .find(and(
                                         eq(Post.Field.FITNESS_CENTERT_ID.get_key(), targetId),
 
+                                        or(
+                                            eq(Post.Field.IS_DELETED.get_key(), false),
+                                            eq(Post.Field.IS_DELETED.get_key(), null)
+                                        ),
+
                                         or(eq(Post.Field.IS_COMMENT.get_key(), false),
                                                 eq(Post.Field.IS_COMMENT.get_key(), null))
                                 ))
