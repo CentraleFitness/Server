@@ -190,7 +190,7 @@ public class GetUsers {
                         }
                     }
 
-                    users.sort(new SortByNbReport());
+                    //users.sort(new SortByNbReport());
 
                     sending.put(Protocol.Field.USERS.key, users);
                 }
