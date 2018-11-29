@@ -1,6 +1,8 @@
 package server.api.routes.mobile.event;
 
+import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.or;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -85,7 +87,14 @@ public class GetEvents {
                         (List<Event>) Database
                                 .collections
                                 .get(Database.Collections.Events)
-                                .find(eq(Event.Field.FITNESS_CENTER_ID.get_key(), fitnessCenterId))
+                                .find(and(
+                                    eq(Event.Field.FITNESS_CENTER_ID.get_key(), fitnessCenterId),
+
+                                    or(
+                                        eq(Event.Field.IS_DELETED.get_key(), null),
+                                        eq(Event.Field.IS_DELETED.get_key(), false)
+                                    )
+                                ))
                                 .sort(new BasicDBObject(Event.Field.CREATION_DATE.get_key(), 1))
                                 //.filter(eq(Event.Field.IS_DELETED.get_key(), false))
                                 .skip(rStart)
