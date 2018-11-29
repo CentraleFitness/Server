@@ -21,7 +21,7 @@ import java.util.*;
 
 public class GetFeedbackStates {
     public GetFeedbackStates(Router router) {
-        router.route(HttpMethod.GET, Protocol.Path.FEEDBACK_STATES.path).handler(routingContext -> {
+        router.route(HttpMethod.GET, Protocol.Path.FEEDBACK_STATE.path).handler(routingContext -> {
 
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");

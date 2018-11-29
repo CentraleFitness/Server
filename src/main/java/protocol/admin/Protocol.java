@@ -24,7 +24,7 @@ public class Protocol {
 
         FEEDBACK_RESPONSE("/feedback_response"),
 
-        FEEDBACK_STATES("/feedback_states"),
+        FEEDBACK_STATE("/feedback_state"),
 
         MOBILE_FEEDBACK("/mobile_feedback"),
 

@@ -75,7 +75,8 @@ public class GetUsers {
                         if (!post_reported.containsKey(doc.getObjectId("posterId").toString())) {
                             post_reported.put(doc.getObjectId("posterId").toString(), new ArrayList<>());
                         }
-                        if (doc.get("is_reported") != null && ((ArrayList<ObjectId>)doc.get("is_reported")).size() > 0) {
+                        if ((doc.get("is_reported") != null && ((ArrayList<ObjectId>)doc.get("is_reported")).size() > 0) ||
+                                (doc.getBoolean("reported_by_club") != null && doc.getBoolean("reported_by_club"))) {
 
                             cur_posts = new HashMap<>();
                             cur_posts.put("_id", doc.getObjectId("_id").toString());
