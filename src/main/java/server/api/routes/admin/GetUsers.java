@@ -146,7 +146,8 @@ public class GetUsers {
                             post_reports.put(
                                     doc.getObjectId("posterId").toString(),
                                     post_reports.get(doc.getObjectId("posterId").toString()) +
-                                            (doc.get("is_reported") != null ? ((ArrayList<ObjectId>)doc.get("is_reported")).size() : 0)
+                                            (doc.get("is_reported") != null ? ((ArrayList<ObjectId>)doc.get("is_reported")).size() : 0) +
+                                            (doc.getBoolean("reported_by_club") != null && doc.getBoolean("reported_by_club") ? 1 : 0)
                             );
 
                             LogManager.write("E11");
@@ -201,9 +202,7 @@ public class GetUsers {
                         }
                         cur.put("nb_report",
                                 (post_reports.containsKey(doc.getObjectId("_id").toString()) ?
-                                post_reports.get(doc.getObjectId("_id").toString()) : 0) +
-                                        (doc.getBoolean("reported_by_club") != null &&
-                                                doc.getBoolean("reported_by_club") ? 1 : 0)
+                                post_reports.get(doc.getObjectId("_id").toString()) : 0)
                         );
                         cur.put("reported_posts",
                                 (post_reported.containsKey(doc.getObjectId("_id").toString()) ?
