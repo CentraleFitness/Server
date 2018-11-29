@@ -66,17 +66,32 @@ public class GetUsers {
                             )
                     );
 
+                    LogManager.write("E1");
+
                     HashMap<String,ArrayList<Object>> post_reported = new HashMap<>();
                     HashMap<String,Integer> post_reports = new HashMap<>();
                     HashMap<String,Object> cur_posts;
                     FindIterable<Post> findIterablePosts = (FindIterable<Post>) Database.collections.get(Database.Collections.Posts).find(posts_filter);
                     for (Document doc : findIterablePosts) {
 
+                        LogManager.write("E2");
+
+                        if (!post_reports.containsKey(doc.getObjectId("posterId").toString())) {
+                            post_reports.put(doc.getObjectId("posterId").toString(), 0);
+                        }
+
+                        LogManager.write("E3");
+
                         if (!post_reported.containsKey(doc.getObjectId("posterId").toString())) {
                             post_reported.put(doc.getObjectId("posterId").toString(), new ArrayList<>());
                         }
+
+                        LogManager.write("E4");
+
                         if ((doc.get("is_reported") != null && ((ArrayList<ObjectId>)doc.get("is_reported")).size() > 0) ||
                                 (doc.getBoolean("reported_by_club") != null && doc.getBoolean("reported_by_club"))) {
+
+                            LogManager.write("E5");
 
                             cur_posts = new HashMap<>();
                             cur_posts.put("_id", doc.getObjectId("_id").toString());
@@ -90,28 +105,38 @@ public class GetUsers {
                             cur_posts.put("event_id", doc.getObjectId("event_id").toString());
                             cur_posts.put("start_date", doc.getLong("start_date"));
                             cur_posts.put("end_date", doc.getLong("end_date"));
+
+                            LogManager.write("E6");
+
                             cur_posts.put("nb_likes",
                                     (doc.get("likes") != null ? ((ArrayList<ObjectId>)doc.get("likes")).size() : 0) +
                                     (doc.getBoolean("likedByClub") != null && doc.getBoolean("likedByClub") ? 1 : 0)
                             );
+
+                            LogManager.write("E7");
+
                             cur_posts.put("nb_comments",
                                     (doc.get("comments") != null ? ((ArrayList<ObjectId>)doc.get("comments")).size() : 0));
+
+                            LogManager.write("E8");
+
                             cur_posts.put("nb_reports",
                                     (doc.get("is_reported") != null ? ((ArrayList<ObjectId>)doc.get("is_reported")).size() : 0) +
                                     (doc.getBoolean("reported_by_club") != null && doc.getBoolean("reported_by_club") ? 1 : 0)
                             );
 
-                            post_reported.get(doc.getObjectId("posterId").toString()).add(cur_posts);
-                        }
+                            LogManager.write("E9");
 
-                        if (!post_reports.containsKey(doc.getObjectId("posterId").toString())) {
-                            post_reports.put(doc.getObjectId("posterId").toString(), 0);
-                        }
-                        if (doc.get("is_reported") != null && ((ArrayList<ObjectId>)doc.get("is_reported")).size() > 0) {
+                            post_reported.get(doc.getObjectId("posterId").toString()).add(cur_posts);
+
+                            LogManager.write("E10");
+
                             post_reports.put(
                                     doc.getObjectId("posterId").toString(),
                                     post_reports.get(doc.getObjectId("posterId").toString()) + ((ArrayList<ObjectId>)doc.get("is_reported")).size()
                             );
+
+                            LogManager.write("E11");
                         }
                     }
 
