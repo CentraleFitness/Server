@@ -110,12 +110,14 @@ public class GetUsers {
                             LogManager.write("E5.7");
                             cur_posts.put("picture", doc.getString("picture"));
                             LogManager.write("E5.8");
-                            cur_posts.put("event_id", doc.getObjectId("event_id").toString());
-                            LogManager.write("E5.9");
-                            cur_posts.put("start_date", doc.getLong("start_date"));
-                            LogManager.write("E5.10");
-                            cur_posts.put("end_date", doc.getLong("end_date"));
-                            
+                            if (doc.getObjectId("event_id") != null) {
+                                cur_posts.put("event_id", doc.getObjectId("event_id").toString());
+                                LogManager.write("E5.9");
+                                cur_posts.put("start_date", doc.getLong("start_date"));
+                                LogManager.write("E5.10");
+                                cur_posts.put("end_date", doc.getLong("end_date"));
+                            }
+
                             LogManager.write("E6");
 
                             cur_posts.put("nb_likes",
