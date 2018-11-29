@@ -45,7 +45,7 @@ public class EndSportSession {
 					sportSession.getField(SportSession.Field.MODULE_ID));
 			if (module != null) {
 				module.setField(Module.Field.NEED_NEW_SESSION_ID, true);
-                ModuleState moduleState = (ModuleState) Database.find_entity(Collections.ModuleStates, ModuleState.Field.CODE, 3);
+                ModuleState moduleState = (ModuleState) Database.find_entity(Collections.ModuleStates, ModuleState.Field.CODE, 2);
                 if (moduleState != null) {
                 	module.setField(Module.Field.MODULE_STATE_ID, moduleState.getField(ModuleState.Field.ID));
                 	module.setField(Module.Field.MODULE_STATE_CODE, moduleState.getField(ModuleState.Field.CODE));
