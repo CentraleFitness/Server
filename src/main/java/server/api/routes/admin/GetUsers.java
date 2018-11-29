@@ -132,7 +132,7 @@ public class GetUsers {
 
                             LogManager.write("E8");
 
-                            cur_posts.put("nb_reports",
+                            cur_posts.put("nb_report",
                                     (doc.get("is_reported") != null ? ((ArrayList<ObjectId>)doc.get("is_reported")).size() : 0) +
                                     (doc.getBoolean("reported_by_club") != null && doc.getBoolean("reported_by_club") ? 1 : 0)
                             );
