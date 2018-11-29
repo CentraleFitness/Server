@@ -1,6 +1,8 @@
 package server.api.routes.mobile.post;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
@@ -117,6 +119,14 @@ public class GetPostContent {
 					sending.put(Protocol.Field.POSTTITLE.key, post.getField(Post.Field.TITLE));
 					sending.put(Protocol.Field.POSTPICTURE.key, post.getField(Post.Field.PICTURE));
 				}
+
+				ArrayList<ObjectId> is_reported = (ArrayList<ObjectId>)post.getField(Post.Field.IS_REPORTED);
+
+				if (is_reported == null) {
+					is_reported = new ArrayList<>();
+				}
+
+				sending.put(Protocol.Field.REPORTED_BY_ME.key, is_reported.contains(user.getField(User.Field.ID)));
 
 				if (post.getField(Post.Field.TYPE) != null &&
 						post.getField(Post.Field.TYPE).equals("EVENT")) {

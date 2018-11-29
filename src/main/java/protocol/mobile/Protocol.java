@@ -74,7 +74,7 @@ public class Protocol {
 		CUSTOMPROGRAMID("custom program id"), FILTERS("filters"), CUSTOMPROGRAMS("custom programs"),
 		FAVORITE("favorite"), NOTE("note"), CREATOR("creator"), POSTTITLE("post title"), POSTPICTURE("post picture"),
 		POSTEVENTID("post event_id"), POSTSTARTDATE("post start_date"), POSTENDDATE("post end_date"), IS_MINE("is_mine"),
-		IS_CENTER("is_center");
+		IS_CENTER("is_center"), REPORTED_BY_ME("reported_by_me");
 		public String key;
 
 		Field(String key) {

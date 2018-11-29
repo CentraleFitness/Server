@@ -89,11 +89,20 @@ public class PostCommentGetRange {
 								comment.getField(Post.Field.POSTERID));
 						commentContent.put(Protocol.Field.COMMENTID.key, comment.getId().toString());
 						commentContent.put(Protocol.Field.NAME.key, comment.getField(Post.Field.POSTERNAME));
-						commentContent.put(Protocol.Field.IS_CENTER.key, (post.getField(Post.Field.IS_CENTER) != null && (Boolean)post.getField(Post.Field.IS_CENTER)));
+						commentContent.put(Protocol.Field.IS_CENTER.key, (comment.getField(Post.Field.IS_CENTER) != null && (Boolean)comment.getField(Post.Field.IS_CENTER)));
 						commentContent.put(Protocol.Field.IS_MINE.key, (comment.getField(Post.Field.POSTERID) == user.getField(User.Field.ID)));
 						commentContent.put(Protocol.Field.COMMENTCONTENT.key,
 								(String) comment.getField(Post.Field.CONTENT));
 						commentContent.put(Protocol.Field.DATE.key, (Long) comment.getField(Post.Field.DATE));
+
+						ArrayList<ObjectId> is_reported = (ArrayList<ObjectId>)comment.getField(Post.Field.IS_REPORTED);
+
+						if (is_reported == null) {
+							is_reported = new ArrayList<>();
+						}
+
+						commentContent.put(Protocol.Field.REPORTED_BY_ME.key, is_reported.contains(user.getField(User.Field.ID)));
+
 						commentsContents.add(commentContent);
 					} catch (InvocationTargetException | NoSuchMethodException | InstantiationException
 							| IllegalAccessException e) {
