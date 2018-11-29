@@ -108,7 +108,7 @@ public class GetPostContent {
 				sending.put(Protocol.Field.POSTTYPE.key, post.getField(Post.Field.TYPE));
 				sending.put(Protocol.Field.POSTDATE.key, post.getField(Post.Field.DATE));
 				sending.put(Protocol.Field.IS_CENTER.key, (post.getField(Post.Field.IS_CENTER) != null && (Boolean)post.getField(Post.Field.IS_CENTER)));
-				sending.put(Protocol.Field.IS_MINE.key, post.getField(Post.Field.POSTERID).toString().equals(user.getField(User.Field.ID)));
+				sending.put(Protocol.Field.IS_MINE.key, post.getField(Post.Field.POSTERID).toString().equals(user.getField(User.Field.ID).toString()));
 				sending.put(Protocol.Field.POSTICON.key,
 						Optional.ofNullable(picture).map(pic -> pic.getField(Picture.Field.PICTURE)).orElse(null));
 				sending.put(Protocol.Field.POSTCONTENT.key, post.getField(Post.Field.CONTENT));
