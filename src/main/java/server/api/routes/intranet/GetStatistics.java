@@ -17,6 +17,8 @@ import org.bson.types.ObjectId;
 import protocol.ResponseObject;
 import protocol.intranet.Protocol;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class GetStatistics {
@@ -70,17 +72,17 @@ public class GetStatistics {
                         HashMap<ObjectId, Double> modules = new HashMap<>();
                         Double total_production_modules = 0d;
                         FindIterable<ElectricProduction> findIterableProductions = (FindIterable<ElectricProduction>) Database.collections.get(Database.Collections.ElectricProductions).find(production_filter);
-                        for (ElectricProduction doc : findIterableProductions) {
+                        for (Document doc : findIterableProductions) {
 
-                            doc.updateProduction();
+                            this.updateProduction(doc);
 
-                            production_day += (Double)doc.getField(ElectricProduction.Field.PRODUCTION_DAY);
-                            production_month += (Double)doc.getField(ElectricProduction.Field.PRODUCTION_MONTH);
-                            production_year += (Double)doc.getField(ElectricProduction.Field.PRODUCTION_YEAR);
-                            production_total += (Double)doc.getField(ElectricProduction.Field.PRODUCTION_TOTAL);
+                            production_day += doc.getDouble("production_day");
+                            production_month += doc.getDouble("production_month");
+                            production_year += doc.getDouble("production_year");
+                            production_total += doc.getDouble("production_total");
 
-                            total_production_modules += (Double)doc.getField(ElectricProduction.Field.PRODUCTION_TOTAL);
-                            modules.put((ObjectId) doc.getField(ElectricProduction.Field.MODULE_ID), 0d);
+                            total_production_modules += doc.getDouble("production_total");
+                            modules.put(doc.getObjectId("module_id"), 0d);
                         }
 
                         Double day_duration = (24d * (60d * 60d * 1000d));
@@ -148,5 +150,23 @@ public class GetStatistics {
             response.end(new GsonBuilder().registerTypeAdapter(ObjectId.class, new ObjectIdSerializer()).create().toJson(sending));
         });
 
+    }
+
+    public void updateProduction(Document doc) {
+        LocalDateTime lastUpdate = LocalDateTime.ofInstant(Instant.ofEpochMilli((Long) doc.getLong("last_update")), TimeZone.getDefault().toZoneId());
+        LocalDateTime now = LocalDateTime.now();
+        if (lastUpdate.getYear() < now.getYear()) {
+            LogManager.write("WTF1");
+            doc.put("production_year", 0d);
+            doc.put("production_month", 0d);
+            doc.put("production_day", 0d);
+        } else if (lastUpdate.getMonth().getValue() < now.getMonth().getValue()) {
+            LogManager.write("WTF2");
+            doc.put("production_month", 0d);
+            doc.put("production_day", 0d);
+        } else if (lastUpdate.getDayOfMonth() < now.getDayOfMonth()) {
+            LogManager.write("WTF2");
+            doc.put("production_day", 0d);
+        }
     }
 }
