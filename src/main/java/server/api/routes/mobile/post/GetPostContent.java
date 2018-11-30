@@ -138,6 +138,8 @@ public class GetPostContent {
 					sending.put(Protocol.Field.POSTSTARTDATE.key, post.getField(Post.Field.START_DATE));
 					sending.put(Protocol.Field.POSTENDDATE.key, post.getField(Post.Field.END_DATE));
 					sending.put(Protocol.Field.ISREG.key, eventParticipation!=null);
+					Event evt = (Event)Database.find_entity(Database.Collections.Events, Event.Field.ID, post.getField(Post.Field.EVENT_ID));
+					sending.put(Protocol.Field.EVENT_IS_DELETED.key, (evt.getField(Event.Field.IS_DELETED) != null && (Boolean)evt.getField(Event.Field.IS_DELETED)));
 				}
 
 				sending.put(Protocol.Field.NAME.key,
