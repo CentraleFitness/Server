@@ -156,16 +156,13 @@ public class GetStatistics {
         LocalDateTime lastUpdate = LocalDateTime.ofInstant(Instant.ofEpochMilli((Long) doc.getLong("last_update")), TimeZone.getDefault().toZoneId());
         LocalDateTime now = LocalDateTime.now();
         if (lastUpdate.getYear() < now.getYear()) {
-            LogManager.write("WTF1");
             doc.put("production_year", 0d);
             doc.put("production_month", 0d);
             doc.put("production_day", 0d);
         } else if (lastUpdate.getMonth().getValue() < now.getMonth().getValue()) {
-            LogManager.write("WTF2");
             doc.put("production_month", 0d);
             doc.put("production_day", 0d);
         } else if (lastUpdate.getDayOfMonth() < now.getDayOfMonth()) {
-            LogManager.write("WTF2");
             doc.put("production_day", 0d);
         }
     }
