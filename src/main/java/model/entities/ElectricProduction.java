@@ -59,13 +59,16 @@ public class ElectricProduction extends Database.Entity {
         LocalDateTime now = LocalDateTime.now();
         setField(Field.LAST_UPDATE, Timestamp.valueOf(now).getTime());
         if (lastUpdate.getYear() < now.getYear()) {
+            LogManager.write("WTF1");
             setField(Field.PRODUCTION_YEAR, 0d);
             setField(Field.PRODUCTION_MONTH, 0d);
             setField(Field.PRODUCTION_DAY, 0d);
         } else if (lastUpdate.getMonth().getValue() < now.getMonth().getValue()) {
+            LogManager.write("WTF2");
             setField(Field.PRODUCTION_MONTH, 0d);
             setField(Field.PRODUCTION_DAY, 0d);
         } else if (lastUpdate.getDayOfMonth() < now.getDayOfMonth()) {
+            LogManager.write("WTF2");
             setField(Field.PRODUCTION_DAY, 0d);
         }
     }
