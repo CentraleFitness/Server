@@ -72,6 +72,8 @@ public class GetStatistics {
                         FindIterable<ElectricProduction> findIterableProductions = (FindIterable<ElectricProduction>) Database.collections.get(Database.Collections.ElectricProductions).find(production_filter);
                         for (Document doc : findIterableProductions) {
 
+                            ((ElectricProduction)doc).updateProduction();
+
                             production_day += doc.getDouble("production_day");
                             production_month += doc.getDouble("production_month");
                             production_year += doc.getDouble("production_year");

@@ -77,13 +77,13 @@ public class ElectricProduction extends Database.Entity {
         for (int i = 0, j = pl.size(); i < j; ++i) {
             production += (double)pl.get(i);
         }
+        LogManager.write("updating the electric production");
+        updateProduction();
         LogManager.write("production sum to be added=" + new Double(production).toString());
         double finalProduction = production;
         compute(Field.PRODUCTION_TOTAL.key, (key, value) -> (double)value + finalProduction);
         compute(Field.PRODUCTION_YEAR.key, (key, value) -> (double)value + finalProduction);
         compute(Field.PRODUCTION_MONTH.key, (key, value) -> (double)value + finalProduction);
         compute(Field.PRODUCTION_DAY.key, (key, value) -> (double)value + finalProduction);
-        LogManager.write("updating the electric production");
-        updateProduction();
     }
 }
