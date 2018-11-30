@@ -70,17 +70,17 @@ public class GetStatistics {
                         HashMap<ObjectId, Double> modules = new HashMap<>();
                         Double total_production_modules = 0d;
                         FindIterable<ElectricProduction> findIterableProductions = (FindIterable<ElectricProduction>) Database.collections.get(Database.Collections.ElectricProductions).find(production_filter);
-                        for (Document doc : findIterableProductions) {
+                        for (ElectricProduction doc : findIterableProductions) {
 
-                            ((ElectricProduction)doc).updateProduction();
+                            doc.updateProduction();
 
-                            production_day += doc.getDouble("production_day");
-                            production_month += doc.getDouble("production_month");
-                            production_year += doc.getDouble("production_year");
-                            production_total += doc.getDouble("production_total");
+                            production_day += (Double)doc.getField(ElectricProduction.Field.PRODUCTION_DAY);
+                            production_month += (Double)doc.getField(ElectricProduction.Field.PRODUCTION_MONTH);
+                            production_year += (Double)doc.getField(ElectricProduction.Field.PRODUCTION_YEAR);
+                            production_total += (Double)doc.getField(ElectricProduction.Field.PRODUCTION_TOTAL);
 
-                            total_production_modules += doc.getDouble("production_total");
-                            modules.put(doc.getObjectId("module_id"), 0d);
+                            total_production_modules += (Double)doc.getField(ElectricProduction.Field.PRODUCTION_TOTAL);
+                            modules.put((ObjectId) doc.getField(ElectricProduction.Field.MODULE_ID), 0d);
                         }
 
                         Double day_duration = (24d * (60d * 60d * 1000d));
