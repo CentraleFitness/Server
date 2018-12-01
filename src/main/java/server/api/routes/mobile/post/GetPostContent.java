@@ -1,19 +1,17 @@
 package server.api.routes.mobile.post;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 
-import com.mongodb.BasicDBObject;
-import model.entities.*;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
 import com.auth0.jwt.JWT;
 import com.google.gson.GsonBuilder;
+import com.mongodb.BasicDBObject;
 
 import Tools.LogManager;
 import Tools.Token;
@@ -22,6 +20,13 @@ import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import model.Database;
 import model.Database.Collections;
+import model.entities.Event;
+import model.entities.Fitness_Center;
+import model.entities.Fitness_Center_Manager;
+import model.entities.Picture;
+import model.entities.Post;
+import model.entities.TUPLE_Event_User;
+import model.entities.User;
 import protocol.ResponseObject;
 import protocol.mobile.Protocol;
 
@@ -31,8 +36,8 @@ public class GetPostContent {
 
 			ResponseObject sending = null;
 			HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
-
-			label: try {
+			LogManager.write("GetPostContent : {");
+			try {
 				Map<String, Object> received = routingContext.getBodyAsJson().getMap();
 				String rToken = (String) received.get(Protocol.Field.TOKEN.key);
 				String rPostId = (String) received.get(Protocol.Field.POSTID.key);
@@ -41,20 +46,20 @@ public class GetPostContent {
 					sending = new ResponseObject(true);
 					sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_KO.code);
 					LogManager.write("Missing key " + Protocol.Field.TOKEN.key);
-					break label;
+					return;
 				}
 				if (rPostId == null) {
 					sending = new ResponseObject(true);
 					sending.put(Protocol.Field.POSTID.key, Protocol.Status.GENERIC_KO.code);
 					LogManager.write("Missing key " + Protocol.Field.POSTID.key);
-					break label;
+					return;
 				}
 				JWT token = Token.decodeToken(rToken);
 				if (token == null) {
 					sending = new ResponseObject(true);
 					sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
 					LogManager.write(Protocol.Status.AUTH_ERROR_TOKEN.message);
-					break label;
+					return;
 				}
 				User user = (User) Database.find_entity(Database.Collections.Users, User.Field.LOGIN,
 						token.getIssuer());
@@ -62,7 +67,7 @@ public class GetPostContent {
 					sending = new ResponseObject(true);
 					sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
 					LogManager.write(Protocol.Status.AUTH_ERROR_TOKEN.message);
-					break label;
+					return;
 				}
 				ObjectId postId = new ObjectId(rPostId);
 				Post post = (Post) Database.find_entity(Database.Collections.Posts, Post.Field.ID, postId);
@@ -70,7 +75,7 @@ public class GetPostContent {
 					sending = new ResponseObject(true);
 					sending.put(Protocol.Field.STATUS.key, Protocol.Status.POST_NOT_FOUND.code);
 					LogManager.write(Protocol.Status.POST_NOT_FOUND.message);
-					break label;
+					return;
 				}
 				ObjectId pictureId = (ObjectId) Optional.ofNullable(post.getField(Post.Field.POSTERID))
 						.map(posterId -> {
@@ -107,20 +112,21 @@ public class GetPostContent {
 				sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
 				sending.put(Protocol.Field.POSTTYPE.key, post.getField(Post.Field.TYPE));
 				sending.put(Protocol.Field.POSTDATE.key, post.getField(Post.Field.DATE));
-				sending.put(Protocol.Field.IS_CENTER.key, (post.getField(Post.Field.IS_CENTER) != null && (Boolean)post.getField(Post.Field.IS_CENTER)));
-				sending.put(Protocol.Field.IS_MINE.key, post.getField(Post.Field.POSTERID).toString().equals(user.getField(User.Field.ID).toString()));
+				sending.put(Protocol.Field.IS_CENTER.key,
+						(post.getField(Post.Field.IS_CENTER) != null && (Boolean) post.getField(Post.Field.IS_CENTER)));
+				sending.put(Protocol.Field.IS_MINE.key,
+						post.getField(Post.Field.POSTERID).toString().equals(user.getField(User.Field.ID).toString()));
 				sending.put(Protocol.Field.POSTICON.key,
 						Optional.ofNullable(picture).map(pic -> pic.getField(Picture.Field.PICTURE)).orElse(null));
 				sending.put(Protocol.Field.POSTCONTENT.key, post.getField(Post.Field.CONTENT));
 
-				if (post.getField(Post.Field.TYPE) != null &&
-						post.getField(Post.Field.TYPE).equals("PHOTO")) {
+				if (post.getField(Post.Field.TYPE) != null && post.getField(Post.Field.TYPE).equals("PHOTO")) {
 
 					sending.put(Protocol.Field.POSTTITLE.key, post.getField(Post.Field.TITLE));
 					sending.put(Protocol.Field.POSTPICTURE.key, post.getField(Post.Field.PICTURE));
 				}
 
-				ArrayList<ObjectId> is_reported = (ArrayList<ObjectId>)post.getField(Post.Field.IS_REPORTED);
+				ArrayList<ObjectId> is_reported = (ArrayList<ObjectId>) post.getField(Post.Field.IS_REPORTED);
 
 				if (is_reported == null) {
 					is_reported = new ArrayList<>();
@@ -128,38 +134,49 @@ public class GetPostContent {
 
 				sending.put(Protocol.Field.REPORTED_BY_ME.key, is_reported.contains(user.getField(User.Field.ID)));
 
-				if (post.getField(Post.Field.TYPE) != null &&
-						post.getField(Post.Field.TYPE).equals("EVENT")) {
+				if (post.getField(Post.Field.TYPE) != null && post.getField(Post.Field.TYPE).equals("EVENT")) {
 
 					sending.put(Protocol.Field.POSTTITLE.key, post.getField(Post.Field.TITLE));
 					sending.put(Protocol.Field.POSTPICTURE.key, post.getField(Post.Field.PICTURE));
 					sending.put(Protocol.Field.POSTEVENTID.key, post.getField(Post.Field.EVENT_ID).toString());
-					Document eventParticipation = Database.find_entity(Database.Collections.TUPLE_Event_Users, new BasicDBObject("$and", Arrays.asList(new BasicDBObject(TUPLE_Event_User.Field.EVENT_ID.get_key(), post.getField(Post.Field.EVENT_ID)), new BasicDBObject(TUPLE_Event_User.Field.USER_ID.get_key(), user.getField(User.Field.ID)))));
+					TUPLE_Event_User eventParticipation = (TUPLE_Event_User) Database.find_entity(Database.Collections.TUPLE_Event_Users,
+							new BasicDBObject("$and",
+									Arrays.asList(
+											new BasicDBObject(TUPLE_Event_User.Field.EVENT_ID.get_key(),
+													post.getField(Post.Field.EVENT_ID)),
+											new BasicDBObject(TUPLE_Event_User.Field.USER_ID.get_key(),
+													user.getField(User.Field.ID)))));
+					LogManager.write("event id : "+((ObjectId) post.getField(Post.Field.EVENT_ID)).toString());
+					LogManager.write("user id : " + ((ObjectId) user.getField(User.Field.ID)).toString());
+					LogManager.write("utple event-user : " + eventParticipation);
 					sending.put(Protocol.Field.POSTSTARTDATE.key, post.getField(Post.Field.START_DATE));
 					sending.put(Protocol.Field.POSTENDDATE.key, post.getField(Post.Field.END_DATE));
-					sending.put(Protocol.Field.ISREG.key, eventParticipation!=null);
-					Event evt = (Event)Database.find_entity(Database.Collections.Events, Event.Field.ID, post.getField(Post.Field.EVENT_ID));
-					sending.put(Protocol.Field.EVENT_IS_DELETED.key, (evt.getField(Event.Field.IS_DELETED) != null && (Boolean)evt.getField(Event.Field.IS_DELETED)));
+					sending.put(Protocol.Field.ISREG.key, eventParticipation != null);
+					Event evt = (Event) Database.find_entity(Database.Collections.Events, Event.Field.ID,
+							post.getField(Post.Field.EVENT_ID));
+					sending.put(Protocol.Field.EVENT_IS_DELETED.key, (evt.getField(Event.Field.IS_DELETED) != null
+							&& (Boolean) evt.getField(Event.Field.IS_DELETED)));
 				}
 
-				sending.put(Protocol.Field.NAME.key,
-						!isCenter
-								? Optional
-										.ofNullable(Database.find_entity(Collections.Users, User.Field.ID,
-												post.getField(Post.Field.POSTERID)))
-										.map(uposter -> ((User) uposter).getField(User.Field.LOGIN)).orElse("")
-								: Optional
-										.ofNullable(Database.find_entity(Collections.Fitness_Centers,
-												Fitness_Center.Field.ID, post.getField(Post.Field.FITNESS_CENTERT_ID)))
-										.map(fcposter -> ((Fitness_Center)fcposter).getField(Fitness_Center.Field.NAME))
-										.orElse(null));
+				sending.put(Protocol.Field.NAME.key, !isCenter
+						? Optional
+								.ofNullable(Database.find_entity(Collections.Users, User.Field.ID,
+										post.getField(Post.Field.POSTERID)))
+								.map(uposter -> ((User) uposter).getField(User.Field.LOGIN)).orElse("")
+						: Optional
+								.ofNullable(Database.find_entity(Collections.Fitness_Centers, Fitness_Center.Field.ID,
+										post.getField(Post.Field.FITNESS_CENTERT_ID)))
+								.map(fcposter -> ((Fitness_Center) fcposter).getField(Fitness_Center.Field.NAME))
+								.orElse(null));
 				sending.put("isCenter", isCenter);
 			} catch (Exception e) {
 				sending = new ResponseObject(true);
 				sending.put(Protocol.Field.STATUS.key, Protocol.Status.INTERNAL_SERVER_ERROR.code);
 				LogManager.write(e);
+			} finally {
+				response.end(new GsonBuilder().create().toJson(sending));
+				LogManager.write("}");
 			}
-			response.end(new GsonBuilder().create().toJson(sending));
 		});
 	}
 }
