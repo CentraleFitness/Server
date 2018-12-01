@@ -41,12 +41,13 @@ public class GetActivities {
 
                     @SuppressWarnings("unchecked")
                     FindIterable<Document> findIterable = (FindIterable<Document>) Database.collections.get(Database.Collections.Activities).find(new Document());
-                    List<Map<String,String>> activities = new ArrayList<>();
-                    HashMap<String,String> cur;
+                    List<Map<String,Object>> activities = new ArrayList<>();
+                    HashMap<String,Object> cur;
                     for (Document doc : findIterable) {
                         cur = new HashMap<>();
                         cur.put("_id", doc.getObjectId("_id").toString());
                         cur.put("name", doc.getString("name"));
+                        cur.put("is_module", doc.getBoolean("is_module"));
                         cur.put("icon", doc.getString("icon"));
                         activities.add(cur);
                     }

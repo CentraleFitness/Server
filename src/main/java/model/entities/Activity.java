@@ -10,6 +10,7 @@ public class Activity extends Database.Entity {
     public enum Field implements Database.Entity_Field {
         ID("_id", ObjectId.class),
         NAME("name", String.class),
+        IS_MODULE("is_module", Boolean.class),
         ICON("icon", String.class),
         ;
         @Override

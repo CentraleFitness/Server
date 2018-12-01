@@ -97,6 +97,7 @@ public class AddCustomProgram {
                             doc = new Document();
                             doc.put("_id", new ObjectId(cur.get("_id").toString()));
                             doc.put("name", cur.get("name").toString());
+                            doc.put("is_module", cur.get("is_module"));
                             doc.put("time", cur.get("time"));
                             doc.put("icon", cur.get("icon").toString());
                             activities.add(doc);
