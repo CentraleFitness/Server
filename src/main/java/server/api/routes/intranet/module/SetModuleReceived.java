@@ -72,7 +72,7 @@ public class SetModuleReceived {
 
                             Database.update_entity(Database.Collections.Modules, module);
 
-                            sending.put(Protocol.Field.MODULE_STATE_ID.key, state.getField(ModuleState.Field.ID));
+                            sending.put(Protocol.Field.MODULE_STATE_ID.key, state.getField(ModuleState.Field.ID).toString());
                             sending.put(Protocol.Field.MODULE_STATE_CODE.key, state.getField(ModuleState.Field.CODE));
                         }
                     }
