@@ -3,6 +3,7 @@ package server.api.routes.mobile.post;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -152,6 +153,11 @@ public class GetPostContent {
 							post.getField(Post.Field.EVENT_ID));
 					sending.put(Protocol.Field.EVENT_IS_DELETED.key, (evt.getField(Event.Field.IS_DELETED) != null
 							&& (Boolean) evt.getField(Event.Field.IS_DELETED)));
+					List<ObjectId> likes = (List<ObjectId>) post.getField(Post.Field.LIKES);
+					sending.put(Protocol.Field.LIKES.key, (likes == null ? 0 : likes.size()) +
+							(post.getField(Post.Field.LIKED_BY_CLUB) == null ||
+									!(Boolean)post.getField(Post.Field.LIKED_BY_CLUB) ? 0 : 1));
+					sending.put("liked", likes.stream().filter(liked -> liked.equals(user.getField(User.Field.ID))).count() > 0);
 				}
 
 				sending.put(Protocol.Field.NAME.key, !isCenter
