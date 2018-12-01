@@ -36,7 +36,6 @@ public class GetPostContent {
 
 			ResponseObject sending = null;
 			HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
-			LogManager.write("GetPostContent : {");
 			try {
 				Map<String, Object> received = routingContext.getBodyAsJson().getMap();
 				String rToken = (String) received.get(Protocol.Field.TOKEN.key);
@@ -146,9 +145,6 @@ public class GetPostContent {
 													post.getField(Post.Field.EVENT_ID)),
 											new BasicDBObject(TUPLE_Event_User.Field.USER_ID.get_key(),
 													user.getField(User.Field.ID)))));
-					LogManager.write("event id : "+((ObjectId) post.getField(Post.Field.EVENT_ID)).toString());
-					LogManager.write("user id : " + ((ObjectId) user.getField(User.Field.ID)).toString());
-					LogManager.write("utple event-user : " + eventParticipation);
 					sending.put(Protocol.Field.POSTSTARTDATE.key, post.getField(Post.Field.START_DATE));
 					sending.put(Protocol.Field.POSTENDDATE.key, post.getField(Post.Field.END_DATE));
 					sending.put(Protocol.Field.ISREG.key, eventParticipation != null);
@@ -175,7 +171,6 @@ public class GetPostContent {
 				LogManager.write(e);
 			} finally {
 				response.end(new GsonBuilder().create().toJson(sending));
-				LogManager.write("}");
 			}
 		});
 	}
