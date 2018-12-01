@@ -44,6 +44,8 @@ public class GetFeedbackStates {
                         cur = new HashMap<>();
                         cur.put("_id", doc.getObjectId("_id").toString());
                         cur.put("code", doc.getInteger("code"));
+                        cur.put("value", doc.getInteger("code"));
+                        cur.put("label", doc.getString("text_fr"));
                         cur.put("text_fr", doc.getString("text_fr"));
                         cur.put("text_en", doc.getString("text_en"));
                         feedback_states.add(cur);

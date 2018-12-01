@@ -78,6 +78,10 @@ public class AddResponseFeedback {
 
                         ArrayList<Document> responses = (ArrayList<Document>) feedback.getField(Feedback.Field.RESPONSES);
 
+                        if (responses == null) {
+                            responses = new ArrayList<>();
+                        }
+
                         responses.add(doc);
 
                         feedback.setField(Feedback.Field.RESPONSES, responses);

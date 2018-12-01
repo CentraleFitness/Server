@@ -66,6 +66,7 @@ public class GetManagerFeedbacks {
                     @SuppressWarnings("unchecked")
                     FindIterable<Feedback> findIterable = (FindIterable<Feedback>) Database.collections.get(Database.Collections.Feedbacks).find().sort(orderBy(descending(Feedback.Field.UPDATE_DATE.get_key())));
                     List<Map<String,Object>> feedbacks = new ArrayList<>();
+                    ArrayList<Document> responses;
                     HashMap<String,Object> cur;
                     for (Document doc : findIterable) {
                         cur = new HashMap<>();
@@ -77,7 +78,14 @@ public class GetManagerFeedbacks {
                         cur.put("fitness_manager_id", doc.getObjectId("fitness_manager_id").toString());
                         cur.put("fitness_center_id", doc.getObjectId("fitness_center_id").toString());
                         cur.put("update_date", doc.getLong("update_date"));
-                        cur.put("responses", doc.get("responses"));
+
+                        responses = (ArrayList<Document>)doc.get("responses");
+
+                        if (responses == null) {
+                            responses = new ArrayList<>();
+                        }
+
+                        cur.put("responses", responses);
 
                         if (doc.getObjectId("fitness_manager_id") != null &&
                                 managers.containsKey(doc.getObjectId("fitness_manager_id").toString())) {

@@ -83,6 +83,10 @@ public class GetFeedbacks {
                                 doc.put("fitness_manager_name", managers.get(doc.getObjectId("fitness_manager_id").toString()));
                             }
 
+                            if (doc.get("responses") == null) {
+                                doc.put("responses", new ArrayList<>());
+                            }
+
                             feedbacks.add(doc);
                         }
 

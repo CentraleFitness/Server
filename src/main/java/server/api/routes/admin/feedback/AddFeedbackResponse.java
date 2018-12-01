@@ -37,11 +37,6 @@ public class AddFeedbackResponse {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_TOKEN.code);
 
-                } else if (received.get(Protocol.Field.CONTENT.key) == null) {
-
-                    sending = new ResponseObject(true);
-                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_MISSING_PARAM.code);
-
                 } else if (received.get(Protocol.Field.FEEDBACK_ID.key) == null) {
 
                     sending = new ResponseObject(true);
@@ -66,18 +61,24 @@ public class AddFeedbackResponse {
                     feedback.setField(Feedback.Field.FEEDBACK_STATE, state.getField(Feedback_State.Field.CODE));
                     feedback.setField(Feedback.Field.UPDATE_DATE, time);
 
-                    Document doc = new Document();
-                    doc.put("content", received.get(protocol.intranet.Protocol.Field.CONTENT.key));
-                    doc.put("author_id", admin.getField(Administrator.Field.ID));
-                    doc.put("author", admin.getField(Administrator.Field.FIRSTNAME) + " " + admin.getField(Administrator.Field.LASTNAME));
-                    doc.put("is_admin", true);
-                    doc.put("date", time);
+                    if (received.get(Protocol.Field.CONTENT.key) != null) {
+                        Document doc = new Document();
+                        doc.put("content", received.get(protocol.intranet.Protocol.Field.CONTENT.key));
+                        doc.put("author_id", admin.getField(Administrator.Field.ID));
+                        doc.put("author", admin.getField(Administrator.Field.FIRSTNAME) + " " + admin.getField(Administrator.Field.LASTNAME));
+                        doc.put("is_admin", true);
+                        doc.put("date", time);
 
-                    ArrayList<Document> responses = (ArrayList<Document>) feedback.getField(Feedback.Field.RESPONSES);
+                        ArrayList<Document> responses = (ArrayList<Document>) feedback.getField(Feedback.Field.RESPONSES);
 
-                    responses.add(doc);
+                        if (responses == null) {
+                            responses = new ArrayList<>();
+                        }
 
-                    feedback.setField(Feedback.Field.RESPONSES, responses);
+                        responses.add(doc);
+
+                        feedback.setField(Feedback.Field.RESPONSES, responses);
+                    }
 
                     Database.update_entity(Database.Collections.Feedbacks, feedback);
 
