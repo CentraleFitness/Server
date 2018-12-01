@@ -6,7 +6,15 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.CorsHandler;
 import model.Database;
-import server.api.routes.admin.*;
+import server.api.routes.admin.account.*;
+import server.api.routes.admin.feedback.*;
+import server.api.routes.admin.manager.*;
+import server.api.routes.admin.module.CreateModule;
+import server.api.routes.admin.module.GetModuleStates;
+import server.api.routes.admin.module.GetModules;
+import server.api.routes.admin.module.UpdateModule;
+import server.api.routes.admin.user.GetUsers;
+import server.api.routes.admin.user.SetUserAccountActivity;
 
 public class AdminVerticle extends AbstractVerticle {
 

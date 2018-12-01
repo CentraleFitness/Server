@@ -422,6 +422,8 @@ public class Protocol {
         PRODUCTION_TOTAL("production_total"),
         AVERAGE_BY_MODULE("average_by_module"),
         FREQUENTATION_YEAR("frequentation_year"),
+        MODULE_ID("module_id"),
+        MODULE_STATE_NAME("module_state_name"),
         ;
         public String key;
         Field(String key) {
