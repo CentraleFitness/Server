@@ -33,12 +33,12 @@ public class SetModuleReceived {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.AUTH_ERROR_ACCOUNT_INACTIVE.code);
 
-                } else if (received.get(Protocol.Field.MODULE_ID.key) != null) {
+                } else if (received.get(Protocol.Field.MODULE_ID.key) == null) {
 
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_MISSING_PARAM.code);
 
-                } else if (received.get(Protocol.Field.IS_RECEIVED.key) != null) {
+                } else if (received.get(Protocol.Field.IS_RECEIVED.key) == null) {
 
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_MISSING_PARAM.code);
