@@ -6,7 +6,17 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.CorsHandler;
 import model.Database;
-import server.api.routes.intranet.*;
+import server.api.routes.intranet.account.*;
+import server.api.routes.intranet.customprogram.*;
+import server.api.routes.intranet.displayconfiguration.*;
+import server.api.routes.intranet.event.*;
+import server.api.routes.intranet.feedback.*;
+import server.api.routes.intranet.homesummary.*;
+import server.api.routes.intranet.manager.*;
+import server.api.routes.intranet.module.*;
+import server.api.routes.intranet.picture.*;
+import server.api.routes.intranet.publication.*;
+import server.api.routes.intranet.statistic.*;
 
 public class IntranetVerticle extends AbstractVerticle {
 
@@ -93,6 +103,7 @@ public class IntranetVerticle extends AbstractVerticle {
 
         new GetModuleStates(this.router);
         new GetModules(this.router);
+        new SetModuleReceived(this.router);
 
         new GetActivities(this.router);
         new AddCustomProgram(this.router);

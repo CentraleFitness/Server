@@ -239,7 +239,7 @@ public class Database {
 
     public static long countEntities(Collections collection){
 
-        return collections.get(collection).count();
+        return collections.get(collection).countDocuments();
     }
 
     public static void delete_entity(Collections collection, Entity_Field field, Object value) {
@@ -259,7 +259,7 @@ public class Database {
 	}
 
 	static {
-        if (collections.get(Collections.Activities).count() == 0) {
+        if (collections.get(Collections.Activities).countDocuments() == 0) {
             try {
 
                 Activity a = (Activity) new_entity(Collections.Activities);
@@ -287,7 +287,7 @@ public class Database {
             }
         }
 
-        if (collections.get(Collections.ModuleStates).count() == 0) {
+        if (collections.get(Collections.ModuleStates).countDocuments() == 0) {
             try {
                 ModuleState m = (ModuleState) new_entity(Collections.ModuleStates);
                 m.setField(ModuleState.Field.CODE, 0);
@@ -323,7 +323,7 @@ public class Database {
             }
         }
 
-        if (collections.get(Collections.Feedback_States).count() == 0) {
+        if (collections.get(Collections.Feedback_States).countDocuments() == 0) {
             try {
                 Feedback_State f = (Feedback_State) new_entity(Collections.Feedback_States);
                 f.setField(Feedback_State.Field.CODE, 1);
@@ -347,7 +347,7 @@ public class Database {
             }
         }
 
-        if (collections.get(Collections.Administrators).count() == 0) {
+        if (collections.get(Collections.Administrators).countDocuments() == 0) {
             try {
                 Long time = System.currentTimeMillis();
 
