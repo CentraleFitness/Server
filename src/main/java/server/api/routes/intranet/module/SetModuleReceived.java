@@ -12,7 +12,6 @@ import org.bson.types.ObjectId;
 import protocol.ResponseObject;
 import protocol.intranet.Protocol;
 
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
 
@@ -51,7 +50,7 @@ public class SetModuleReceived {
 
                         ModuleState state = (ModuleState) Database.find_entity(Database.Collections.ModuleStates, ModuleState.Field.CODE, 1);
 
-                        Module module = (Module) Database.find_entity(Database.Collections.Modules, Module.Field.ID, new ObjectId((String)received.get(Protocol.Field.MODULE_ID.key)));
+                        model.entities.Module module = (model.entities.Module) Database.find_entity(Database.Collections.Modules, Module.Field.ID, new ObjectId((String)received.get(Protocol.Field.MODULE_ID.key)));
 
                         module.setField(Module.Field.MODULE_STATE_ID, state.getField(ModuleState.Field.ID));
                         module.setField(Module.Field.MODULE_STATE_CODE, state.getField(ModuleState.Field.CODE));
