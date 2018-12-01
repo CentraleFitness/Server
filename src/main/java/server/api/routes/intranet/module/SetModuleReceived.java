@@ -62,10 +62,8 @@ public class SetModuleReceived {
 
                         model.entities.Module module = (model.entities.Module) Database.find_entity(Database.Collections.Modules, model.entities.Module.Field.ID, new ObjectId((String)received.get(Protocol.Field.MODULE_ID.key)));
 
-                        if (((Boolean)received.get(Protocol.Field.IS_RECEIVED.key) &&
-                                (Integer) module.getField(model.entities.Module.Field.MODULE_STATE_CODE) == 1) ||
-                                (!(Boolean)received.get(Protocol.Field.IS_RECEIVED.key) &&
-                                        (Integer) module.getField(model.entities.Module.Field.MODULE_STATE_CODE) == 0)) {
+                        if ((Integer) module.getField(model.entities.Module.Field.MODULE_STATE_CODE) == 1 ||
+                                (Integer) module.getField(model.entities.Module.Field.MODULE_STATE_CODE) == 0) {
 
                             module.setField(model.entities.Module.Field.MODULE_STATE_ID, state.getField(ModuleState.Field.ID));
                             module.setField(model.entities.Module.Field.MODULE_STATE_CODE, state.getField(ModuleState.Field.CODE));
