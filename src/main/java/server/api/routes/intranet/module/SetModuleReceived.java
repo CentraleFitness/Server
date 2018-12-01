@@ -17,7 +17,7 @@ import java.util.Objects;
 
 public class SetModuleReceived {
     public SetModuleReceived(Router router) {
-        router.route(HttpMethod.POST, Protocol.Path.UPDATE_DISPLAY_CONFIGURATION.path).handler(routingContext -> {
+        router.route(HttpMethod.POST, Protocol.Path.SET_MODULE_RECEIVED.path).handler(routingContext -> {
             Map<String, Object> received = routingContext.getBodyAsJson().getMap();
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
@@ -38,6 +38,11 @@ public class SetModuleReceived {
                     sending = new ResponseObject(true);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_MISSING_PARAM.code);
 
+                } else if (received.get(Protocol.Field.IS_RECEIVED.key) != null) {
+
+                    sending = new ResponseObject(true);
+                    sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_MISSING_PARAM.code);
+
                 } else {
                     Fitness_Center center = (Fitness_Center) Database.find_entity(Database.Collections.Fitness_Centers, Fitness_Center.Field.ID, manager.getField(Fitness_Center_Manager.Field.FITNESS_CENTER_ID));
 
@@ -48,16 +53,28 @@ public class SetModuleReceived {
                         sending = new ResponseObject(false);
                         sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
 
-                        ModuleState state = (ModuleState) Database.find_entity(Database.Collections.ModuleStates, ModuleState.Field.CODE, 1);
+                        ModuleState state;
+                        if ((Boolean)received.get(Protocol.Field.IS_RECEIVED.key)) {
+                            state = (ModuleState) Database.find_entity(Database.Collections.ModuleStates, ModuleState.Field.CODE, 1);
+                        } else {
+                            state = (ModuleState) Database.find_entity(Database.Collections.ModuleStates, ModuleState.Field.CODE, 0);
+                        }
 
                         model.entities.Module module = (model.entities.Module) Database.find_entity(Database.Collections.Modules, model.entities.Module.Field.ID, new ObjectId((String)received.get(Protocol.Field.MODULE_ID.key)));
 
-                        module.setField(model.entities.Module.Field.MODULE_STATE_ID, state.getField(ModuleState.Field.ID));
-                        module.setField(model.entities.Module.Field.MODULE_STATE_CODE, state.getField(ModuleState.Field.CODE));
+                        if (((Boolean)received.get(Protocol.Field.IS_RECEIVED.key) &&
+                                (Integer) module.getField(model.entities.Module.Field.MODULE_STATE_CODE) == 0) ||
+                                (!(Boolean)received.get(Protocol.Field.IS_RECEIVED.key) &&
+                                        (Integer) module.getField(model.entities.Module.Field.MODULE_STATE_CODE) == 1)) {
 
-                        Database.update_entity(Database.Collections.Modules, module);
+                            module.setField(model.entities.Module.Field.MODULE_STATE_ID, state.getField(ModuleState.Field.ID));
+                            module.setField(model.entities.Module.Field.MODULE_STATE_CODE, state.getField(ModuleState.Field.CODE));
 
-                        sending.put(Protocol.Field.MODULE_STATE_NAME.key, state.getField(ModuleState.Field.TEXT_FR));
+                            Database.update_entity(Database.Collections.Modules, module);
+
+                            sending.put(Protocol.Field.MODULE_STATE_ID.key, state.getField(ModuleState.Field.ID));
+                            sending.put(Protocol.Field.MODULE_STATE_CODE.key, state.getField(ModuleState.Field.CODE));
+                        }
                     }
                 }
             }catch (Exception e){

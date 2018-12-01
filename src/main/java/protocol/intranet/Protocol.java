@@ -319,6 +319,13 @@ public class Protocol {
          * @param: TOKEN.
          * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
          */
+        SET_MODULE_RECEIVED("/center/set/modulereceived"),
+
+        /**
+         * @path: ADD_FEEDBACK:
+         * @param: TOKEN.
+         * @return: STATUS, LOGIN, FIRSTNAME, LASTNAME, EMAIL, PHONE.
+         */
         GET_STATISTICS("/center/get/statistics"),
 
         /**
@@ -423,7 +430,9 @@ public class Protocol {
         AVERAGE_BY_MODULE("average_by_module"),
         FREQUENTATION_YEAR("frequentation_year"),
         MODULE_ID("module_id"),
-        MODULE_STATE_NAME("module_state_name"),
+        MODULE_STATE_ID("module_state_id"),
+        MODULE_STATE_CODE("module_state_code"),
+        IS_RECEIVED("is_received"),
         ;
         public String key;
         Field(String key) {
