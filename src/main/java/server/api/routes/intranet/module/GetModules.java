@@ -64,7 +64,11 @@ public class GetModules {
                             cur.put("_id", doc.getObjectId("_id").toString());
                             cur.put("UUID", doc.getString("UUID"));
                             cur.put("machine_type", doc.getString("machine_type"));
-                            cur.put("module_state_id", doc.getObjectId("module_state_id").toString());
+                            if (doc.getObjectId("module_state_id") != null) {
+                                cur.put("module_state_id", doc.getObjectId("module_state_id").toString());
+                            } else {
+                                cur.put("module_state_id", "");
+                            }
                             cur.put("module_state_code", doc.getInteger("module_state_code"));
                             modules.add(cur);
                         }
