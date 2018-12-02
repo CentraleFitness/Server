@@ -63,11 +63,19 @@ public class GetModules {
                         cur.put("_id", doc.getObjectId("_id").toString());
                         cur.put("UUID", doc.getString("UUID"));
                         LogManager.write("3");
-                        cur.put("fitness_center_id", doc.getObjectId("fitness_center_id").toString());
+                        if (doc.getObjectId("fitness_center_id") != null) {
+                            cur.put("fitness_center_id", doc.getObjectId("fitness_center_id").toString());
+                        } else {
+                            cur.put("fitness_center_id", "");
+                        }
                         LogManager.write("4");
                         cur.put("machine_type", doc.getString("machine_type"));
                         LogManager.write("5");
-                        cur.put("module_state_id", doc.getObjectId("module_state_id").toString());
+                        if (doc.getObjectId("module_state_id") != null) {
+                            cur.put("module_state_id", doc.getObjectId("module_state_id").toString());
+                        } else {
+                            cur.put("module_state_id", "");
+                        }
                         LogManager.write("6");
                         cur.put("module_state_code", doc.getInteger("module_state_code"));
                         LogManager.write("7");
@@ -75,9 +83,12 @@ public class GetModules {
                         LogManager.write("8");
                         cur.put("update_date", doc.getLong("update_date"));
                         LogManager.write("9");
-                        cur.put("creator_admin_id", doc.getObjectId("creator_admin_id").toString());
+                        if (doc.getObjectId("creator_admin_id") != null) {
+                            cur.put("creator_admin_id", doc.getObjectId("creator_admin_id").toString());
+                        } else {
+                            cur.put("creator_admin_id", "");
+                        }
                         LogManager.write("10");
-
                         if (doc.getObjectId("creator_admin_id") != null &&
                                 admins.containsKey(doc.getObjectId("creator_admin_id").toString())) {
                             LogManager.write("11");
