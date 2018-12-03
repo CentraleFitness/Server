@@ -54,7 +54,7 @@ public class GetDisplayConfiguration {
                             configuration.setField(DisplayConfiguration.Field.SHOW_EVENTS, false);
                             configuration.setField(DisplayConfiguration.Field.SELECTED_EVENTS, new ArrayList());
                             configuration.setField(DisplayConfiguration.Field.SHOW_NEWS, false);
-                            configuration.setField(DisplayConfiguration.Field.NEWS_TYPE, "");
+                            configuration.setField(DisplayConfiguration.Field.NEWS_TYPE, new ArrayList());
                             configuration.setField(DisplayConfiguration.Field.SHOW_GLOBAL_PERFORMANCES, false);
                             configuration.setField(DisplayConfiguration.Field.PERFORMANCES_TYPE, "");
                             configuration.setField(DisplayConfiguration.Field.SHOW_RANKING_DISCIPLINE, false);
