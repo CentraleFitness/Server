@@ -52,7 +52,7 @@ public class UpdateDisplayConfiguration {
                         ArrayList<String> selected_array = (ArrayList<String>) received.get(Protocol.Field.SELECTED_EVENTS.key);
                         ArrayList<ObjectId> selected_events_to_insert = new ArrayList<>();
 
-                        for (String cur :selected_array) {
+                        for (String cur : selected_array) {
                             selected_events_to_insert.add(new ObjectId(cur));
                         }
 

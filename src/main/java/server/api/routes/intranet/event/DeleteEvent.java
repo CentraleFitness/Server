@@ -18,6 +18,7 @@ import protocol.ResponseObject;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 public class DeleteEvent {
     public DeleteEvent(Router router) {
@@ -68,7 +69,8 @@ public class DeleteEvent {
                         DisplayConfiguration display = (DisplayConfiguration) Database.find_entity(Database.Collections.DisplayConfigurations, DisplayConfiguration.Field.FITNESS_CENTER_ID, center.getField(Fitness_Center.Field.ID));
 
                         ArrayList<ObjectId> selected_events = (ArrayList<ObjectId>) display.getField(DisplayConfiguration.Field.SELECTED_EVENTS);
-                        selected_events.removeIf(evt -> evt == event.getField(Event.Field.ID));
+                        Predicate<ObjectId> pred = evt -> evt == event.getField(Event.Field.ID);
+                        selected_events.removeIf(pred);
                         display.setField(DisplayConfiguration.Field.SELECTED_EVENTS, selected_events);
                         Database.update_entity(Database.Collections.DisplayConfigurations, display);
                     }
