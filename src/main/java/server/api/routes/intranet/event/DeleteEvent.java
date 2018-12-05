@@ -69,7 +69,7 @@ public class DeleteEvent {
                         DisplayConfiguration display = (DisplayConfiguration) Database.find_entity(Database.Collections.DisplayConfigurations, DisplayConfiguration.Field.FITNESS_CENTER_ID, center.getField(Fitness_Center.Field.ID));
 
                         ArrayList<ObjectId> selected_events = (ArrayList<ObjectId>) display.getField(DisplayConfiguration.Field.SELECTED_EVENTS);
-                        Predicate<ObjectId> pred = evt -> evt == event.getField(Event.Field.ID);
+                        Predicate<ObjectId> pred = evt -> evt.toString().equals(event.getField(Event.Field.ID).toString());
                         selected_events.removeIf(pred);
                         display.setField(DisplayConfiguration.Field.SELECTED_EVENTS, selected_events);
                         Database.update_entity(Database.Collections.DisplayConfigurations, display);
