@@ -52,7 +52,10 @@ public class GetEvents {
 
                         Bson event_filter = Filters.and(
                                 Filters.eq(Event.Field.FITNESS_CENTER_ID.get_key(), center.getField(Fitness_Center.Field.ID)),
-                                Filters.eq(Event.Field.IS_DELETED.get_key(), false)
+                                Filters.or(
+                                    Filters.eq(Event.Field.IS_DELETED.get_key(), false),
+                                    Filters.eq(Event.Field.IS_DELETED.get_key(), null)
+                                )
                         );
                         @SuppressWarnings("unchecked")
                         ArrayList<Document> events = (ArrayList<Document>) Database.collections.get(Database.Collections.Events).find(event_filter).into(new ArrayList<Document>());
@@ -95,7 +98,7 @@ public class GetEvents {
                                 }
                             }
 
-                            for (Document cur :events) {
+                            for (Document cur : events) {
                                 cur.put(Protocol.Field.NB_SUBSCRIBERS.key, counter.get(cur.get(Event.Field.ID.get_key()).toString()).get());
                                 cur.put(Protocol.Field.LAST_POST.key, last_post.get(cur.get(Event.Field.ID.get_key()).toString()));
                                 if (selected_events.contains(cur.get(Event.Field.ID.get_key()))) {
