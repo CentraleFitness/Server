@@ -7,6 +7,7 @@ import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import model.Database;
+import model.entities.DisplayConfiguration;
 import model.entities.Event;
 import model.entities.Fitness_Center;
 import model.entities.Fitness_Center_Manager;
@@ -14,6 +15,7 @@ import org.bson.types.ObjectId;
 import protocol.intranet.Protocol;
 import protocol.ResponseObject;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
 
@@ -62,6 +64,13 @@ public class DeleteEvent {
                         }
                         event.setField(Event.Field.UPDATE_DATE, time);
                         Database.update_entity(Database.Collections.Events, event);
+
+                        DisplayConfiguration display = (DisplayConfiguration) Database.find_entity(Database.Collections.DisplayConfigurations, DisplayConfiguration.Field.FITNESS_CENTER_ID, center.getField(Fitness_Center.Field.ID));
+
+                        ArrayList<ObjectId> selected_events = (ArrayList<ObjectId>) display.getField(DisplayConfiguration.Field.SELECTED_EVENTS);
+                        selected_events.removeIf(evt -> evt == event.getField(Event.Field.ID));
+                        display.setField(DisplayConfiguration.Field.SELECTED_EVENTS, selected_events);
+                        Database.update_entity(Database.Collections.DisplayConfigurations, display);
                     }
                 }
             } catch (Exception e) {
