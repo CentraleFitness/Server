@@ -96,8 +96,14 @@ public class CustomProgramGetRange {
 				@SuppressWarnings("unchecked")
 				List<Object> customProgramsList = (List<Object>) Database.collections
 						.get(Database.Collections.CustomPrograms)
-						.find(com.mongodb.client.model.Filters.eq(CustomProgram.Field.FITNESS_CENTER_ID.get_key(),
-								fitnessCenterId))
+						.find(
+								com.mongodb.client.model.Filters.and(
+									com.mongodb.client.model.Filters.eq(CustomProgram.Field.FITNESS_CENTER_ID.get_key(),
+									fitnessCenterId),
+									com.mongodb.client.model.Filters.eq(CustomProgram.Field.AVAILABLE.get_key(),
+												true)
+								)
+						)
 						.sort(new BasicDBObject(CustomProgram.Field.CREATION_DATE.get_key(), 1))
 						// .filter(eq(CustomProgram.Field.NAME.get_key(), rFilters.get("name")))
 						.skip(rStart).limit(rEnd).into(new ArrayList()).stream().map(doc -> {

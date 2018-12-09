@@ -1,5 +1,6 @@
 package model.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bson.Document;
@@ -57,6 +58,7 @@ public class Post extends Entity {
     public Post() {
         super();
         setField(Field.ID, new ObjectId());
+        setField(Field.LIKES, new ArrayList<>());
     }
 
     public Post(Document doc) {super(doc);}
