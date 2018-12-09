@@ -41,21 +41,24 @@ public class OutlookInterface {
                         }
                     });
 
-            String msgBody = "Sending email using JavaMail API...";
 
             Message msg = new MimeMessage(session);
-            msg.setFrom(new InternetAddress(username, "Centrale Fitness"));
+            msg.setFrom(new InternetAddress(username, "NoReply"));
             msg.addRecipient(Message.RecipientType.TO,
-                    new InternetAddress(to, object));
-            msg.setSubject(content);
-            msg.setText(msgBody);
+                    new InternetAddress(to, "Mr. Recipient"));
+            msg.setSubject(object);
+            msg.setText(content);
             Transport.send(msg);
             System.out.println("Email sent successfully...");
         } catch (AddressException e) {
+            e.printStackTrace();
         } catch (MessagingException e) {
+            e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
     }
+
 
 
 }
