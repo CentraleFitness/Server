@@ -1,6 +1,7 @@
 package server;
 
 import Tools.LogManager;
+import Tools.OutlookInterface;
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
@@ -35,6 +36,8 @@ public class CentralServer {
             mSettings = new Gson().fromJson(new JsonParser().parse(new JsonReader(new FileReader("ServerSettings.ini"))), new TypeToken<HashMap<String, String>>(){}.getType());
             mVertx = Vertx.vertx();
             mVerticles = new HashMap<>();
+
+            OutlookInterface.initOutlookInterface(mSettings.get("emailUser"), mSettings.get("emailPassword"));
 
             if (Boolean.parseBoolean(mSettings.get("EnableLogManager"))) LogManager.enable();
 
