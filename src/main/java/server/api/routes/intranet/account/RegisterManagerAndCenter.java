@@ -1,6 +1,7 @@
 package server.api.routes.intranet.account;
 
 import Tools.LogManager;
+import Tools.OutlookInterface;
 import Tools.PasswordAuthentication;
 import Tools.Token;
 import com.google.gson.GsonBuilder;
@@ -122,6 +123,24 @@ public class RegisterManagerAndCenter {
 
                             Database.update_entity(Database.Collections.Statistics, statistic);
                         }
+
+                        String managerName = manager.getField(Fitness_Center_Manager.Field.FIRSTNAME) + " " +
+                                manager.getField(Fitness_Center_Manager.Field.LASTNAME);
+                        String clubName = (String) center.getField(Fitness_Center.Field.NAME);
+
+                        String mailContent = "Bonjour " + managerName + ",<br/><br/>" +
+                                "Bienvenue chez Centrale Fitness !<br/>" +
+                                "Votre compte de gérant principal et la salle " + clubName + " ont été créés avec succès !<br/><br/>" +
+                                "Votre compte est maintenant en attente de validation par nos équipes.<br/>" +
+                                "Vous recevrez un email lors de la validation de votre compte.<br/><br/>" +
+                                "A bientôt,<br/><br/>" +
+                                "L'équipe Centrale Fitness";
+
+                        OutlookInterface.outlookInterface.sendMail(
+                                (String)manager.getField(Fitness_Center_Manager.Field.EMAIL),
+                                "Inscription à Centrale Fitness",
+                                mailContent
+                        );
 
                         sending = new ResponseObject(false);
                         sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_SUCCESS.code);
