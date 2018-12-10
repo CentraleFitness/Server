@@ -45,7 +45,7 @@ public class OutlookInterface {
             Message msg = new MimeMessage(session);
             msg.setFrom(new InternetAddress(username, "NoReply"));
             msg.addRecipient(Message.RecipientType.TO,
-                    new InternetAddress(to, "Mr. Recipient"));
+                    new InternetAddress(to, to));
             msg.setSubject(object);
             msg.setText(content);
             Transport.send(msg);
