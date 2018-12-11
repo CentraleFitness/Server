@@ -2,6 +2,7 @@ package server.api.routes.admin.manager;
 
 import Tools.LogManager;
 import Tools.ObjectIdSerializer;
+import Tools.OutlookInterface;
 import Tools.Token;
 import com.google.gson.GsonBuilder;
 import io.vertx.core.http.HttpMethod;
@@ -58,6 +59,38 @@ public class SetManagerAccountActivity {
                     manager.setField(Fitness_Center_Manager.Field.LAST_UPDATE_ADMIN_IS_MANAGER, false);
 
                     Database.update_entity(Database.Collections.Fitness_Center_Managers, manager);
+
+                    String managerName = manager.getField(Fitness_Center_Manager.Field.FIRSTNAME) + " " +
+                            manager.getField(Fitness_Center_Manager.Field.LASTNAME);
+                    String adminName = admin.getField(Fitness_Center_Manager.Field.FIRSTNAME) + " " +
+                            admin.getField(Fitness_Center_Manager.Field.LASTNAME);
+                    String mailObject = "";
+                    String mailContent = "";
+
+                    if ((Boolean) received.get(Protocol.Field.IS_ACTIVE.key)) {
+
+                        mailObject = "Votre compte est de nouveau actif";
+                        mailContent = "Bonjour " + managerName + ",<br/><br/>" +
+                                "Votre compte a été rendu actif par " + adminName + ", administrateur Centrale Fitness !<br/><br/>" +
+                                "Vous pouvez de nouveau accéder à votre espace Centrale Fitness et administrer votre salle.<br/><br/>" +
+                                "A bientôt,<br/><br/>" +
+                                "L'équipe Centrale Fitness";
+
+                    } else {
+
+                        mailObject = "Votre compte a été rendu inactif";
+                        mailContent = "Bonjour " + managerName + ",<br/><br/>" +
+                                "Votre compte a été rendu inactif par " + adminName + ", administrateur Centrale Fitness.<br/><br/>" +
+                                "Votre compte demeurera inactif à moins qu'un administrateur décide de revenir sur cette décision.<br/><br/>" +
+                                "A bientôt peut être,<br/><br/>" +
+                                "L'équipe Centrale Fitness";
+                    }
+
+                    OutlookInterface.outlookInterface.sendMail(
+                            (String)manager.getField(Fitness_Center_Manager.Field.EMAIL),
+                            mailObject,
+                            mailContent
+                    );
 
                     sending.put(Protocol.Field.ADMINISTRATOR_ID.key, admin.getField(Administrator.Field.ID));
                     sending.put(Protocol.Field.ADMINISTRATOR_NAME.key, admin.getField(Administrator.Field.FIRSTNAME) + " " + admin.getField(Administrator.Field.LASTNAME));
