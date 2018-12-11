@@ -41,15 +41,12 @@ public class OutlookInterface {
 
             Multipart mp = new MimeMultipart();
 
-            BodyPart textPart = new MimeBodyPart();
-            textPart.setText("\n\n"); // sets type to "text/plain"
 
             BodyPart pixPart = new MimeBodyPart();
             pixPart.setContent(content, "text/html");
 
             // Collect the Parts into the MultiPart
             mp.addBodyPart(pixPart);
-            mp.addBodyPart(textPart);
 
             Message msg = new MimeMessage(session);
             msg.setFrom(new InternetAddress(username, "NoReply"));
