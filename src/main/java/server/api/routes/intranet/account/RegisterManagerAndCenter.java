@@ -132,11 +132,11 @@ public class RegisterManagerAndCenter {
 
                         mailContent = "Bonjour " + managerName + ",<br/><br/>" +
                                 "Bienvenue chez Centrale Fitness !<br/>" +
-                                "Votre compte de gérant principal et la salle " + clubName + " ont été créés avec succès !<br/><br/>" +
-                                "Votre compte est maintenant en attente de validation par nos équipes.<br/>" +
+                                "Votre compte de g&eacute;rant principal et la salle " + clubName + " ont &eacute;t&eacute; cr&eacute;&eacute;s avec succ&egrave;s !<br/><br/>" +
+                                "Votre compte est maintenant en attente de validation par nos &eacute;quipes.<br/>" +
                                 "Vous recevrez un email lors de la validation de votre compte.<br/><br/>" +
-                                "A bientôt,<br/><br/>" +
-                                "L'équipe Centrale Fitness";
+                                "A bient&ocirc;t,<br/><br/>" +
+                                "L'&eacute;quipe Centrale Fitness";
 
                         sendMail = true;
 
@@ -167,7 +167,7 @@ public class RegisterManagerAndCenter {
             if (sendMail) {
                 OutlookInterface.outlookInterface.sendMail(
                         (String)manager.getField(Fitness_Center_Manager.Field.EMAIL),
-                        "Inscription à Centrale Fitness",
+                        "Inscription &agrave; Centrale Fitness",
                         mailContent
                 );
             }

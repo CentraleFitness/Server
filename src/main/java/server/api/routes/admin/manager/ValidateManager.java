@@ -78,10 +78,10 @@ public class ValidateManager {
 
                             mailObject = "Validation de votre compte";
                             mailContent = "Bonjour " + managerName + ",<br/><br/>" +
-                                    "Votre compte a été validé par " + adminName + ", administrateur Centrale Fitness !<br/><br/>" +
-                                    "Vous pouvez désormais accéder à votre espace Centrale Fitness et administrer votre salle.<br/><br/>" +
-                                    "A bientôt,<br/><br/>" +
-                                    "L'équipe Centrale Fitness";
+                                    "Votre compte a &eacute;t&eacute; valid&eacute; par " + adminName + ", administrateur Centrale Fitness !<br/><br/>" +
+                                    "Vous pouvez d&eacute;sormais acc&eacute;der &agrave; votre espace Centrale Fitness et administrer votre salle.<br/><br/>" +
+                                    "A bient&ocirc;t,<br/><br/>" +
+                                    "L'&eacute;quipe Centrale Fitness";
 
                         } else {
                             manager.setField(Fitness_Center_Manager.Field.IS_ACTIVE, false);
@@ -90,10 +90,10 @@ public class ValidateManager {
 
                             mailObject = "Refus de votre compte";
                             mailContent = "Bonjour " + managerName + ",<br/><br/>" +
-                                    "Votre compte a été refusé par " + adminName + ", administrateur Centrale Fitness.<br/><br/>" +
-                                    "Votre compte demeurera inactif à moins qu'un administrateur décide de revenir sur cette décision.<br/><br/>" +
-                                    "A bientôt peut être,<br/><br/>" +
-                                    "L'équipe Centrale Fitness";
+                                    "Votre compte a &eacute;t&eacute; refus&eacute; par " + adminName + ", administrateur Centrale Fitness.<br/><br/>" +
+                                    "Votre compte demeurera inactif &agrave; moins qu'un administrateur d&eacute;cide de revenir sur cette d&eacute;cision.<br/><br/>" +
+                                    "A bient&ocirc;t peut &ecirc;tre,<br/><br/>" +
+                                    "L'&eacute;quipe Centrale Fitness";
 
                         }
 

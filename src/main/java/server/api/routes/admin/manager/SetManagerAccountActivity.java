@@ -73,19 +73,19 @@ public class SetManagerAccountActivity {
 
                         mailObject = "Votre compte est de nouveau actif";
                         mailContent = "Bonjour " + managerName + ",<br/><br/>" +
-                                "Votre compte a été rendu actif par " + adminName + ", administrateur Centrale Fitness !<br/><br/>" +
-                                "Vous pouvez de nouveau accéder à votre espace Centrale Fitness et administrer votre salle.<br/><br/>" +
-                                "A bientôt,<br/><br/>" +
-                                "L'équipe Centrale Fitness";
+                                "Votre compte a &eacute;t&eacute; rendu actif par " + adminName + ", administrateur Centrale Fitness !<br/><br/>" +
+                                "Vous pouvez de nouveau acc&eacute;der &agrave; votre espace Centrale Fitness et administrer votre salle.<br/><br/>" +
+                                "A bient&ocirc;t,<br/><br/>" +
+                                "L'&eacute;quipe Centrale Fitness";
 
                     } else {
 
-                        mailObject = "Votre compte a été rendu inactif";
+                        mailObject = "Votre compte a &eacute;t&eacute; rendu inactif";
                         mailContent = "Bonjour " + managerName + ",<br/><br/>" +
-                                "Votre compte a été rendu inactif par " + adminName + ", administrateur Centrale Fitness.<br/><br/>" +
-                                "Votre compte demeurera inactif à moins qu'un administrateur décide de revenir sur cette décision.<br/><br/>" +
-                                "A bientôt peut être,<br/><br/>" +
-                                "L'équipe Centrale Fitness";
+                                "Votre compte a &eacute;t&eacute; rendu inactif par " + adminName + ", administrateur Centrale Fitness.<br/><br/>" +
+                                "Votre compte demeurera inactif &agrave; moins qu'un administrateur d&eacute;cide de revenir sur cette d&eacute;cision.<br/><br/>" +
+                                "A bient&ocirc;t peut &ecirc;tre,<br/><br/>" +
+                                "L'&eacute;quipe Centrale Fitness";
                     }
 
                     sendMail = true;
