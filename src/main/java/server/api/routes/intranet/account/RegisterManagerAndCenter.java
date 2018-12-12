@@ -26,6 +26,8 @@ public class RegisterManagerAndCenter {
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
             Fitness_Center_Manager manager = null;
             Fitness_Center center = null;
+            Boolean sendMail = false;
+            String mailContent = "";
 
             try {
                 if (received.get(Protocol.Field.EMAIL.key) == null) {
@@ -128,7 +130,7 @@ public class RegisterManagerAndCenter {
                                 manager.getField(Fitness_Center_Manager.Field.LASTNAME);
                         String clubName = (String) center.getField(Fitness_Center.Field.NAME);
 
-                        String mailContent = "Bonjour " + managerName + ",<br/><br/>" +
+                        mailContent = "Bonjour " + managerName + ",<br/><br/>" +
                                 "Bienvenue chez Centrale Fitness !<br/>" +
                                 "Votre compte de gérant principal et la salle " + clubName + " ont été créés avec succès !<br/><br/>" +
                                 "Votre compte est maintenant en attente de validation par nos équipes.<br/>" +
@@ -136,11 +138,7 @@ public class RegisterManagerAndCenter {
                                 "A bientôt,<br/><br/>" +
                                 "L'équipe Centrale Fitness";
 
-                        OutlookInterface.outlookInterface.sendMail(
-                                (String)manager.getField(Fitness_Center_Manager.Field.EMAIL),
-                                "Inscription à Centrale Fitness",
-                                mailContent
-                        );
+                        sendMail = true;
 
                         sending = new ResponseObject(false);
                         sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_SUCCESS.code);
@@ -166,6 +164,13 @@ public class RegisterManagerAndCenter {
                 LogManager.write("Exception: " + e.toString());
             }
             response.end(new GsonBuilder().create().toJson(sending));
+            if (sendMail) {
+                OutlookInterface.outlookInterface.sendMail(
+                        (String)manager.getField(Fitness_Center_Manager.Field.EMAIL),
+                        "Inscription à Centrale Fitness",
+                        mailContent
+                );
+            }
         });
     }
 }

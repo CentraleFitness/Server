@@ -26,6 +26,10 @@ public class SetManagerAccountActivity {
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
             Administrator admin;
+            Boolean sendMail = false;
+            String mailContent = "";
+            String mailObject = "";
+            Fitness_Center_Manager manager = null;
 
             try {
                 admin = (Administrator) Database.find_entity(Database.Collections.Administrators, Administrator.Field.EMAIL, Token.decodeToken((String) received.get(Protocol.Field.TOKEN.key)).getIssuer());
@@ -48,7 +52,7 @@ public class SetManagerAccountActivity {
                     sending = new ResponseObject(false);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
 
-                    Fitness_Center_Manager manager = (Fitness_Center_Manager) Database.find_entity(Database.Collections.Fitness_Center_Managers, Fitness_Center_Manager.Field.ID, new ObjectId((String)received.get(Protocol.Field.FITNESS_CENTER_MANAGER_ID.key)));
+                    manager = (Fitness_Center_Manager) Database.find_entity(Database.Collections.Fitness_Center_Managers, Fitness_Center_Manager.Field.ID, new ObjectId((String)received.get(Protocol.Field.FITNESS_CENTER_MANAGER_ID.key)));
 
                     Long time = System.currentTimeMillis();
 
@@ -64,8 +68,6 @@ public class SetManagerAccountActivity {
                             manager.getField(Fitness_Center_Manager.Field.LASTNAME);
                     String adminName = admin.getField(Fitness_Center_Manager.Field.FIRSTNAME) + " " +
                             admin.getField(Fitness_Center_Manager.Field.LASTNAME);
-                    String mailObject = "";
-                    String mailContent = "";
 
                     if ((Boolean) received.get(Protocol.Field.IS_ACTIVE.key)) {
 
@@ -86,11 +88,7 @@ public class SetManagerAccountActivity {
                                 "L'équipe Centrale Fitness";
                     }
 
-                    OutlookInterface.outlookInterface.sendMail(
-                            (String)manager.getField(Fitness_Center_Manager.Field.EMAIL),
-                            mailObject,
-                            mailContent
-                    );
+                    sendMail = true;
 
                     sending.put(Protocol.Field.ADMINISTRATOR_ID.key, admin.getField(Administrator.Field.ID));
                     sending.put(Protocol.Field.ADMINISTRATOR_NAME.key, admin.getField(Administrator.Field.FIRSTNAME) + " " + admin.getField(Administrator.Field.LASTNAME));
@@ -102,6 +100,13 @@ public class SetManagerAccountActivity {
                 LogManager.write("Exception: " + e.toString());
             }
             response.end(new GsonBuilder().registerTypeAdapter(ObjectId.class, new ObjectIdSerializer()).create().toJson(sending));
+            if (sendMail) {
+                OutlookInterface.outlookInterface.sendMail(
+                        (String)manager.getField(Fitness_Center_Manager.Field.EMAIL),
+                        mailObject,
+                        mailContent
+                );
+            }
         });
     }
 }
