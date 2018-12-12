@@ -24,45 +24,48 @@ public class OutlookInterface {
 
     public void sendMail(final String to, final String object, final String content) {
 
-        try {
+        ((Runnable) () -> {
+            try {
 
-            Properties props = new Properties();
-            props.put("mail.smtp.host", "smtp-mail.outlook.com");
-            props.put("mail.smtp.port", "587");
-            props.put("mail.smtp.starttls.enable","true");
-            props.put("mail.smtp.auth", "true");
+                Properties props = new Properties();
+                props.put("mail.smtp.host", "smtp-mail.outlook.com");
+                props.put("mail.smtp.port", "587");
+                props.put("mail.smtp.starttls.enable","true");
+                props.put("mail.smtp.auth", "true");
 
-            Session session = Session.getDefaultInstance(props,
-                    new javax.mail.Authenticator() {
-                        protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
-                            return new javax.mail.PasswordAuthentication(username,password);
-                        }
-                    });
+                Session session = Session.getDefaultInstance(props,
+                        new javax.mail.Authenticator() {
+                            protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
+                                return new javax.mail.PasswordAuthentication(username,password);
+                            }
+                        });
 
-            Multipart mp = new MimeMultipart();
+                Multipart mp = new MimeMultipart();
 
 
-            BodyPart pixPart = new MimeBodyPart();
-            pixPart.setContent(content, "text/html");
+                BodyPart pixPart = new MimeBodyPart();
+                pixPart.setContent(content, "text/html");
 
-            // Collect the Parts into the MultiPart
-            mp.addBodyPart(pixPart);
+                // Collect the Parts into the MultiPart
+                mp.addBodyPart(pixPart);
 
-            Message msg = new MimeMessage(session);
-            msg.setFrom(new InternetAddress(username, "NoReply"));
-            msg.addRecipient(Message.RecipientType.TO,
-                    new InternetAddress(to, to));
-            msg.setSubject(object);
-            msg.setContent(mp);
-            Transport.send(msg);
-            System.out.println("Email sent successfully...");
-        } catch (AddressException e) {
-            e.printStackTrace();
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+                Message msg = new MimeMessage(session);
+                msg.setFrom(new InternetAddress(username, "NoReply"));
+                msg.addRecipient(Message.RecipientType.TO,
+                        new InternetAddress(to, to));
+                msg.setSubject(object);
+                msg.setContent(mp);
+                Transport.send(msg);
+                System.out.println("Email sent successfully...");
+            } catch (AddressException e) {
+                e.printStackTrace();
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }).run();
+
     }
 
 
