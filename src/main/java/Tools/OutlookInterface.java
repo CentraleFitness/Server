@@ -26,37 +26,44 @@ public class OutlookInterface {
 
     public void sendMail(final String to, final String object, final String content) {
 
-        try {
+        new Runnable() {
+            @Override
+            public void run() {
 
-            Properties props = new Properties();
-            props.put("mail.smtp.host", "smtp-mail.outlook.com");
-            props.put("mail.smtp.port", "587");
-            props.put("mail.smtp.starttls.enable","true");
-            props.put("mail.smtp.auth", "true");
+                try {
 
-            Session session = Session.getDefaultInstance(props,
-                    new javax.mail.Authenticator() {
-                        protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
-                            return new javax.mail.PasswordAuthentication(username,password);
-                        }
-                    });
+                    Properties props = new Properties();
+                    props.put("mail.smtp.host", "smtp-mail.outlook.com");
+                    props.put("mail.smtp.port", "587");
+                    props.put("mail.smtp.starttls.enable","true");
+                    props.put("mail.smtp.auth", "true");
+
+                    Session session = Session.getDefaultInstance(props,
+                            new javax.mail.Authenticator() {
+                                protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
+                                    return new javax.mail.PasswordAuthentication(username,password);
+                                }
+                            });
 
 
-            Message msg = new MimeMessage(session);
-            msg.setFrom(new InternetAddress(username, "NoReply"));
-            msg.addRecipient(Message.RecipientType.TO,
-                    new InternetAddress(to, "Mr. Recipient"));
-            msg.setSubject(object);
-            msg.setText(content);
-            Transport.send(msg);
-            System.out.println("Email sent successfully...");
-        } catch (AddressException e) {
-            e.printStackTrace();
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+                    Message msg = new MimeMessage(session);
+                    msg.setFrom(new InternetAddress(username, "NoReply"));
+                    msg.addRecipient(Message.RecipientType.TO,
+                            new InternetAddress(to, "Mr. Recipient"));
+                    msg.setSubject(object);
+                    msg.setText(content);
+                    Transport.send(msg);
+                    System.out.println("Email sent successfully...");
+                } catch (AddressException e) {
+                    e.printStackTrace();
+                } catch (MessagingException e) {
+                    e.printStackTrace();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.run();
+
     }
 
 
