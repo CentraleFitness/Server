@@ -1,6 +1,7 @@
 package server.api.routes.intranet.account;
 
 import Tools.LogManager;
+import Tools.OutlookInterface;
 import Tools.PasswordAuthentication;
 import Tools.Token;
 import com.google.gson.GsonBuilder;
@@ -25,6 +26,8 @@ public class RegisterManagerAndCenter {
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
             Fitness_Center_Manager manager = null;
             Fitness_Center center = null;
+            Boolean sendMail = false;
+            String mailContent = "";
 
             try {
                 if (received.get(Protocol.Field.EMAIL.key) == null) {
@@ -123,6 +126,20 @@ public class RegisterManagerAndCenter {
                             Database.update_entity(Database.Collections.Statistics, statistic);
                         }
 
+                        String managerName = manager.getField(Fitness_Center_Manager.Field.FIRSTNAME) + " " +
+                                manager.getField(Fitness_Center_Manager.Field.LASTNAME);
+                        String clubName = (String) center.getField(Fitness_Center.Field.NAME);
+
+                        mailContent = "Bonjour " + managerName + ",<br/><br/>" +
+                                "Bienvenue chez Centrale Fitness !<br/>" +
+                                "Votre compte de g&eacute;rant principal et la salle " + clubName + " ont &eacute;t&eacute; cr&eacute;&eacute;s avec succ&egrave;s !<br/><br/>" +
+                                "Votre compte est maintenant en attente de validation par nos &eacute;quipes.<br/>" +
+                                "Vous recevrez un email lors de la validation de votre compte.<br/><br/>" +
+                                "A bient&ocirc;t,<br/><br/>" +
+                                "L'&eacute;quipe Centrale Fitness";
+
+                        sendMail = true;
+
                         sending = new ResponseObject(false);
                         sending.put(Protocol.Field.STATUS.key, Protocol.Status.REG_SUCCESS.code);
                     } else {
@@ -147,6 +164,13 @@ public class RegisterManagerAndCenter {
                 LogManager.write("Exception: " + e.toString());
             }
             response.end(new GsonBuilder().create().toJson(sending));
+            if (sendMail) {
+                OutlookInterface.outlookInterface.sendMail(
+                        (String)manager.getField(Fitness_Center_Manager.Field.EMAIL),
+                        "Inscription à Centrale Fitness",
+                        mailContent
+                );
+            }
         });
     }
 }

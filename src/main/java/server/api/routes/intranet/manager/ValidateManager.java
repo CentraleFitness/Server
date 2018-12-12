@@ -2,6 +2,7 @@ package server.api.routes.intranet.manager;
 
 import Tools.LogManager;
 import Tools.ObjectIdSerializer;
+import Tools.OutlookInterface;
 import Tools.Token;
 import com.google.gson.GsonBuilder;
 import io.vertx.core.http.HttpMethod;
@@ -26,6 +27,10 @@ public class ValidateManager {
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
             Fitness_Center_Manager me;
             Fitness_Center center;
+            Boolean sendMail = false;
+            String mailContent = "";
+            String mailObject = "";
+            Fitness_Center_Manager manager = null;
 
             try {
                 me = (Fitness_Center_Manager) Database.find_entity(Database.Collections.Fitness_Center_Managers, Fitness_Center_Manager.Field.EMAIL, Token.decodeToken((String) received.get(Protocol.Field.TOKEN.key)).getIssuer());
@@ -59,11 +64,19 @@ public class ValidateManager {
                         sending = new ResponseObject(false);
                         sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
 
-                        Fitness_Center_Manager manager = (Fitness_Center_Manager) Database.find_entity(Database.Collections.Fitness_Center_Managers, Fitness_Center_Manager.Field.ID, new ObjectId((String) received.get(Protocol.Field.FITNESS_CENTER_MANAGER_ID.key)));
+                        manager = (Fitness_Center_Manager) Database.find_entity(Database.Collections.Fitness_Center_Managers, Fitness_Center_Manager.Field.ID, new ObjectId((String) received.get(Protocol.Field.FITNESS_CENTER_MANAGER_ID.key)));
 
                         if (!((Boolean) manager.getField(Fitness_Center_Manager.Field.IS_VALIDATED))) {
 
                             Long time = System.currentTimeMillis();
+
+                            String managerName = manager.getField(Fitness_Center_Manager.Field.FIRSTNAME) + " " +
+                                    manager.getField(Fitness_Center_Manager.Field.LASTNAME);
+                            String adminName = me.getField(Fitness_Center_Manager.Field.FIRSTNAME) + " " +
+                                    me.getField(Fitness_Center_Manager.Field.LASTNAME);
+                            String clubName = (String) center.getField(Fitness_Center.Field.NAME);
+                            mailObject = "";
+                            mailContent = "";
 
                             if ((Boolean) received.get(Protocol.Field.IS_VALIDATED.key)) {
                                 manager.setField(Fitness_Center_Manager.Field.IS_ACTIVE, true);
@@ -73,10 +86,26 @@ public class ValidateManager {
                                 manager.setField(Fitness_Center_Manager.Field.LAST_UPDATE_ACTIVITY, time);
                                 manager.setField(Fitness_Center_Manager.Field.LAST_UPDATE_ADMIN_ID, me.getField(Fitness_Center_Manager.Field.ID));
                                 manager.setField(Fitness_Center_Manager.Field.LAST_UPDATE_ADMIN_IS_MANAGER, true);
+
+                                mailObject = "Validation de votre compte";
+                                mailContent = "Bonjour " + managerName + ",<br/><br/>" +
+                                    "Votre compte a &eacute;t&eacute; valid&eacute; par " + adminName + ", g&eacute;rant principal de la salle " + clubName + " !<br/><br/>" +
+                                    "Vous pouvez d&eacute;sormais acc&eacute;der &agrave; votre espace Centrale Fitness et administrer votre salle.<br/><br/>" +
+                                    "A bient&ocirc;t,<br/><br/>" +
+                                    "L'&eacute;quipe Centrale Fitness";
+
+
                             } else {
                                 manager.setField(Fitness_Center_Manager.Field.IS_ACTIVE, false);
                                 manager.setField(Fitness_Center_Manager.Field.IS_VALIDATED, false);
                                 manager.setField(Fitness_Center_Manager.Field.IS_REFUSED, true);
+
+                                mailObject = "Refus de votre compte";
+                                mailContent = "Bonjour " + managerName + ",<br/><br/>" +
+                                        "Votre compte a &eacute;t&eacute; refus&eacute; par " + adminName + ", g&eacute;rant principal de la salle " + clubName + ".<br/><br/>" +
+                                        "Votre compte demeurera inactif &agrave; moins qu'un administrateur d&eacute;cide de revenir sur cette d&eacute;cision.<br/><br/>" +
+                                        "A bient&ocirc;t peut &ecirc;tre,<br/><br/>" +
+                                        "L'&eacute;quipe Centrale Fitness";
                             }
 
                             manager.setField(Fitness_Center_Manager.Field.VALIDATION_DATE, time);
@@ -85,6 +114,8 @@ public class ValidateManager {
                             manager.setField(Fitness_Center_Manager.Field.VALIDATOR_ADMIN_IS_MANAGER, true);
 
                             Database.update_entity(Database.Collections.Fitness_Center_Managers, manager);
+
+                            sendMail = true;
 
                             sending.put(Protocol.Field.ADMINISTRATOR_ID.key, me.getField(Fitness_Center_Manager.Field.ID));
                             sending.put(Protocol.Field.ADMINISTRATOR_NAME.key, me.getField(Fitness_Center_Manager.Field.FIRSTNAME) + " " + me.getField(Fitness_Center_Manager.Field.LASTNAME));
@@ -98,6 +129,13 @@ public class ValidateManager {
                 LogManager.write("Exception: " + e.toString());
             }
             response.end(new GsonBuilder().registerTypeAdapter(ObjectId.class, new ObjectIdSerializer()).create().toJson(sending));
+            if (sendMail) {
+                OutlookInterface.outlookInterface.sendMail(
+                        (String)manager.getField(Fitness_Center_Manager.Field.EMAIL),
+                        mailObject,
+                        mailContent
+                );
+            }
         });
     }
 }

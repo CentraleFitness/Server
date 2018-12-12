@@ -2,6 +2,7 @@ package server.api.routes.admin.manager;
 
 import Tools.LogManager;
 import Tools.ObjectIdSerializer;
+import Tools.OutlookInterface;
 import Tools.Token;
 import com.google.gson.GsonBuilder;
 import io.vertx.core.http.HttpMethod;
@@ -25,6 +26,10 @@ public class SetManagerAccountActivity {
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
             Administrator admin;
+            Boolean sendMail = false;
+            String mailContent = "";
+            String mailObject = "";
+            Fitness_Center_Manager manager = null;
 
             try {
                 admin = (Administrator) Database.find_entity(Database.Collections.Administrators, Administrator.Field.EMAIL, Token.decodeToken((String) received.get(Protocol.Field.TOKEN.key)).getIssuer());
@@ -47,7 +52,7 @@ public class SetManagerAccountActivity {
                     sending = new ResponseObject(false);
                     sending.put(Protocol.Field.STATUS.key, Protocol.Status.GENERIC_OK.code);
 
-                    Fitness_Center_Manager manager = (Fitness_Center_Manager) Database.find_entity(Database.Collections.Fitness_Center_Managers, Fitness_Center_Manager.Field.ID, new ObjectId((String)received.get(Protocol.Field.FITNESS_CENTER_MANAGER_ID.key)));
+                    manager = (Fitness_Center_Manager) Database.find_entity(Database.Collections.Fitness_Center_Managers, Fitness_Center_Manager.Field.ID, new ObjectId((String)received.get(Protocol.Field.FITNESS_CENTER_MANAGER_ID.key)));
 
                     Long time = System.currentTimeMillis();
 
@@ -59,6 +64,32 @@ public class SetManagerAccountActivity {
 
                     Database.update_entity(Database.Collections.Fitness_Center_Managers, manager);
 
+                    String managerName = manager.getField(Fitness_Center_Manager.Field.FIRSTNAME) + " " +
+                            manager.getField(Fitness_Center_Manager.Field.LASTNAME);
+                    String adminName = admin.getField(Fitness_Center_Manager.Field.FIRSTNAME) + " " +
+                            admin.getField(Fitness_Center_Manager.Field.LASTNAME);
+
+                    if ((Boolean) received.get(Protocol.Field.IS_ACTIVE.key)) {
+
+                        mailObject = "Votre compte est de nouveau actif";
+                        mailContent = "Bonjour " + managerName + ",<br/><br/>" +
+                                "Votre compte a &eacute;t&eacute; rendu actif par " + adminName + ", administrateur Centrale Fitness !<br/><br/>" +
+                                "Vous pouvez de nouveau acc&eacute;der &agrave; votre espace Centrale Fitness et administrer votre salle.<br/><br/>" +
+                                "A bient&ocirc;t,<br/><br/>" +
+                                "L'&eacute;quipe Centrale Fitness";
+
+                    } else {
+
+                        mailObject = "Votre compte a été rendu inactif";
+                        mailContent = "Bonjour " + managerName + ",<br/><br/>" +
+                                "Votre compte a &eacute;t&eacute; rendu inactif par " + adminName + ", administrateur Centrale Fitness.<br/><br/>" +
+                                "Votre compte demeurera inactif &agrave; moins qu'un administrateur d&eacute;cide de revenir sur cette d&eacute;cision.<br/><br/>" +
+                                "A bient&ocirc;t peut &ecirc;tre,<br/><br/>" +
+                                "L'&eacute;quipe Centrale Fitness";
+                    }
+
+                    sendMail = true;
+
                     sending.put(Protocol.Field.ADMINISTRATOR_ID.key, admin.getField(Administrator.Field.ID));
                     sending.put(Protocol.Field.ADMINISTRATOR_NAME.key, admin.getField(Administrator.Field.FIRSTNAME) + " " + admin.getField(Administrator.Field.LASTNAME));
                 }
@@ -69,6 +100,14 @@ public class SetManagerAccountActivity {
                 LogManager.write("Exception: " + e.toString());
             }
             response.end(new GsonBuilder().registerTypeAdapter(ObjectId.class, new ObjectIdSerializer()).create().toJson(sending));
+            if (sendMail) {
+                LogManager.write("Et VOILA");
+                OutlookInterface.outlookInterface.sendMail(
+                        (String)manager.getField(Fitness_Center_Manager.Field.EMAIL),
+                        mailObject,
+                        mailContent
+                );
+            }
         });
     }
 }
