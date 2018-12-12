@@ -95,7 +95,7 @@ public class SetManagerAccountActivity {
 
                         } else {
 
-                            mailObject = "Votre compte a &eacute;t&eacute; rendu inactif";
+                            mailObject = "Votre compte a été rendu inactif";
                             mailContent = "Bonjour " + managerName + ",<br/><br/>" +
                                     "Votre compte a &eacute;t&eacute; rendu inactif par " + adminName + ", g&eacute;rant principal de la salle " + clubName + ".<br/><br/>" +
                                     "Votre compte demeurera inactif &agrave; moins qu'un administrateur d&eacute;cide de revenir sur cette d&eacute;cision.<br/><br/>" +

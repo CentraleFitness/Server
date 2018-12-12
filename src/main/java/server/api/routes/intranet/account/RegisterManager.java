@@ -124,7 +124,7 @@ public class RegisterManager {
             if (sendMail) {
                 OutlookInterface.outlookInterface.sendMail(
                         (String)manager.getField(Fitness_Center_Manager.Field.EMAIL),
-                        "Inscription &agrave; Centrale Fitness",
+                        "Inscription à Centrale Fitness",
                         mailContent
                 );
             }
