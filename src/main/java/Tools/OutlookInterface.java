@@ -1,9 +1,7 @@
 package Tools;
 
 import javax.mail.*;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+import javax.mail.internet.*;
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
@@ -41,13 +39,21 @@ public class OutlookInterface {
                         }
                     });
 
+            Multipart mp = new MimeMultipart();
+
+
+            BodyPart pixPart = new MimeBodyPart();
+            pixPart.setContent(content, "text/html");
+
+            // Collect the Parts into the MultiPart
+            mp.addBodyPart(pixPart);
 
             Message msg = new MimeMessage(session);
             msg.setFrom(new InternetAddress(username, "NoReply"));
             msg.addRecipient(Message.RecipientType.TO,
                     new InternetAddress(to, to));
             msg.setSubject(object);
-            msg.setText(content);
+            msg.setContent(mp);
             Transport.send(msg);
             System.out.println("Email sent successfully...");
         } catch (AddressException e) {
@@ -58,7 +64,6 @@ public class OutlookInterface {
             e.printStackTrace();
         }
     }
-
 
 
 }
