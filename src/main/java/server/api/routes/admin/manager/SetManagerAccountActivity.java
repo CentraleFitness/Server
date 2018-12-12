@@ -101,6 +101,7 @@ public class SetManagerAccountActivity {
             }
             response.end(new GsonBuilder().registerTypeAdapter(ObjectId.class, new ObjectIdSerializer()).create().toJson(sending));
             if (sendMail) {
+                LogManager.write("Et VOILA");
                 OutlookInterface.outlookInterface.sendMail(
                         (String)manager.getField(Fitness_Center_Manager.Field.EMAIL),
                         mailObject,
