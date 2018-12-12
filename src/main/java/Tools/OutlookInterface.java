@@ -22,9 +22,20 @@ public class OutlookInterface {
         this.password = password;
     }
 
-    public void sendMail(final String to, final String object, final String content) {
+    private class MailSender extends Thread {
 
-        ((Runnable) () -> {
+        String to;
+        String object;
+        String content;
+
+        private MailSender(final String to, final String object, final String content){
+            this.to = to;
+            this.object = object;
+            this.content = content;
+        }
+
+        @Override
+        public void run() {
             try {
 
                 Properties props = new Properties();
@@ -64,9 +75,15 @@ public class OutlookInterface {
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-        }).run();
+        }
+    }
+
+    public void sendMail(final String to, final String object, final String content) {
+
+        new MailSender(to, object, content).start();
 
     }
+
 
 
 }
