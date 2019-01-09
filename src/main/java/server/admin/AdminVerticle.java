@@ -11,6 +11,7 @@ import server.api.routes.admin.feedback.*;
 import server.api.routes.admin.manager.*;
 import server.api.routes.admin.module.*;
 import server.api.routes.admin.user.*;
+import server.api.routes.intranet.statistic.*;
 
 public class AdminVerticle extends AbstractVerticle {
 
@@ -82,6 +83,15 @@ public class AdminVerticle extends AbstractVerticle {
         new GetUsers(this.router);
         new SetUserAccountActivity(this.router);
 
+        new GetCenterId(this.router);
+        new GetDisplayBestCenterProdYear(this.router);
+        new GetDisplayBestUserProdDay(this.router);
+        new GetDisplayBestUserProdYear(this.router);
+        new GetDisplayConfig(this.router);
+        new GetDisplayEvent(this.router);
+        new GetDisplayProductionPerModule(this.router);
+        new GetDisplayUser(this.router);
+        new GetDisplayUserPicture(this.router);
 
     }
 
