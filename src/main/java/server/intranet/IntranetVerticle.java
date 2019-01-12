@@ -117,6 +117,17 @@ public class IntranetVerticle extends AbstractVerticle {
         new GetFitnessCenterId(this.router);
 
         new GetSecondaryManagers(this.router);
+
+        new GetCenterId(this.router);
+        new GetDisplayBestCenterProdYear(this.router);
+        new GetDisplayBestUserProdDay(this.router);
+        new GetDisplayBestUserProdYear(this.router);
+        new GetDisplayConfig(this.router);
+        new GetDisplayEvent(this.router);
+        new GetDisplayProductionPerModule(this.router);
+        new GetDisplayUser(this.router);
+        new GetDisplayUserPicture(this.router);
+
     }
 
 
