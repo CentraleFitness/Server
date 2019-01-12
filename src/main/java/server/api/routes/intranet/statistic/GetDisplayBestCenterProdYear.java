@@ -20,7 +20,7 @@ import java.util.Map;
 
 public class GetDisplayBestCenterProdYear {
     public GetDisplayBestCenterProdYear(Router router) {
-        router.route(HttpMethod.POST, "/get/display/user/best/year").handler(routingContext -> {
+        router.route(HttpMethod.POST, "/get/display/center/best/year").handler(routingContext -> {
             Map<String, Object> received = routingContext.getBodyAsJson().getMap();
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
