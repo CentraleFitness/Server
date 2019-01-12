@@ -42,6 +42,7 @@ public class GetCenterId {
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_ERROR.code);
                 LogManager.write("Exception: " + e.toString());
                 e.printStackTrace();
+                response.end(new GsonBuilder().create().toJson(sending));
             }
         });
 
