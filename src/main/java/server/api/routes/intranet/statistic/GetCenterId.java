@@ -32,16 +32,16 @@ public class GetCenterId {
             Map<String, Object> received = routingContext.getBodyAsJson().getMap();
             ResponseObject sending;
             HttpServerResponse response = routingContext.response().putHeader("content-type", "text/plain");
-
             try {
                 MongoCollection fitnessCenterCollection = Database.collections.get(Database.Collections.Fitness_Centers);
-                Document center = new Fitness_Center((Document) fitnessCenterCollection.find(new BasicDBObject("apiKey", new ObjectId((String) received.get("id")))).first());
+                Document center = (Document) fitnessCenterCollection.find(new BasicDBObject("_id", new ObjectId((String) received.get("id")))).first();
                 response.end(center.toJson());
 
             } catch (Exception e){
                 sending = new ResponseObject(true);
                 sending.put(Protocol.Field.STATUS.key, Protocol.Status.MISC_ERROR.code);
                 LogManager.write("Exception: " + e.toString());
+                e.printStackTrace();
             }
         });
 
