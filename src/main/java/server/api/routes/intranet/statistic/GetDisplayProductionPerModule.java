@@ -36,6 +36,7 @@ public class GetDisplayProductionPerModule {
                 Iterator iterator = iterable.iterator();
                 List<String> results = new ArrayList<>();
                 while (iterator.hasNext()) {
+                    System.out.println(doc.get("_id"));
                     Document doc = (Document) iterator.next();
                     ObjectId id = (ObjectId) doc.get("_id");
                     doc.append("_id", id.toString());
