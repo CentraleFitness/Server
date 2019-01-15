@@ -29,7 +29,7 @@ public class GetDisplayProductionPerModule {
             try {
                 MongoCollection fitnessCenterCollection = Database.collections.get(Database.Collections.Modules);
                 AggregateIterable iterable =  fitnessCenterCollection.aggregate(Arrays.asList(
-                        Aggregates.match(new BasicDBObject("fitness_center_id", new ObjectId((String) received.get("id")))),
+                        Aggregates.match(new BasicDBObject("fitness_center_id", new ObjectId("5be823d310dc3238eeed16a7"))),
                         Aggregates.lookup("electricproductions", "_id", "module_id", "electricproductions"),
                         Aggregates.unwind("$electricproductions"),
                         Aggregates.group(new BasicDBObject("_id", "$_id"), Accumulators.push("electricproductions", "$electricproductions"))));
@@ -38,9 +38,19 @@ public class GetDisplayProductionPerModule {
                 while (iterator.hasNext()) {
                     Document doc = (Document) iterator.next();
 
-                    ObjectId id = (ObjectId) doc.get("_id");
+                    ObjectId id = ((Document)doc.get("_id")).getObjectId("_id");
                     System.out.println(id);
                     doc.append("_id", id.toString());
+                    List<Document> productions = (List<Document>) doc.get("electricproductions");
+                    for (Document tmp: productions) {
+                        Set<String> keys = tmp.keySet();
+                        for (String key: keys) {
+                            if (tmp.get(key) instanceof ObjectId) {
+                                String idstr = tmp.getObjectId(key).toString();
+                                tmp.append(key, idstr);
+                            }
+                        }
+                    }
                     results.add(doc.toJson());
                 }
                 response.end(new GsonBuilder().create().toJson(results));
@@ -76,6 +86,20 @@ db.electricproductions.find({})
         List<String> results = new ArrayList<>();
         while (iterator.hasNext()) {
             Document doc = (Document) iterator.next();
+
+            ObjectId id = ((Document)doc.get("_id")).getObjectId("_id");
+            System.out.println(id);
+            doc.append("_id", id.toString());
+            List<Document> productions = (List<Document>) doc.get("electricproductions");
+            for (Document tmp: productions) {
+                Set<String> keys = tmp.keySet();
+                for (String key: keys) {
+                    if (tmp.get(key) instanceof ObjectId) {
+                        String idstr = tmp.getObjectId(key).toString();
+                        tmp.append(key, idstr);
+                    }
+                }
+            }
             results.add(doc.toJson());
         }
         System.out.println();
