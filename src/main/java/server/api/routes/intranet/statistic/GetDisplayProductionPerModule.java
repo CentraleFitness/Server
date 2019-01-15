@@ -29,7 +29,7 @@ public class GetDisplayProductionPerModule {
             try {
                 MongoCollection fitnessCenterCollection = Database.collections.get(Database.Collections.Modules);
                 AggregateIterable iterable =  fitnessCenterCollection.aggregate(Arrays.asList(
-                        Aggregates.match(new BasicDBObject("fitness_center_id", new ObjectId("5be823d310dc3238eeed16a7"))),
+                        Aggregates.match(new BasicDBObject("fitness_center_id", new ObjectId((String) received.get("id")))),
                         Aggregates.lookup("electricproductions", "_id", "module_id", "electricproductions"),
                         Aggregates.unwind("$electricproductions"),
                         Aggregates.group(new BasicDBObject("_id", "$_id"), Accumulators.push("electricproductions", "$electricproductions"))));
