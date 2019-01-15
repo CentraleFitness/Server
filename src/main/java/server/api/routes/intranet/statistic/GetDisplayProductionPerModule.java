@@ -37,6 +37,8 @@ public class GetDisplayProductionPerModule {
                 List<String> results = new ArrayList<>();
                 while (iterator.hasNext()) {
                     Document doc = (Document) iterator.next();
+                    ObjectId id = (ObjectId) doc.get("_id");
+                    doc.append("_id", id.toString());
                     results.add(doc.toJson());
                 }
                 response.end(new GsonBuilder().create().toJson(results));
